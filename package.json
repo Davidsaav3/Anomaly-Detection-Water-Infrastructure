@@ -28,7 +28,7 @@
     "shuffle-seed": "^1.1.6"
   },
   "scripts": {
-
+ 
     "1- acquisition": "node   ./prepare/acquisition.js   ./dataset/acquisition.json   ./config.json",
     "1- flatten": "node   ./prepare/flatten.js   ./dataset/acquisition.json   ./dataset/flatten.json   ./config.json",
     "1- expanded": "node   ./prepare/expanded.js   ./dataset/flatten.json   ./dataset/expanded.json   ./config.json",
