@@ -46,7 +46,8 @@
     "1- union": "node   ./prepare/union.js   ./dataset/normalize.csv   ./dataset/union.csv   ./config.json",
     "1- tojson": "node   ./prepare/tojson.js   ./dataset/normalize.csv   ./dataset/tojson.json   ./config.json",
 
-    "1- index": "node   ./models/isolation_forest/index.js   ./dataset/add_r.csv   ./models/isolation_forest/result/isolation.json   ./models/isolation_forest/result/scores.csv   ./models/isolation_forest/result/metrics.csv   ./dataset/auxiliary/weight.csv   ./models/isolation_forest/result/image1.png   ./models/isolation_forest/result/image2.png   ./models/isolation_forest/result/image3.png   ./config.json"
+    "1- index": "node   ./models/isolation_forest/index.js   ./dataset/add_r.csv   ./models/isolation_forest/result/isolation.json   ./models/isolation_forest/result/scores.csv   ./models/isolation_forest/result/metrics.csv  ./dataset/auxiliary/weight.csv   ./models/isolation_forest/result/image1.png   ./models/isolation_forest/result/image2.png   ./models/isolation_forest/result/image3.png   ./config.json",
+    "2- index": "node   ./models/isolation_forest/indexMultiple.js   ./dataset/add_r.csv   ./models/isolation_forest/result/isolation/   ./models/isolation_forest/result/scores.csv   ./models/isolation_forest/result/metrics.csv  ./dataset/auxiliary/weight.csv   ./models/isolation_forest/result/image1.png   ./models/isolation_forest/result/image2.png   ./models/isolation_forest/result/image3.png   ./models/isolation_forest/result/image4.png   ./models/isolation_forest/result/image5.png   ./models/isolation_forest/result/image6.png   1   ./config.json"
   },
   "keywords": [
     "neural-network",

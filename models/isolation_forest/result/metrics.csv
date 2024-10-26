@@ -1,2 +1,2 @@
-precision,recall,f1,accuracy
-0,0,0,0.8996655518394648
+iteration,precision,recall,f1Score,accuracy
+1,0.67,0.33,0.44,0.98

@@ -173,7 +173,7 @@
         ]
     },
     "index": {
-        "threshold": 0.48,
+        "threshold": 0.55,
         "trees": 100,
         "score": 4,
         

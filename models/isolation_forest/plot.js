@@ -228,4 +228,189 @@ const plot3 = (datos, features, csvData, outputPath3, config) => {
     console.log(`[ PLOT3 - Scatter Plot: ${outputPath3}]`);
 };
 
-module.exports = { plot, plot2, plot3 };
+// NUEVA FUNCIÓN PLOT4 - TASA DE FALSOS POSITIVOS Y VERDADEROS NEGATIVOS
+const plot4 = (datos, features, csvData, outputPath4, config) => {
+    // Cálculo de métricas
+    const tp = datos.filter(d => d[0].truth === 1 && d[1]).length; // Verdaderos Positivos
+    const fp = datos.filter(d => d[0].truth === 0 && d[1]).length; // Falsos Positivos
+    const tn = datos.filter(d => d[0].truth === 0 && !d[1]).length; // Verdaderos Negativos
+    const fn = datos.filter(d => d[0].truth === 1 && !d[1]).length; // Falsos Negativos
+
+    const total = tp + fp + tn + fn;
+    const falsePositiveRate = total ? fp / (fp + tn) : 0; // Tasa de Falsos Positivos
+    const trueNegativeRate = total ? tn / (tn + fp) : 0; // Tasa de Verdaderos Negativos
+
+    // Log para verificar valores calculados
+    //console.log(`TP: ${tp}, FP: ${fp}, TN: ${tn}, FN: ${fn}`);
+    //console.log(`False Positive Rate: ${falsePositiveRate}, True Negative Rate: ${trueNegativeRate}`);
+
+    // Configuración del canvas
+    const canvasWidth = 1000;
+    const canvasHeight = 600;
+    const canvas = createCanvas(canvasWidth, canvasHeight);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Crear datos para el gráfico
+    const metricsData = [
+        { label: 'False Positive Rate', value: falsePositiveRate },
+        { label: 'True Negative Rate', value: trueNegativeRate },
+    ];
+
+    // Log para verificar los datos del gráfico
+    //console.log('Metrics Data:', metricsData);
+
+    // Crear gráfico de barras
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: metricsData.map(m => m.label),
+            datasets: [{
+                label: 'Metric Values',
+                data: metricsData.map(m => m.value),
+                backgroundColor: ['rgba(255, 0, 0, 0.5)', 'rgba(0, 255, 0, 0.5)'],
+                borderColor: ['rgba(255, 0, 0, 1)', 'rgba(0, 255, 0, 1)'],
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            scales: {
+                y: {
+                    title: { display: true, text: 'Rate', font: { size: 16, family: 'Arial' } },
+                    beginAtZero: true,
+                    ticks: {
+                        min: 0,
+                        max: 1,
+                        stepSize: 0.1, // Ajusta según sea necesario
+                    },
+                },
+            },
+            plugins: {
+                legend: { display: false },
+            },
+        },
+    });
+
+    // Guardar imagen
+    fs.writeFileSync(outputPath4, canvas.toBuffer('image/png'));
+    console.log(`[ PLOT4 - Performance Metrics: ${outputPath4}]`);
+};
+
+
+// NUEVA FUNCIÓN PLOT5 - AGREGACIÓN DE MÉTRICAS PROMEDIO //
+const plot5 = (metricasPorIteracion, outputPath5, config) => {
+    
+    const totalIterations = metricasPorIteracion.length;
+    metricasPorIteracion.precision /= totalIterations;
+    metricasPorIteracion.falsePositiveRate /= totalIterations;
+    metricasPorIteracion.trueNegativeRate /= totalIterations;
+
+    const canvasWidth = 1000;
+    const canvasHeight = 600;
+    const canvas = createCanvas(canvasWidth, canvasHeight);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Crear datos para el gráfico
+    const metricsData = [
+        { label: 'Average Precision', value: metricasPorIteracion.precision },
+        { label: 'Average False Positive Rate', value: metricasPorIteracion.falsePositiveRate },
+        { label: 'Average True Negative Rate', value: metricasPorIteracion.trueNegativeRate },
+    ];
+
+    // Crear gráfico de barras
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: metricsData.map(m => m.label),
+            datasets: [{
+                label: 'Average Metric Values',
+                data: metricsData.map(m => m.value),
+                backgroundColor: ['rgba(75, 192, 192, 0.5)', 'rgba(255, 99, 132, 0.5)', 'rgba(255, 206, 86, 0.5)'],
+                borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 206, 86, 1)'],
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            scales: {
+                y: {
+                    title: { display: true, text: 'Rate', font: { size: 16, family: 'Arial' } },
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: { display: false },
+            },
+        },
+    });
+
+    // Guardar imagen
+    fs.writeFileSync(outputPath5, canvas.toBuffer('image/png'));
+    console.log(`[ PLOT5 - Average Performance Metrics: ${outputPath5}]`);
+};
+
+// NUEVA FUNCIÓN PLOT6 - GRAFICAR EVOLUCIÓN DE MÉTRICAS //
+const plot6 = (metricasPorIteracion, outputPath6, config) => {
+    const canvasWidth = 1000;
+    const canvasHeight = 600;
+    const canvas = createCanvas(canvasWidth, canvasHeight);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Crear datos para la evolución de métricas
+    const precisionData = metricasPorIteracion.map(m => m.precision);
+    const falsePositiveRateData = metricasPorIteracion.map(m => m.falsePositiveRate);
+    const trueNegativeRateData = metricasPorIteracion.map(m => m.trueNegativeRate);
+
+    // Crear gráfico de líneas
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Array.from({ length: metricasPorIteracion.length }, (_, i) => i + 1), // Iteraciones
+            datasets: [
+                {
+                    label: 'Precision',
+                    data: precisionData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false,
+                },
+                {
+                    label: 'False Positive Rate',
+                    data: falsePositiveRateData,
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    fill: false,
+                },
+                {
+                    label: 'True Negative Rate',
+                    data: trueNegativeRateData,
+                    borderColor: 'rgba(0, 255, 0, 1)',
+                    fill: false,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                x: {
+                    title: { display: true, text: 'Iterations', font: { size: 16, family: 'Arial' } },
+                    grid: { color: 'rgba(200, 200, 200, 0.5)' },
+                },
+                y: {
+                    title: { display: true, text: 'Metric Value', font: { size: 16, family: 'Arial' } },
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: { display: true },
+            },
+        },
+    });
+
+    // Guardar imagen
+    fs.writeFileSync(outputPath6, canvas.toBuffer('image/png'));
+    console.log(`[ PLOT6 - Evolution of Metrics: ${outputPath6}]`);
+};
+
+module.exports = { plot, plot2, plot3, plot4, plot5, plot6 };

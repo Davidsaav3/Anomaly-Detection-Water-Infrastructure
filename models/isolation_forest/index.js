@@ -104,11 +104,11 @@ const runIsolationForest = async () => {
         const resultsRows = datos.map(({ 0: { id, value_y, value_x, score }, 1: isAnomaly }) => 
             `${id},${value_y},${value_x},${score},${isAnomaly}`).join('\n');
         fs.writeFileSync(resultsCSVPath, resultsHeader + resultsRows, 'utf8');
-        console.log(`[ ISOLATION: ${resultsCSVPath} ]`);
+        console.log(`[ SCORE: ${resultsCSVPath} ]`);
 
         // Guardar el modelo en JSON
         fs.writeFileSync(isolationModelPath, JSON.stringify(myForest, null, 2), 'utf8');
-        console.log(`[ MODEL: ${isolationModelPath}]`);
+        console.log(`[ ISOLATION: ${isolationModelPath}]`);
 
         // Graficar resultados con plot
         plot(datos, features, csvData, plotCSVPath, config); // Llamar a la función plot para graficar los resultados
