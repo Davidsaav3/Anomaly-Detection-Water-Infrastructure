@@ -1,0 +1,72 @@
+{
+  "name": "sensorsNeuralNetwork",
+  "version": "1.0.0",
+  "description": "Processing sensor data using neural networks.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Davidsaav/sensorsNeuralNetwork.git"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^0.1.21",
+    "canvas": "^2.11.2",
+    "chart.js": "^4.4.4",
+    "chartjs-adapter-moment": "^1.0.1",
+    "crypto-js": "^4.2.0",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "express": "^4.21.0",
+    "fs": "^0.0.1-security",
+    "isolation-forest-visualization": "^1.0.7",
+    "json2csv": "^6.0.0-alpha.2",
+    "lodash": "^4.17.11",
+    "mqtt": "^5.10.1",
+    "mysql2": "^3.11.3",
+    "node-remote-plot": "^1.2.0",
+    "one-hot": "^2.1.4",
+    "scikitjs": "^1.24.0",
+    "shuffle-seed": "^1.1.6"
+  },
+  "scripts": {
+
+    "1- acquisition": "node   ./prepare/acquisition.js   ./dataset/acquisition.json   ./config.json",
+    "1- flatten": "node   ./prepare/flatten.js   ./dataset/acquisition.json   ./dataset/flatten.json   ./config.json",
+    "1- expanded": "node   ./prepare/expanded.js   ./dataset/flatten.json   ./dataset/expanded.json   ./config.json",
+    "1- reduce": "node   ./prepare/reduce.js   ./dataset/flatten.json   ./dataset/reduce.json   ./config.json",
+    "1- format": "node   ./prepare/format.js   ./dataset/expanded.json   ./dataset/format.csv   ./config.json",
+    "1- onehot": "node   ./prepare/onehot.js   ./dataset/format.csv   ./dataset/onehot.csv   ./dataset/auxiliary/dictionary.csv    ./config.json",
+    "1- filter": "node   ./prepare/filter.js   ./dataset/onehot.csv   ./dataset/filter.csv   ./config.json",
+    
+    "1- template": "node   ./prepare/template.js   ./dataset/onehot.csv   ./dataset/auxiliary/nulls.csv   ./dataset/auxiliary/normalize.csv  ./dataset/auxiliary/weight.csv   ./config.json",
+    "1- nulls": "node   ./prepare/nulls.js   ./dataset/onehot.csv   ./dataset/nulls.csv   ./dataset/auxiliary/nulls.csv    ./config.json",
+    "1- normalize": "node   ./prepare/normalize.js   ./dataset/onehot.csv   ./dataset/normalize.csv   ./dataset/auxiliary/normalize.csv    ./config.json",
+    
+    "1- add": "node   ./prepare/add.js   ./dataset/normalize.csv   ./dataset/add.csv   ./config.json",
+    "1- separate": "node   ./prepare/separate.js   ./dataset/normalize.csv   ./config.json",
+    "1- union": "node   ./prepare/union.js   ./dataset/normalize.csv   ./dataset/union.csv   ./config.json",
+    "1- tojson": "node   ./prepare/tojson.js   ./dataset/normalize.csv   ./dataset/tojson.json   ./config.json",
+
+    "1- index": "node   ./models/isolation_forest/index.js   ./dataset/add.csv   ./models/isolation_forest/isolation.json   ./models/isolation_forest/scores.csv   ./models/isolation_forest/metrics.csv   ./dataset/auxiliary/weight.csv   ./models/isolation_forest/image1.png   ./models/isolation_forest/image2.png   ./models/isolation_forest/image3.png   ./config.json"
+  },
+  "keywords": [
+    "neural-network",
+    "sensors",
+    "machine-learning",
+    "nodejs",
+    "tensorflow"
+  ],
+  "author": {
+    "name": "David Saavedra Pastor",
+    "email": "Davidsaav3@gmail.com",
+    "url": "https://github.com/Davidsaav3"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidsaav/sensorsNeuralNetwork/issues"
+  },
+  "homepage": "https://github.com/davidsaav/sensorsNeuralNetwork",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}
