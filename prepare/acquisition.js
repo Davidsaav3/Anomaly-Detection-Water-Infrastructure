@@ -18,7 +18,7 @@ catch (error) {
   process.exit(1); // SALIR SI NO SE PUEDE LEER EL ARCHIVO DE CONFIGURACIÓN
 }
 
-const outputFileName = args[0] ? `${config.default.dataset}${args[0]}.json` : `${config.default.dataset}dataset_${new Date().toISOString().replace(/[-T:.Z]/g, '').slice(0, 14)}_acquisition.json`;
+const outputFileName = args[0];
 let messages = [];
 
 // VERIFICAR Y CREAR DIRECTORIO SI NO EXISTE

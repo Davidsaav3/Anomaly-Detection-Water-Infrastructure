@@ -1,8 +1,4 @@
 {
-    "default": {
-        "dataset": "../dataset/",
-        "result": "./result/"
-    },
     "acquisition": {
         "accesKey": "NNSXS.5TNLKEZMIOLEGLUYYQ7UNXNFPJKCH5SRBTR5YVY.6IQK5GKVMAJ6WQBET4ZMXW7OXIKLAY4H4HCF4OFBQ26LMOMLTEXA",
         "subscribe": "v3/ua-bim@ttn/devices/+/up",
@@ -16,7 +12,6 @@
     "reduce": {},
     "format": {},
     "onehot": {
-        "folder_dictionary": "../dataset/auxiliary/",
         "fill_transform": "mean",
         "": [
             "none",
@@ -33,13 +28,13 @@
         ]
     },
     "template": {
-        "folder_weight": "../dataset/auxiliary/"
+
     },
     "nulls": {
-        "folder_nulls": "../dataset/auxiliary/"
+
     },
     "normalize": {
-        "folder_normalize": "../dataset/auxiliary/"
+
     },
     "add": {
         "key": [
@@ -181,14 +176,16 @@
         "threshold": 0.48,
         "trees": 100,
         "score": 4,
-        "truth_position": 4,
-        "value": 5,
-        "date": "﻿Fecha_hora",
+        
+        "value_y": 5,
+        "value_x": "﻿Fecha_hora",
         "_": "received_at",
+
         "truth": "truth",
         "label": "Datos normales",
         "text_x": "Índice",
         "text_y": "value",
+        
         "input_files": [
             "./expanded/dataset_20241011115558_truth",
             "./expanded/dataset_20241011115558_truth"

@@ -6,7 +6,7 @@ Chart.register(...registerables);
 // PLOT ORIGINAL //
 const plot = (datos, features, csvData, outputPath, config) => {
     // OBTENCIÓN Y ORDENACIÓN DE DATOS
-    const data = datos.map((element, index) => ({ x: element[0].date, y: element[0].value }));
+    const data = datos.map((element, index) => ({ x: element[0].value_x, y: element[0].value_y }));
 
     // OBTENCIÓN DE MÍNIMOS Y MÁXIMOS
     const maxvalue = Math.max(...data.map(d => d.y));
@@ -132,7 +132,7 @@ const plot2 = (datos, features, csvData, outputPath2, config) => {
 const plot3 = (datos, features, csvData, outputPath3, config) => {
     // EXTRAER VALORES PARA NUBES DE PUNTOS
     const scatterData = datos.map(element => ({
-        x: element[0].value,  // Usar el valor como eje X
+        x: element[0].value_y,  // Usar el valor como eje X
         y: element[0].score,   // Usar el puntaje de anomalía como eje Y
         isAnomaly: element[1]  // Identificar si es una anomalía
     }));

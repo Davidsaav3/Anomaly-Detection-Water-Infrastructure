@@ -58,7 +58,7 @@ const readWeightCSV = async (filePath) => {
 const preprocessData = (data, weights) => {
     return data.map(row => {
         const rowData = Object.values(row).map(parseFloat);
-        return rowData.map((value, index) => !isNaN(value) && weights ? value * weights[index] : value); // APLICAR PESO SI NO ES NaN
+        return rowData.map((value_y, index) => !isNaN(value_y) && weights ? value_y * weights[index] : value_y); // APLICAR PESO SI NO ES NaN
     }).filter(row => row.every(num => !isNaN(num))); // FILTRAR FILAS CON VALORES NO NÚMERICOS
 };
 
@@ -81,12 +81,12 @@ const runIsolationForest = async () => {
         // Generar salida detallada de anomalías
         const datos = scores.map((score, index) => {
             const isAnomaly = score > config.index.threshold; // Determinar si es una anomalía
-            const value = features[index][config.index.value]; // Obtener valor
-            const date = csvData[index][config.index.date]; // Obtener fecha
+            const value_y = features[index][config.index.value_y]; // Obtener valor
+            const value_x = csvData[index][config.index.value_x]; // Obtener fecha
             const rowFeatures = features[index]; // Guardar las características de cada fila
             const id = csvData[index][config.index.id] || index; // Asignar un identificador único (puede ser el índice si no hay una columna de id)
 
-            return [{ value, date, rowFeatures, id, score }, isAnomaly]; // Devolver resultado con detalles
+            return [{ value_y, value_x, rowFeatures, id, score }, isAnomaly]; // Devolver resultado con detalles
         });
 
         // Extraer etiquetas reales
@@ -100,9 +100,9 @@ const runIsolationForest = async () => {
         saveMetricsToCSV(metrics, metricsCSVPath);
 
         // Guardar resultados detallados en CSV
-        const resultsHeader = 'id,features,value,date,score,anomaly\n';
-        const resultsRows = datos.map(({ 0: { id, rowFeatures, value, date, score }, 1: isAnomaly }) => 
-            `${id},${JSON.stringify(rowFeatures)},${value},${date},${score},${isAnomaly}`).join('\n');
+        const resultsHeader = 'id,value_y,value_x,score,anomaly\n';
+        const resultsRows = datos.map(({ 0: { id, value_y, value_x, score }, 1: isAnomaly }) => 
+            `${id},${value_y},${value_x},${score},${isAnomaly}`).join('\n');
         fs.writeFileSync(resultsCSVPath, resultsHeader + resultsRows, 'utf8');
         console.log(`[ ISOLATION: ${resultsCSVPath} ]`);
 
