@@ -4,7 +4,7 @@ const fs = require('fs');
 Chart.register(...registerables);
 
 // PLOT ORIGINAL //
-const plot = (datos, features, csvData, outputPath, config) => {
+const plot1 = (datos, outputPath, config) => {
     // OBTENCIÓN Y ORDENACIÓN DE DATOS
     const data = datos.map((element, index) => ({ x: element[0].value_x, y: element[0].value_y }));
 
@@ -78,7 +78,7 @@ const plot = (datos, features, csvData, outputPath, config) => {
 
 
 // NUEVA FUNCIÓN PLOT2 - GRÁFICOS ADICIONALES //
-const plot2 = (datos, features, csvData, outputPath2, config) => {
+const plot2 = (datos,  outputPath2, config) => {
     // Graficar distribución de puntajes de anomalía (histograma)
     const anomalyScores = datos.map(element => element[0].score); // Puntajes de anomalías
     const isAnomalies = datos.map(element => element[1]); // Identificar si es una anomalía
@@ -129,7 +129,7 @@ const plot2 = (datos, features, csvData, outputPath2, config) => {
 };
 
 // NUEVA FUNCIÓN PLOT3 - GRAFICAR NUBES DE PUNTOS //
-const plot3 = (datos, features, csvData, outputPath3, config) => {
+const plot3 = (datos,  outputPath3, config) => {
     // EXTRAER VALORES PARA NUBES DE PUNTOS
     const scatterData = datos.map(element => ({
         x: element[0].value_y,  // Usar el valor como eje X
@@ -229,83 +229,103 @@ const plot3 = (datos, features, csvData, outputPath3, config) => {
 };
 
 // NUEVA FUNCIÓN PLOT4 - TASA DE FALSOS POSITIVOS Y VERDADEROS NEGATIVOS
-const plot4 = (datos, features, csvData, outputPath4, config) => {
-    // Cálculo de métricas
-    const tp = datos.filter(d => d[0].truth === 1 && d[1]).length; // Verdaderos Positivos
-    const fp = datos.filter(d => d[0].truth === 0 && d[1]).length; // Falsos Positivos
-    const tn = datos.filter(d => d[0].truth === 0 && !d[1]).length; // Verdaderos Negativos
-    const fn = datos.filter(d => d[0].truth === 1 && !d[1]).length; // Falsos Negativos
 
-    const total = tp + fp + tn + fn;
-    const falsePositiveRate = total ? fp / (fp + tn) : 0; // Tasa de Falsos Positivos
-    const trueNegativeRate = total ? tn / (tn + fp) : 0; // Tasa de Verdaderos Negativos
-
-    // Log para verificar valores calculados
-    //console.log(`TP: ${tp}, FP: ${fp}, TN: ${tn}, FN: ${fn}`);
-    //console.log(`False Positive Rate: ${falsePositiveRate}, True Negative Rate: ${trueNegativeRate}`);
-
-    // Configuración del canvas
-    const canvasWidth = 1000;
-    const canvasHeight = 600;
+const plot4 = (metricsData, outputPath) => {
+    // Crear un Canvas de dimensiones apropiadas
+    const canvasWidth = 2000;
+    const canvasHeight = 1000;
     const canvas = createCanvas(canvasWidth, canvasHeight);
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Crear datos para el gráfico
-    const metricsData = [
-        { label: 'False Positive Rate', value: falsePositiveRate },
-        { label: 'True Negative Rate', value: trueNegativeRate },
-    ];
+    // Preparación de los datos de métricas
+    const iterations = metricsData.map(d => d.iteration);
+    const accuracies = metricsData.map(d => d.accuracy);
+    const precisions = metricsData.map(d => d.precision);
+    const recalls = metricsData.map(d => d.recall);
+    const f1Scores = metricsData.map(d => d.f1Score);
 
-    // Log para verificar los datos del gráfico
-    //console.log('Metrics Data:', metricsData);
-
-    // Crear gráfico de barras
+    // Creación del gráfico con Chart.js
     new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-            labels: metricsData.map(m => m.label),
-            datasets: [{
-                label: 'Metric Values',
-                data: metricsData.map(m => m.value),
-                backgroundColor: ['rgba(255, 0, 0, 0.5)', 'rgba(0, 255, 0, 0.5)'],
-                borderColor: ['rgba(255, 0, 0, 1)', 'rgba(0, 255, 0, 1)'],
-                borderWidth: 1,
-            }],
+            labels: iterations,
+            datasets: [
+                {
+                    label: 'Accuracy',
+                    data: accuracies,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    pointRadius: 5,
+                },
+                {
+                    label: 'Precision',
+                    data: precisions,
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 2,
+                    pointRadius: 5,
+                },
+                {
+                    label: 'Recall',
+                    data: recalls,
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 2,
+                    pointRadius: 5,
+                },
+                {
+                    label: 'F1 Score',
+                    data: f1Scores,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    pointRadius: 5,
+                }
+            ],
         },
         options: {
+            responsive: false,
+            maintainAspectRatio: false,
             scales: {
-                y: {
-                    title: { display: true, text: 'Rate', font: { size: 16, family: 'Arial' } },
-                    beginAtZero: true,
-                    ticks: {
-                        min: 0,
-                        max: 1,
-                        stepSize: 0.1, // Ajusta según sea necesario
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Número de Árboles (Iteraciones)',
+                        font: { size: 16, family: 'Arial' },
                     },
+                    grid: { color: 'rgba(200, 200, 200, 0.5)' },
+                    ticks: { stepSize: 1, font: { size: 12 }, autoSkip: true, maxTicksLimit: 20 },
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Métrica',
+                        font: { size: 16, family: 'Arial' },
+                    },
+                    grid: { color: 'rgba(200, 200, 200, 0.5)' },
+                    ticks: { font: { size: 12 }, beginAtZero: true },
                 },
             },
             plugins: {
-                legend: { display: false },
+                legend: {
+                    labels: { font: { size: 14 } },
+                },
             },
         },
     });
 
-    // Guardar imagen
-    fs.writeFileSync(outputPath4, canvas.toBuffer('image/png'));
-    console.log(`[ PLOT4 - Performance Metrics: ${outputPath4}]`);
+    // Guardar el gráfico en formato PNG
+    fs.writeFileSync(outputPath, canvas.toBuffer('image/png'));
+    console.log(`[ PLOT: ${outputPath}]`);
 };
+
 
 
 // NUEVA FUNCIÓN PLOT5 - AGREGACIÓN DE MÉTRICAS PROMEDIO //
 const plot5 = (metricasPorIteracion, outputPath5, config) => {
-    
-    const totalIterations = metricasPorIteracion.length;
-    metricasPorIteracion.precision /= totalIterations;
-    metricasPorIteracion.falsePositiveRate /= totalIterations;
-    metricasPorIteracion.trueNegativeRate /= totalIterations;
-
     const canvasWidth = 1000;
     const canvasHeight = 600;
     const canvas = createCanvas(canvasWidth, canvasHeight);
@@ -313,43 +333,46 @@ const plot5 = (metricasPorIteracion, outputPath5, config) => {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Crear datos para el gráfico
-    const metricsData = [
-        { label: 'Average Precision', value: metricasPorIteracion.precision },
-        { label: 'Average False Positive Rate', value: metricasPorIteracion.falsePositiveRate },
-        { label: 'Average True Negative Rate', value: metricasPorIteracion.trueNegativeRate },
-    ];
+    // Crear datos solo para el MSE en cada iteración
+    //console.log(metricasPorIteracion)
 
-    // Crear gráfico de barras
+    // Crear gráfico de líneas solo para el MSE
     new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-            labels: metricsData.map(m => m.label),
-            datasets: [{
-                label: 'Average Metric Values',
-                data: metricsData.map(m => m.value),
-                backgroundColor: ['rgba(75, 192, 192, 0.5)', 'rgba(255, 99, 132, 0.5)', 'rgba(255, 206, 86, 0.5)'],
-                borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 206, 86, 1)'],
-                borderWidth: 1,
-            }],
+            labels: Array.from({ length: metricasPorIteracion.length }, (_, i) => i + 1), // Iteraciones
+            datasets: [
+                {
+                    label: 'Mean Squared Error (MSE)',
+                    data: metricasPorIteracion,
+                    borderColor: 'rgba(0, 0, 255, 1)',
+                    fill: false,
+                    borderDash: [5, 5], // Líneas punteadas para MSE
+                },
+            ],
         },
         options: {
             scales: {
+                x: {
+                    title: { display: true, text: 'Iterations', font: { size: 16, family: 'Arial' } },
+                    grid: { color: 'rgba(200, 200, 200, 0.5)' },
+                },
                 y: {
-                    title: { display: true, text: 'Rate', font: { size: 16, family: 'Arial' } },
+                    title: { display: true, text: 'Mean Squared Error (MSE)', font: { size: 16, family: 'Arial' } },
                     beginAtZero: true,
                 },
             },
             plugins: {
-                legend: { display: false },
+                legend: { display: true },
             },
         },
     });
 
     // Guardar imagen
     fs.writeFileSync(outputPath5, canvas.toBuffer('image/png'));
-    console.log(`[ PLOT5 - Average Performance Metrics: ${outputPath5}]`);
+    console.log(`[ PLOT5 - Mean Squared Error (MSE) Evolution: ${outputPath5}]`);
 };
+
 
 // NUEVA FUNCIÓN PLOT6 - GRAFICAR EVOLUCIÓN DE MÉTRICAS //
 const plot6 = (metricasPorIteracion, outputPath6, config) => {
@@ -360,10 +383,13 @@ const plot6 = (metricasPorIteracion, outputPath6, config) => {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Crear datos para la evolución de métricas
+    // Crear datos para la evolución de cada métrica
     const precisionData = metricasPorIteracion.map(m => m.precision);
-    const falsePositiveRateData = metricasPorIteracion.map(m => m.falsePositiveRate);
+    const recallData = metricasPorIteracion.map(m => m.recall);
+    const f1ScoreData = metricasPorIteracion.map(m => m.f1Score);
+    const accuracyData = metricasPorIteracion.map(m => m.accuracy);
     const trueNegativeRateData = metricasPorIteracion.map(m => m.trueNegativeRate);
+    const falsePositiveRateData = metricasPorIteracion.map(m => m.falsePositiveRate);
 
     // Crear gráfico de líneas
     new Chart(ctx, {
@@ -372,9 +398,9 @@ const plot6 = (metricasPorIteracion, outputPath6, config) => {
             labels: Array.from({ length: metricasPorIteracion.length }, (_, i) => i + 1), // Iteraciones
             datasets: [
                 {
-                    label: 'Precision',
-                    data: precisionData,
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    label: 'True Negative Rate',
+                    data: trueNegativeRateData,
+                    borderColor: 'rgba(0, 255, 0, 1)',
                     fill: false,
                 },
                 {
@@ -383,15 +409,10 @@ const plot6 = (metricasPorIteracion, outputPath6, config) => {
                     borderColor: 'rgba(255, 0, 0, 1)',
                     fill: false,
                 },
-                {
-                    label: 'True Negative Rate',
-                    data: trueNegativeRateData,
-                    borderColor: 'rgba(0, 255, 0, 1)',
-                    fill: false,
-                },
             ],
         },
         options: {
+            responsive: false,
             scales: {
                 x: {
                     title: { display: true, text: 'Iterations', font: { size: 16, family: 'Arial' } },
@@ -403,7 +424,7 @@ const plot6 = (metricasPorIteracion, outputPath6, config) => {
                 },
             },
             plugins: {
-                legend: { display: true },
+                legend: { labels: { font: { size: 14 } } },
             },
         },
     });
@@ -413,4 +434,4 @@ const plot6 = (metricasPorIteracion, outputPath6, config) => {
     console.log(`[ PLOT6 - Evolution of Metrics: ${outputPath6}]`);
 };
 
-module.exports = { plot, plot2, plot3, plot4, plot5, plot6 };
+module.exports = { plot1, plot2, plot3, plot4, plot5, plot6 };
