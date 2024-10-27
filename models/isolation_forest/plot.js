@@ -434,4 +434,80 @@ const plot6 = (metricasPorIteracion, outputPath6, config) => {
     console.log(`[ PLOT6 - Evolution of Metrics: ${outputPath6}]`);
 };
 
-module.exports = { plot1, plot2, plot3, plot4, plot5, plot6 };
+const plot7 = (datos, outputPath, config) => {
+    // OBTENCIÓN Y ORDENACIÓN DE DATOS
+    const data = datos.map((element) => ({
+        x: element[0].value_x,
+        y: Array.isArray(element[0].value_y) ? element[0].value_y : [element[0].value_y],
+    }));
+
+    // OBTENCIÓN DE MÍNIMOS Y MÁXIMOS
+    const maxvalue = Math.max(...data.flatMap(d => d.y));
+    const minvalue = Math.min(...data.flatMap(d => d.y));
+
+    // CONFIGURACIÓN DEL CANVAS
+    const canvasWidth = 2000; 
+    const canvasHeight = 1000; 
+    const canvas = createCanvas(canvasWidth, canvasHeight);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // CREACIÓN DEL GRÁFICO
+    const datasets = data[0].y.map((_, i) => ({
+        label: `Score ${i + 1}`,
+        data: data.map(d => ({ x: d.x, y: d.y[i] ?? null })), // Use null for missing y values
+        backgroundColor: `rgba(${i * 50}, 192, 192, 0.2)`,
+        borderColor: `rgba(${i * 50}, 192, 192, 1)`,
+        borderWidth: 2,
+        pointRadius: (context) => (datos[context.dataIndex][1]) ? 10 : 5,
+        pointBackgroundColor: (context) => {
+            const isAnomaly = datos[context.dataIndex][1]; // Anomalías se marcan en rojo
+            return isAnomaly ? 'red' : 'blue'; // Rojo si es anomalía, azul si no
+        },
+    }));
+
+    // Crear el gráfico
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: datasets,
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: { display: true, text: config.index.text_X, font: { size: 16, family: 'Arial' }},
+                    grid: { color: 'rgba(200, 200, 200, 0.5)' },
+                    ticks: { 
+                        stepSize: 1,
+                        font: { size: 12 },
+                        autoSkip: true,
+                        maxTicksLimit: 20
+                    }
+                },
+                y: {
+                    title: { display: true, text: config.index.text_y, font: { size: 16, family: 'Arial' }},
+                    grid: { color: 'rgba(200, 200, 200, 0.5)' },
+                    ticks: { 
+                        font: { size: 12 },
+                        beginAtZero: true,
+                    },
+                    min: minvalue,
+                    max: maxvalue,
+                },
+            },
+            plugins: {
+                legend: { labels: { font: { size: 14 } } },
+            },
+        }
+    });
+
+    // GUARDAR LA IMAGEN 
+    fs.writeFileSync(outputPath, canvas.toBuffer('image/png'));
+    console.log(`[ PLOT: ${outputPath}]`);
+};
+
+
+module.exports = { plot1, plot2, plot3, plot4, plot5, plot6, plot7 };

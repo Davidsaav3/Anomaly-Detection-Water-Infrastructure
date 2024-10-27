@@ -184,11 +184,6 @@
         "truth": "truth",
         "label": "Datos normales",
         "text_x": "Índice",
-        "text_y": "value",
-        
-        "input_files": [
-            "./expanded/dataset_20241011115558_truth",
-            "./expanded/dataset_20241011115558_truth"
-        ]
+        "text_y": "value"
     }
 }
