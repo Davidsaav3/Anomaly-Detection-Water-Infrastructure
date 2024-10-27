@@ -39,13 +39,12 @@
     "1- onehot": "node   ./prepare/onehot.js   ./dataset/format.csv   ./dataset/onehot.csv   ./dataset/auxiliary/dictionary.csv    ./config.json",
         "1- filter": "node   ./prepare/filter.js   ./dataset/onehot.csv   ./dataset/filter.csv   ./config.json",
   
-    "1 - template": "node   ./prepare/template.js   ./dataset/onehot.csv   ./dataset/auxiliary_nulls.csv   ./dataset/auxiliary_normalize.csv  ./dataset/auxiliary_weight.csv   ./config.json",
+    "1- template": "node   ./prepare/template.js   ./dataset/onehot.csv   ./dataset/auxiliary_nulls.csv   ./dataset/auxiliary_normalize.csv   ./config.json",
     "1- nulls": "node   ./prepare/nulls.js   ./dataset/onehot.csv   ./dataset/nulls.csv   ./dataset/auxiliary_nulls.csv    ./config.json",
     "1- normalize": "node   ./prepare/normalize.js   ./dataset/nulls.csv   ./dataset/normalize.csv   ./dataset/auxiliary_normalize.csv    ./config.json",
     
-    "1- add": "node   ./prepare/add.js   ./dataset/normalize.csv   ./dataset/add.csv   ./config.json",
+    "1- add": "node   ./prepare/add.js   ./dataset/normalize.csv   ./dataset/add.csv   ./dataset/auxiliary_weight.csv   ./config.json",
         "1- separate": "node   ./prepare/separate.js   ./dataset/normalize.csv   ./config.json",
-        "1- tojson": "node   ./prepare/tojson.js   ./dataset/normalize.csv   ./dataset/tojson.json   ./config.json",
 
     "2- index": "node   ./models/isolation_forest/index.js   ./dataset/add_r.csv   ./models/isolation_forest/result/isolation.csv   ./models/isolation_forest/result/scores.csv   ./models/isolation_forest/result/metrics.csv  ./dataset/auxiliary_weight.csv   ./models/isolation_forest/result/image1.png   ./models/isolation_forest/result/image2.png   ./models/isolation_forest/result/image3.png   ./models/isolation_forest/result/image4.png   ./models/isolation_forest/result/image5.png   ./models/isolation_forest/result/image6.png   ./models/isolation_forest/result/image7.png   25   ./config.json"
   },

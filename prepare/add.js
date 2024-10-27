@@ -4,14 +4,15 @@ const csv = require('csv-parser');
 
 // OBTENER PARÁMETROS DE LA LÍNEA DE COMANDOS
 const args = process.argv.slice(2);
-if (args.length < 3) {
-  console.error('! ERROR: INPUT, OUTPUT AND CONFIG NEEDED !');
+if (args.length < 4) {
+  console.error('! ERROR: INPUT, OUTPUT, WEIGHT, AND CONFIG NEEDED !');
   process.exit(1);
 }
 
 const inputFile = args[0];
 const outputFile = args[1];
-const configPath = args[2] ? args[2] : './config.json';
+const weightFileName = args[2];
+const configPath = args[3] ? args[3] : './config.json';
 
 let config = {};
 
@@ -62,6 +63,16 @@ async function addGroundTruthColumn(results) {
   });
 }
 
+// CREAR ARCHIVO WEIGHT
+function saveWeightFile(headers) {  
+  // FILA DE 1's DEBE COINCIDIR EN LONGITUD CON LAS CABECERAS
+  const onesRow = headers.map(() => '1').join(',');
+  const csvContent = [headers.join(','), onesRow].join('\n');
+
+  fs.writeFileSync(weightFileName, csvContent);
+  console.log(`[ WEIGHT: ${weightFileName} ]`);
+}
+
 // PREPARAR DATOS
 async function prepareData(inputFile, outputFile) {
   try {
@@ -69,6 +80,9 @@ async function prepareData(inputFile, outputFile) {
     const updatedResults = await addGroundTruthColumn(results); // Agregar columnas de truth
     const headers = [...Object.keys(results[0]), ...config.add.key]; // Cabeceras con nuevas columnas
     saveToCSV(updatedResults, headers, outputFile); // Guardar resultados
+
+    // Generar archivo de peso después de guardar el CSV actualizado
+    saveWeightFile(headers);
   } 
   catch (error) {
     console.error('ERROR AL PROCESAR:', error);

@@ -12,8 +12,7 @@ if (args.length !== 5) {
 const inputFile = args[0];
 const nullsFileName = args[1];
 const normalizeFileName = args[2];
-const weightFileName = args[3];
-const configPath = args[4] ? args[4] : './config.json';
+const configPath = args[3] ? args[3] : './config.json';
 
 let config = {};
 
@@ -71,15 +70,6 @@ function saveNormalizedFile(headers) {
   console.log(`[ NORMALIZE: ${normalizeFileName} ]`);
 }
 
-// CREAR ARCHIVO WEIGHT
-function saveWeightFile(headers) {
-  const onesRow = headers.map(() => '1').join(','); // FILA DE 1's
-  const csvContent = [headers.join(','), onesRow].join('\n'); // UNIR CABECERAS Y 1's
-
-  fs.writeFileSync(normalizeFileName, csvContent);
-  console.log(`[ WEIGHT: ${normalizeFileName} ]`);
-}
-
 // PROCESAR CSV
 async function processCSV(inputFilename) {
   const data = await readCSV(inputFilename);
@@ -128,5 +118,5 @@ async function processCSV(inputFilename) {
   const nullsMap = getNullsByColumn(data, headers); // VERIFICAR NULLS
   saveNullsFile(headers, nullsMap); // GUARDAR ARCHIVOS
   saveNormalizedFile(headers); // NORMALIZADO
-  saveWeightFile(headers); // GUARDAR WEIGHT
+  //saveWeightFile(headers); // GUARDAR WEIGHT
 }
