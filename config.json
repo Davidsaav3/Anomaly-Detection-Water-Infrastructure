@@ -177,9 +177,9 @@
         "trees": 100,
         "score": 4,
         
-        "value_y": 0,
-        "value_x": "received_at",
-        "_": "﻿Fecha_hora - 5 /// received_at - end_device_ids.device_id",
+        "value_y": 5,
+        "value_x": "﻿Fecha_hora",
+        "_": "﻿Fecha_hora - 5 /// received_at - 0",
 
         "truth": "truth",
         "label": "Datos normales",
