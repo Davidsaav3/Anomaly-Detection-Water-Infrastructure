@@ -35,15 +35,15 @@ const saveToCSV = (data, headers, fileName) => {
     ...data.map(row => headers.map(header => row[header] ?? '').join(','))
   ].join('\n');
   fs.writeFileSync(fileName, csvContent); // ESCRIBIR CSV
-  console.log(`[ NULLS: ${fileName} ]`); // CONFIRMAR GUARDADO
+  console.log(`[ GUARDADO: ${fileName} ]`); // CONFIRMAR GUARDADO
 };
 
 // PREPARAR DATOS Y MANEJAR NULOS
 async function normalizes(inputFile, normalizeFile) {
   try {
     const { headers, results } = await readCSV(inputFile); // LEER CSV
-    const { results: results1 } = await readCSV(normalizeFile); // LEER ARCHIVO NULLS
-    if (results1.length === 0) throw new Error('ARCHIVO NULLS VACÍO.');
+    const { results: results1 } = await readCSV(normalizeFile); // LEER ARCHIVO DE NORMALIZACIÓN
+    if (results1.length === 0) throw new Error('ARCHIVO DE NORMALIZACIÓN VACÍO.');
     const values1 = results1[0];
     return results.map(row => {
       // NORMALIZAR DATOS
@@ -62,10 +62,10 @@ async function normalizes(inputFile, normalizeFile) {
 
 // FUNCIÓN PARA NORMALIZAR UN VALOR
 function normalizeValue(value, min, max, newMin, newMax) {
-  if (value === min && value === max) { // SI LOS TRES VALORES SON IGUALES
-    return newMin; // DEVUELVE EL NUEVO MÍNIMO
+  if (min === max) { // SI TODOS LOS VALORES SON IGUALES
+    return 1; // ASIGNAR 1 A TODA LA COLUMNA
   }
-  const normalized = (value - min) / (max - min); // NORMALIZA ENTRE 0 Y 1
+  const normalized = (value - min) / (max - min); // NORMALIZAR ENTRE 0 Y 1
   return normalized * (newMax - newMin) + newMin;  // ESCALA AL NUEVO RANGO
 }
 
@@ -90,7 +90,7 @@ async function normalize(inputFile, normalizeFile) {
 
     // OBTENER NUEVOS MÍNIMO Y MÁXIMO DE LA SEGUNDA Y TERCERA FILA
     const { results: results1 } = await readCSV(normalizeFile);
-    if (results1.length === 0) throw new Error('ARCHIVO NORMALIZE VACÍO.'); // VERIFICAR ARCHIVO auxiliary
+    if (results1.length === 0) throw new Error('ARCHIVO DE NORMALIZACIÓN VACÍO.');
 
     // OBTENER MIN Y MAX PARA CADA COLUMNA
     const minMaxValues = {};
@@ -125,7 +125,7 @@ async function normalize(inputFile, normalizeFile) {
 // EJECUTAR Y GUARDAR RESULTADOS
 const args = process.argv.slice(2);
 if (args.length !== 4) {
-  console.error('! ERROR: INPUT, OUTPUT, NULLS FILE AND CONFIG NEEDED !'); 
+  console.error('! ERROR: SE REQUIEREN INPUT, OUTPUT, ARCHIVO DE NULOS Y CONFIGURACIÓN !'); 
   process.exit(1);
 }
 
@@ -139,10 +139,7 @@ const config = loadConfig(configPath);
 
 // PROCESAR NULOS Y NORMALIZAR
 normalizes(inputFile, normalizeFile)
-  .then(data => {
-    const normalizedData = normalize(inputFile, normalizeFile);
-    return normalizedData;
-  })
+  .then(data => normalize(inputFile, normalizeFile))
   .then(data => {
     saveToCSV(data, data.length ? Object.keys(data[0]) : [], outputFile); 
   })

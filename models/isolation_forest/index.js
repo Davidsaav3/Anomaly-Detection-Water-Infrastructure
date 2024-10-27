@@ -146,13 +146,17 @@ const runIsolationForest = async () => {
             return [{ value_y, value_x, rowFeatures, id, score }, isAnomaly]; // Devolver resultado con detalles
         });
 
-        let datos2 = scoresResults[0].map((score, index) => { 
-            const isAnomaly = score > config.index.threshold; // Determinar si es una anomalía
-            const value_y = Array.isArray(scoresResults[index]) ? scoresResults[index] : [scoresResults[index]]; // Asegúrate de que value_y sea un array
-            const value_x = csvData[index][config.index.value_x]; // Obtener fecha
-            const rowFeatures = features[index]; // Guardar las características de cada fila
-            const id = csvData[index][config.index.id] || index; // Asignar un identificador único
-            return [{ value_y, value_x, rowFeatures, id, score }, isAnomaly]; // Devolver resultado con detalles
+        const datos2 = scoresResults[0].map((score, index) => {
+            const isAnomaly = score > config.index.threshold;
+        
+            // Obtener todos los valores de features[index]
+            const values_y = Object.values(features[index]); // Extrae todos los valores de features[index]
+            const value_x = csvData[index][config.index.value_x];
+            const rowFeatures = features[index];
+            const id = csvData[index][config.index.id] || index;
+        
+            // Retornar todos los valores como un objeto
+            return [{ values_y, value_x, rowFeatures, id, score }, isAnomaly];
         });
 
         // SCORES

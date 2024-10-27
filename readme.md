@@ -64,8 +64,7 @@ nombre de salida...
 -
 -
 
-   data size: 299, number of attributes: 73
------------------------------------------------
-   number of trees: 100, sample size: 299
------------------------------------------------
-   height limit of trees set to: 9
+normalizar va mal si la columna todo es 13
+separav pesos de temlate 
+y alicar pesos
+sumar 1

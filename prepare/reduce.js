@@ -3,7 +3,7 @@ const path = require('path');
 
 // OBTENER PARÁMETROS DE LA LÍNEA DE COMANDOS
 const args = process.argv.slice(2);
-const configPath = args[2] ? args[2] : './config.json
+const configPath = args[2] ? args[2] : './config.json';
 
 let config = {};
 

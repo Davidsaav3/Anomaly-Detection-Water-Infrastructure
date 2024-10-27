@@ -129,34 +129,28 @@ const plot2 = (datos,  outputPath2, config) => {
 };
 
 // NUEVA FUNCIÓN PLOT3 - GRAFICAR NUBES DE PUNTOS //
-const plot3 = (datos,  outputPath3, config) => {
-    // EXTRAER VALORES PARA NUBES DE PUNTOS
-    const scatterData = datos.map(element => ({
-        x: element[0].value_y,  // Usar el valor como eje X
-        y: element[0].score,   // Usar el puntaje de anomalía como eje Y
+const plot3 = (datos, outputPath3, config) => {
+    // Crear datos para nube de puntos
+    const scatterData = datos.map((element, index) => ({
+        x: index + 1,  // Usar índice como eje X para que coincida con plot2
+        y: element[0].score,   // Puntaje de anomalía en eje Y
         isAnomaly: element[1]  // Identificar si es una anomalía
     }));
 
-    // Asegurarse de que scatterData no tenga duplicados
-    const uniqueData = [...new Map(scatterData.map(point => [point.x + '-' + point.y, point])).values()];
-
-    // Normalizar coordenadas
-    const xMin = Math.min(...uniqueData.map(p => p.x));
-    const xMax = Math.max(...uniqueData.map(p => p.x));
-    const yMin = Math.min(...uniqueData.map(p => p.y));
-    const yMax = Math.max(...uniqueData.map(p => p.y));
+    // Normalizar coordenadas para ajuste en el canvas
+    const yMin = Math.min(...scatterData.map(p => p.y));
+    const yMax = Math.max(...scatterData.map(p => p.y));
 
     const canvasWidth = 1000;
     const canvasHeight = 600;
     const canvas = createCanvas(canvasWidth, canvasHeight);
     const ctx = canvas.getContext('2d');
 
-    // NO RELLENAR EL CANVAS (FONDO TRANSPARENTE)
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Fondo transparente
 
-    // DIBUJAR LÍNEAS DE EJE
-    ctx.strokeStyle = 'white'; // Color de las líneas de los ejes
-    ctx.lineWidth = 2; // Grosor de la línea
+    // Dibujar líneas de eje
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(50, 0); // Eje Y
     ctx.lineTo(50, canvasHeight); 
@@ -164,26 +158,26 @@ const plot3 = (datos,  outputPath3, config) => {
     ctx.lineTo(canvasWidth, canvasHeight - 50);
     ctx.stroke();
 
-    // DIBUJAR REJILLA
-    ctx.strokeStyle = 'rgba(200, 200, 200, 0.5)'; // Color de la rejilla
+    // Dibujar rejilla
+    ctx.strokeStyle = 'rgba(200, 200, 200, 0.5)';
     for (let i = 0; i <= 10; i++) {
-        const xGrid = (i / 10) * (canvasWidth - 100) + 50; // Espaciado en el eje X
+        const xGrid = (i / 10) * (canvasWidth - 100) + 50;
         ctx.beginPath();
         ctx.moveTo(xGrid, 0);
         ctx.lineTo(xGrid, canvasHeight);
         ctx.stroke();
     }
     for (let i = 0; i <= 10; i++) {
-        const yGrid = canvasHeight - ((i / 10) * (canvasHeight - 100)); // Espaciado en el eje Y
+        const yGrid = canvasHeight - ((i / 10) * (canvasHeight - 100));
         ctx.beginPath();
         ctx.moveTo(0, yGrid);
         ctx.lineTo(canvasWidth, yGrid);
         ctx.stroke();
     }
 
-    // CREAR GRAFICO DE NUBES DE PUNTOS
-    uniqueData.forEach(point => {
-        const normalizedX = ((point.x - xMin) / (xMax - xMin)) * (canvasWidth - 100) + 50; // Normalizar X y ajustar
+    // Crear gráfico de nube de puntos
+    scatterData.forEach(point => {
+        const normalizedX = ((point.x - 1) / (scatterData.length - 1)) * (canvasWidth - 100) + 50; // Normalizar X y ajustar
         const normalizedY = (canvasHeight - 50) - ((point.y - yMin) / (yMax - yMin)) * (canvasHeight - 100); // Normalizar Y y ajustar
 
         ctx.beginPath();
@@ -193,37 +187,37 @@ const plot3 = (datos,  outputPath3, config) => {
         ctx.closePath();
     });
 
-    // AGREGAR TITULOS Y ETIQUETAS
-    ctx.fillStyle = 'white'; // Cambiar a blanco
+    // Agregar títulos y etiquetas
+    ctx.fillStyle = 'white';
     ctx.font = 'bold 16px Arial';
-    ctx.fillText('Scatter Plot of Anomaly Scores', canvasWidth / 2 - 100, 30); // Título
+    ctx.fillText('Scatter Plot of Anomaly Scores', canvasWidth / 2 - 100, 30);
 
     // Etiquetas de ejes
     ctx.font = '12px Arial';
-    ctx.fillText(config.index.text_X || 'Eje X', canvasWidth - 150, canvasHeight - 10); // Etiqueta eje X
+    ctx.fillText(config.index.text_X || 'Eje X', canvasWidth - 150, canvasHeight - 10);
     ctx.save();
     ctx.translate(10, canvasHeight / 2);
-    ctx.rotate(-Math.PI / 2); // Rotar para eje Y
-    ctx.fillText(config.index.text_y || 'Eje Y', 0, 0); // Etiqueta eje Y
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText(config.index.text_y || 'Eje Y', 0, 0);
     ctx.restore();
 
-    // AGREGAR VALORES A LOS EJES
-    const xStep = (xMax - xMin) / 10; // Paso para el eje X
-    const yStep = (yMax - yMin) / 10; // Paso para el eje Y
+    // Agregar valores a los ejes
+    const xStep = scatterData.length / 10;
+    const yStep = (yMax - yMin) / 10;
 
     for (let i = 0; i <= 10; i++) {
         // Eje X
-        const xValue = xMin + i * xStep;
-        const xLabelX = (i / 10) * (canvasWidth - 100) + 50; // Normalizar posición en el canvas
-        ctx.fillText(xValue.toFixed(2), xLabelX - 15, canvasHeight - 30); // Etiqueta del eje X
+        const xValue = Math.floor(i * xStep);
+        const xLabelX = (i / 10) * (canvasWidth - 100) + 50;
+        ctx.fillText(xValue, xLabelX - 15, canvasHeight - 30);
 
         // Eje Y
         const yValue = yMin + i * yStep;
-        const yLabelY = canvasHeight - 50 - (i / 10) * (canvasHeight - 100); // Normalizar posición en el canvas
-        ctx.fillText(yValue.toFixed(2), 10, yLabelY + 5); // Etiqueta del eje Y
+        const yLabelY = canvasHeight - 50 - (i / 10) * (canvasHeight - 100);
+        ctx.fillText(yValue.toFixed(2), 10, yLabelY + 5);
     }
 
-    // GUARDAR LA IMAGEN 
+    // Guardar la imagen
     fs.writeFileSync(outputPath3, canvas.toBuffer('image/png'));
     console.log(`[ PLOT3 - Scatter Plot: ${outputPath3}]`);
 };
@@ -436,46 +430,56 @@ const plot6 = (metricasPorIteracion, outputPath6, config) => {
 
 const plot7 = (datos, outputPath, config) => {
     // OBTENCIÓN Y ORDENACIÓN DE DATOS
-    const data = datos.map((element) => ({
-        x: element[0].value_x,
-        y: Array.isArray(element[0].value_y) ? element[0].value_y : [element[0].value_y],
-    }));
+    const datosPlot = datos.map((element) => {
+        const isAnomaly = element[1]; // Asumiendo que el segundo elemento indica si es una anomalía
 
-    // OBTENCIÓN DE MÍNIMOS Y MÁXIMOS
-    const maxvalue = Math.max(...data.flatMap(d => d.y));
-    const minvalue = Math.min(...data.flatMap(d => d.y));
+        // Obtener todos los valores de features[index]
+        const values_y = Object.values(element[0].rowFeatures); // Extrae todos los valores de rowFeatures
+        const value_x = element[0].value_x;
+
+        return { values_y, value_x, isAnomaly }; // Retornar un objeto con todos los valores
+    });
 
     // CONFIGURACIÓN DEL CANVAS
-    const canvasWidth = 2000; 
-    const canvasHeight = 1000; 
+    const canvasWidth = 10000; 
+    const canvasHeight = 2000; 
     const canvas = createCanvas(canvasWidth, canvasHeight);
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // CREACIÓN DEL GRÁFICO
-    const datasets = data[0].y.map((_, i) => ({
-        label: `Score ${i + 1}`,
-        data: data.map(d => ({ x: d.x, y: d.y[i] ?? null })), // Use null for missing y values
-        backgroundColor: `rgba(${i * 50}, 192, 192, 0.2)`,
-        borderColor: `rgba(${i * 50}, 192, 192, 1)`,
-        borderWidth: 2,
-        pointRadius: (context) => (datos[context.dataIndex][1]) ? 10 : 5,
-        pointBackgroundColor: (context) => {
-            const isAnomaly = datos[context.dataIndex][1]; // Anomalías se marcan en rojo
-            return isAnomaly ? 'red' : 'blue'; // Rojo si es anomalía, azul si no
-        },
-    }));
+    const datasets = Array.from({ length: datosPlot[0].values_y.length }, (_, i) => {
+        const color = `hsl(${(i * 360) / datosPlot[0].values_y.length}, 100%, 50%)`; // Color único para cada serie
+        return {
+            label: `Elemento ${i + 1}`,
+            data: datosPlot.map(d => ({ x: d.value_x, y: d.values_y[i] })), // Cada serie de datos para el eje Y
+            backgroundColor: color, // Color de fondo para el área (no usado ya que fill es false)
+            borderColor: color, // Usar el mismo color para la línea
+            borderWidth: 3, // Aumentar el grosor de la línea
+            fill: false, // Asegura que las líneas no estén llenas
+            pointRadius: (context) => (datosPlot[context.dataIndex].isAnomaly) ? 10 : 5, // Cambiar el tamaño del punto si es una anomalía
+            pointBackgroundColor: (context) => {
+                const truthValue = datosPlot[context.dataIndex].isAnomaly; // Obtener el valor de isAnomaly
+                return truthValue ? 'red' : 'blue'; // Color de los puntos
+            },
+        };
+    });
 
-    // Crear el gráfico
     new Chart(ctx, {
         type: 'line',
-        data: {
-            datasets: datasets,
-        },
+        data: { datasets },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Título del Gráfico', // Cambia esto por el título que desees
+                    font: { size: 20 }
+                },
+                legend: { labels: { font: { size: 14 }}},
+            },
             scales: {
                 x: {
                     title: { display: true, text: config.index.text_X, font: { size: 16, family: 'Arial' }},
@@ -485,7 +489,7 @@ const plot7 = (datos, outputPath, config) => {
                         font: { size: 12 },
                         autoSkip: true,
                         maxTicksLimit: 20
-                    }
+                    },
                 },
                 y: {
                     title: { display: true, text: config.index.text_y, font: { size: 16, family: 'Arial' }},
@@ -494,12 +498,7 @@ const plot7 = (datos, outputPath, config) => {
                         font: { size: 12 },
                         beginAtZero: true,
                     },
-                    min: minvalue,
-                    max: maxvalue,
                 },
-            },
-            plugins: {
-                legend: { labels: { font: { size: 14 } } },
             },
         }
     });
@@ -508,6 +507,7 @@ const plot7 = (datos, outputPath, config) => {
     fs.writeFileSync(outputPath, canvas.toBuffer('image/png'));
     console.log(`[ PLOT: ${outputPath}]`);
 };
+
 
 
 module.exports = { plot1, plot2, plot3, plot4, plot5, plot6, plot7 };
