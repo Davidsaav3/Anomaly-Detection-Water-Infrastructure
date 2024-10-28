@@ -3,38 +3,42 @@ const csv = require('csv-parser');
 const fs = require('fs');
 const { plot1, plot2, plot3, plot4, plot5, plot6, plot7 } = require('./plot');
 
+// [ OBTENER ARGUMENTOS ]
 const args = process.argv.slice(2);
 if (args.length < 9) {
-    console.error('! ERROR: INPUT, SCORES OUTPUT, METRICS OUTPUT, WEIGHT FILE, PLOT PATHS, ITERATIONS, CONFIG NEEDED !');
+    console.error('! ERROR: INPUT !');
     process.exit(1);
 }
 
-const inputFilename = args[0];
-const isolationOutputPath = args[1]; // ARCHIVO DEL MODELO
-const scoresOutputPath = args[2];
-const metricsOutputPath = args[3]; // Nueva ruta para el archivo de métricas
-const weightFilePath = args[4];
-const plotCSVPath = args[5]; // ARCHIVO DE PLOT
-const plot2CSVPath = args[6]; // ARCHIVO DE PLOT 2
-const plot3CSVPath = args[7]; // ARCHIVO DE PLOT 3
-const plot4CSVPath = args[8]; // ARCHIVO DE PLOT
-const plot5CSVPath = args[9]; // ARCHIVO DE PLOT 2
-const plot6CSVPath = args[10]; // ARCHIVO DE PLOT 3
-const plot7CSVPath = args[11]; // ARCHIVO DE PLOT 3
-const iterations = parseInt(args[12], 10);
-const configPath = args[13];
-
+// [ ARGUMENTOS ]
+const inputFilename = args[0]; // ENTRADA
+const isolationOutputPath = args[1]; // ISOLATION
+const scoresOutputPath = args[2]; // SCORES
+const metricsOutputPath = args[3]; // MÉTRICAS
+const weightFilePath = args[4]; // PESOS
+const plotCSVPath = args[5]; // PLOT 1
+const plot2CSVPath = args[6]; // PLOT 2
+const plot3CSVPath = args[7]; // PLOT 3
+const plot4CSVPath = args[8]; // PLOT 4
+const plot5CSVPath = args[9]; // PLOT 5
+const plot6CSVPath = args[10]; // PLOT 6
+const plot7CSVPath = args[11]; // PLOT 7
+const iterations = parseInt(args[12], 10); // ITERACIONES ISOALTION
+const configPath = args[13]; // CONFIGURACIÓN
 let config = {};
+let iterationCounter = 0;
 
-// Cargar configuración
+// [ CARGAR CONFIGURACIÓN ]
 try {
     const configFile = fs.readFileSync(configPath);
     config = JSON.parse(configFile);
-} catch (error) {
-    console.error(`! ERROR: NO SE PUDO LEER ${configPath}, USANDO CONFIGURACIÓN POR DEFECTO !`, error);
+}
+catch (error) {
+    console.error(`! ERROR: CONFIG ${configPath} !`, error);
     process.exit(1);
 }
 
+// [ LEER CSV ]
 const readCSV = (filePath) => {
     return new Promise((resolve, reject) => {
         const results = [];
@@ -46,6 +50,7 @@ const readCSV = (filePath) => {
     });
 };
 
+// [ LEER PESOS ]
 const readWeightCSV = async (filePath) => {
     if (!filePath) {
         return null;
@@ -54,6 +59,7 @@ const readWeightCSV = async (filePath) => {
     return Object.values(weights[0]).map(parseFloat);
 };
 
+// [ APLICAR PESOS ]
 const preprocessData = (data, weights) => {
     return data.map(row => {
         const rowData = Object.values(row).map(parseFloat);
@@ -61,43 +67,44 @@ const preprocessData = (data, weights) => {
     }).filter(row => row.every(num => !isNaN(num)));
 };
 
-let iterationCounter = 0;
+// [ CALCULAR MÉTRICAS ]
 const calculateMetrics = (yTrue, yPred) => {
     iterationCounter += 1;
-    const tp = yPred.filter((pred, idx) => pred === 1 && yTrue[idx] === 1).length; // Verdaderos positivos
-    const fp = yPred.filter((pred, idx) => pred === 1 && yTrue[idx] === 0).length; // Falsos positivos
-    const tn = yPred.filter((pred, idx) => pred === 0 && yTrue[idx] === 0).length; // Verdaderos negativos
-    const fn = yPred.filter((pred, idx) => pred === 0 && yTrue[idx] === 1).length; // Falsos negativos
+    const tp = yPred.filter((pred, idx) => pred === 1 && yTrue[idx] === 1).length; // VERDADEROS POSITIVOS
+    const fp = yPred.filter((pred, idx) => pred === 1 && yTrue[idx] === 0).length; // FALSOS POSITIVOS
+    const tn = yPred.filter((pred, idx) => pred === 0 && yTrue[idx] === 0).length; // VERDADEROS NEGATIVOS
+    const fn = yPred.filter((pred, idx) => pred === 0 && yTrue[idx] === 1).length; // FALSOS NEGATIVOS
 
     const precision = tp / (tp + fp || 1);
     const recall = tp / (tp + fn || 1);
     const f1Score = (2 * precision * recall) / (precision + recall || 1);
     const accuracy = (tp + tn) / yTrue.length;
-    const falsePositiveRate = fp / (fp + tn || 1); // Tasa de Falsos Positivos
-    const trueNegativeRate = tn / (tn + fp || 1);  // Tasa de Verdaderos Negativos
+    const falsePositiveRate = fp / (fp + tn || 1); // TASA DE FALSOS POSITIVOS
+    const trueNegativeRate = tn / (tn + fp || 1);  // TASA DE VERDADEROS NEGATIVOS
 
     return { iteration: iterationCounter, precision, recall, f1Score, accuracy, trueNegativeRate, falsePositiveRate };
 };
 
-// Ejecutar Isolation Forest múltiples veces y guardar resultados
-const runIsolationForest = async () => {
+// [ ISOLATION FOREST ]
+const main = async () => {
     try {
         const csvData = await readCSV(inputFilename);
         const weights = await readWeightCSV(weightFilePath);
         let features = preprocessData(csvData, weights);
 
         if (features.length < 10) {
-            console.error('! ERROR: Se necesitan al menos 10 filas !');
+            console.error('! ERROR: AT LEAST 10 ROWS ARE NEEDED !');
             return;
         }
 
         const scoresResults = [];
         const ids = csvData.map(row => row[config.index.id] || csvData.indexOf(row));
-        const y_true = csvData.map(row => parseInt(row[config.index.truth])); // Asumiendo que existe una columna "truth"
+        const y_true = csvData.map(row => parseInt(row[config.index.truth])); // COLUMNA "TRUTH"
         const mseResults = [];
-        const thresholdIncrement = (1 - 0.1) / iterations; // Incremento del umbral
-        const isolationData = []; // Array para almacenar información de cada iteración
+        const thresholdIncrement = (1 - 0.1) / iterations; // UMBRAL
+        const isolationData = [];
 
+        // 0. ISOLATION
         for (let i = 1; i < iterations + 1; i++) {
             //config.index.trees = i; 
             //config.index.score = i;
@@ -109,9 +116,7 @@ const runIsolationForest = async () => {
             const y_pred = myForest.dataAnomalyScore(config.index.score).map(score => score > config.index.threshold ? 1 : 0);
             const mse = calculateMSE(y_true, y_pred);
             mseResults.push(mse);
-            //config.index.threshold += thresholdIncrement;
 
-            // Guardar información del modelo para esta iteración
             isolationData.push({
                 'iteration': i,
                 'data_size': csvData.length,
@@ -120,68 +125,36 @@ const runIsolationForest = async () => {
             });
         }
 
-        // Crear archivo scores.csv con los puntajes de cada ejecución
+        // 1. SCORES
         const scoresHeader = ['id', 'value_y', 'value_x', ...Array.from({ length: iterations }, (_, i) => `score_${i + 1}`), 'scores_total', 'score', 'anomaly'].join(',');
         const scoresRows = scoresResults[0].map((_, index) => {
             const scores = scoresResults.map(scoreArray => scoreArray[index].toFixed(2));
             const scoresTotal = scores.reduce((acc, score) => acc + parseFloat(score), 0);
             const scoresPercent = (scoresTotal / iterations).toFixed(2);
-            
-            const value_y = features[index][config.index.value_y]; // Obtener value_y
-            //const value_y = scores; // Ahora value_y es un array de puntajes
-
-            const value_x = csvData[index][config.index.value_x]; // Obtener value_x
-            const isAnomaly = scoresPercent > config.index.threshold; // Determinar si es una anomalía
-            //console.log(`Index: ${index}, value_y: ${value_y}, value_x: ${value_x}, score: ${scoresPercent}`); // Registro para depuración
+            const value_y = features[index][config.index.value_y]; // VALUE_Y
+            const value_x = csvData[index][config.index.value_x]; // VALUE_X
+            const isAnomaly = scoresPercent > config.index.threshold; // DETERMINAR SI ES UNA ANOMALÍA
             return [ids[index], value_y, value_x, ...scores, scoresTotal.toFixed(2), scoresPercent, isAnomaly].join(',');
         }).join('\n');
-
-
-        const datos = scoresResults[0].map((score, index) => {
-            const isAnomaly = score > config.index.threshold; // Determinar si es una anomalía
-            const value_y = features[index][config.index.value_y]; // Obtener valor
-            const value_x = csvData[index][config.index.value_x]; // Obtener fecha
-            const rowFeatures = features[index]; // Guardar las características de cada fila
-            const id = csvData[index][config.index.id] || index; // Asignar un identificador único (puede ser el índice si no hay una columna de id)
-            return [{ value_y, value_x, rowFeatures, id, score }, isAnomaly]; // Devolver resultado con detalles
-        });
-
-        const datos2 = scoresResults[0].map((score, index) => {
-            const isAnomaly = score > config.index.threshold;
-        
-            // Obtener todos los valores de features[index]
-            const values_y = Object.values(features[index]); // Extrae todos los valores de features[index]
-            const value_x = csvData[index][config.index.value_x];
-            const rowFeatures = features[index];
-            const id = csvData[index][config.index.id] || index;
-        
-            // Retornar todos los valores como un objeto
-            return [{ values_y, value_x, rowFeatures, id, score }, isAnomaly];
-        });
-
-        // SCORES
         fs.writeFileSync(scoresOutputPath, `${scoresHeader}\n${scoresRows}`, 'utf8');
         console.log(`[ SCORES: ${scoresOutputPath} ]`);
 
-        // CALCULATE METRICS
-        const y_pred = scoresResults.map(scoreArray => scoreArray.map((score, idx) => score > config.index.threshold ? 1 : 0)); // Predicciones de cada ejecución
+        // 2. MÉTRICAS
+        const y_pred = scoresResults.map(scoreArray => scoreArray.map((score, idx) => score > config.index.threshold ? 1 : 0)); // PREDICCIONES DE CADA EJECUCIÓN
         const metricsResults = [];
         for (let i = 0; i < iterations; i++) {
             const metrics = calculateMetrics(y_true, y_pred[i]);
             metricsResults.push({ iteration: i + 1, ...metrics });
         }
-
-        // METRICS
         const metricsHeader = 'iteration,precision,recall,f1Score,accuracy,trueNegativeRate,falsePositiveRate,mse\n';
         const metricsRows = metricsResults.map(({ iteration, precision, recall, f1Score, accuracy, trueNegativeRate, falsePositiveRate }, i) => {
-            const mse = mseResults[i]; // Usa el MSE calculado en la iteración i
+            const mse = mseResults[i]; // MSE CALCULADO 
             return `${iteration},${precision.toFixed(2)},${recall.toFixed(2)},${f1Score.toFixed(2)},${accuracy.toFixed(2)},${trueNegativeRate.toFixed(2)},${falsePositiveRate.toFixed(2)},${mse.toFixed(2)}`;
         }).join('\n');
-        
         fs.writeFileSync(metricsOutputPath, `${metricsHeader}${metricsRows}`, 'utf8');
         console.log(`[ METRICS: ${metricsOutputPath} ]`);
-        
-        // ISOLATION
+
+        // 3. ISOLATION INFO
         const isolationHeader = 'iteration,data_size,number_of_attributes,number_of_trees\n';
         const isolationRows = isolationData.map(({ iteration, data_size, number_of_attributes, number_of_trees }) =>
             `${iteration},${data_size},${number_of_attributes},${number_of_trees}`
@@ -189,21 +162,38 @@ const runIsolationForest = async () => {
         fs.writeFileSync(isolationOutputPath, `${isolationHeader}${isolationRows}`, 'utf8');
         console.log(`[ ISOLATION: ${isolationOutputPath}]`);
 
-        // PLOT
-        plot1(datos, plotCSVPath, config); 
-        plot2(datos, plot2CSVPath, config); 
-        plot3(datos, plot3CSVPath, config); 
-        plot4(metricsResults, plot4CSVPath, config); 
-        plot5(mseResults, plot5CSVPath, config); 
-        plot6(metricsResults, plot6CSVPath, config);
-        plot7(datos2, plot7CSVPath, config); 
+        // 4. PLOTS
+        const datos = scoresResults[0].map((score, index) => {
+            const isAnomaly = score > config.index.threshold; // DETERMINAR SI ES UNA ANOMALÍA
+            const value_y = features[index][config.index.value_y]; // VALOR
+            const value_x = csvData[index][config.index.value_x]; // FECHA
+            const rowFeatures = features[index]; // CARACTERÍSTICAS DE CADA FILA
+            const id = csvData[index][config.index.id] || index; // UN IDENTIFICADOR ÚNICO
+            return [{ value_y, value_x, rowFeatures, id, score }, isAnomaly];
+        });
+        const datos2 = scoresResults[0].map((score, index) => {
+            const isAnomaly = score > config.index.threshold;
+            const values_y = Object.values(features[index]); // OBTENER TODOS LOS VALORES DE FEATURES[INDEX] 
+            const value_x = csvData[index][config.index.value_x];
+            const rowFeatures = features[index];
+            const id = csvData[index][config.index.id] || index;
+            return [{ values_y, value_x, rowFeatures, id, score }, isAnomaly]; // RETORNAR TODOS LOS VALORES COMO UN OBJETO
+        });
 
-    } 
+        plot1(datos, plotCSVPath, config);
+        plot2(datos, plot2CSVPath, config);
+        plot3(datos, plot3CSVPath, config);
+        plot4(metricsResults, plot4CSVPath, config);
+        plot5(mseResults, plot5CSVPath, config);
+        plot6(metricsResults, plot6CSVPath, config);
+        plot7(datos2, plot7CSVPath, config);
+    }
     catch (error) {
-        console.error('! ERROR: FALLÓ AL EJECUTAR EL ALGORITMO DE AISLAMIENTO !', error);
+        console.error('! ERROR: ISOLATION !', error);
     }
 };
 
+// [ ERROR CUADRÁTICO MEDIO  ECM]
 const calculateMSE = (yTrue, yPred) => {
     return yTrue.reduce((sum, trueVal, idx) => {
         const diff = trueVal - yPred[idx];
@@ -211,4 +201,4 @@ const calculateMSE = (yTrue, yPred) => {
     }, 0) / yTrue.length;
 };
 
-runIsolationForest();
+main();

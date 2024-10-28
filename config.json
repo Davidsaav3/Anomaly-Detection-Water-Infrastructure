@@ -6,12 +6,14 @@
         "mqttQeue": "mqtt://eu1.cloud.thethings.network:1883"
     },
     "flatten": {},
-    "expanded": {
+
+    "expandedColumn": {
         "expand_value": "#fill#"
     },
-    "reduce": {},
-    "format": {},
-    "onehot": {
+    "reduceColumn": {},
+
+    "toCsv": {},
+    "encoding": {
         "fill_transform": "mean",
         "": [
             "none",
@@ -21,22 +23,17 @@
             "median"
         ]
     },
-    "filter": {
+    "deleteColumn": {
         "delete": [
-            "end_device_ids.device_id",
-            "end_device_ids.application_ids.application_id"
+            ""
         ]
     },
-    "template": {
 
-    },
-    "nulls": {
+    "createTemplate": {},
+    "nulls": {},
+    "normalize": {},
 
-    },
-    "normalize": {
-
-    },
-    "add": {
+    "addColumn": {
         "key": [
             "truth"
         ],
@@ -44,8 +41,8 @@
             0
         ]
     },
-    "separate": {
-        "folder_separate": "../dataset/separate/",
+    "createGroups": {
+        "folder_createGroups": "../dataset/createGroups/",
         "groups": [
             {
                 "output": "DEVICE",
@@ -166,21 +163,21 @@
             }
         ]
     },
-    "union": {
-        "union_files": [
+
+    "joinColumn": {
+        "joinColumn_files": [
             "﻿Fecha",
             "hora"
         ]
     },
+    
     "index": {
         "threshold": 0.55,
         "trees": 100,
         "score": 4,
-        
         "value_y": 5,
         "value_x": "﻿Fecha_hora",
         "_": "﻿Fecha_hora - 5 /// received_at - 0",
-
         "truth": "truth",
         "label": "Datos normales",
         "text_x": "Índice",

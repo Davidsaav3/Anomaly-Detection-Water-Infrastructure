@@ -1,0 +1,18 @@
+{
+  "name": "red_neuronal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^0.1.21",
+    "lodash": "^4.17.11",
+    "node-remote-plot": "^1.2.0",
+    "shuffle-seed": "^1.1.6"
+  }
+}

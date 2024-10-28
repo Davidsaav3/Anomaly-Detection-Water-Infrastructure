@@ -28,25 +28,25 @@
     "shuffle-seed": "^1.1.6"
   },
   "scripts": {
- 
-    "1- acquisition": "node   ./prepare/acquisition.js   ./dataset/acquisition.json   ./config.json",
-    "1- flatten": "node   ./prepare/flatten.js   ./dataset/acquisition.json   ./dataset/flatten.json   ./config.json",
+    "1 - acquisition": "node   ./processing/acquisition.js   ./dataset/acquisition.json   ./config.json",
+    "2 - flatten": "node   ./processing/flatten.js   ./dataset/acquisition.json   ./dataset/flatten.json   ./config.json",
     
-    "1- expanded": "node   ./prepare/expanded.js   ./dataset/flatten.json   ./dataset/expanded.json   ./config.json",
-    "1- reduce": "node   ./prepare/reduce.js   ./dataset/flatten.json   ./dataset/reduce.json   ./config.json",
-    "1- format": "node   ./prepare/format.js   ./dataset/expanded.json   ./dataset/format.csv   ./config.json",
-        "1- union": "node   ./prepare/union.js   ./dataset/format.csv   ./dataset/union.csv   ./config.json",
-    "1- onehot": "node   ./prepare/onehot.js   ./dataset/format.csv   ./dataset/onehot.csv   ./dataset/auxiliary/dictionary.csv    ./config.json",
-        "1- filter": "node   ./prepare/filter.js   ./dataset/onehot.csv   ./dataset/filter.csv   ./config.json",
+    "3 - expandedColumn": "node   ./processing/expandedColumn.js   ./dataset/flatten.json   ./dataset/expandedColumn.json   ./config.json",
+    "4 - reduceColumn": "node   ./processing/reduceColumn.js   ./dataset/flatten.json   ./dataset/reduceColumn.json   ./config.json",
+    
+    "5 - toCsv": "node   ./processing/toCsv.js   ./dataset/expandedColumn.json   ./dataset/toCsv.csv   ./config.json",
+        "5.1 - joinColumn": "node   ./processing/joinColumn.js   ./dataset/toCsv.csv   ./dataset/joinColumn.csv   ./config.json",
+    "6 - encoding": "node   ./processing/encoding.js   ./dataset/toCsv.csv   ./dataset/encoding.csv   ./common/dictionary.csv    ./config.json",
+        "6.1 - deleteColumn": "node   ./processing/deleteColumn.js   ./dataset/encoding.csv   ./dataset/deleteColumn.csv   ./config.json",
   
-    "1- template": "node   ./prepare/template.js   ./dataset/onehot.csv   ./dataset/auxiliary_nulls.csv   ./dataset/auxiliary_normalize.csv   ./config.json",
-    "1- nulls": "node   ./prepare/nulls.js   ./dataset/onehot.csv   ./dataset/nulls.csv   ./dataset/auxiliary_nulls.csv    ./config.json",
-    "1- normalize": "node   ./prepare/normalize.js   ./dataset/nulls.csv   ./dataset/normalize.csv   ./dataset/auxiliary_normalize.csv    ./config.json",
+    "7 - createTemplate": "node   ./processing/createTemplate.js   ./dataset/encoding.csv   ./dataset/auxiliary_nulls.csv   ./dataset/auxiliary_normalize.csv   ./config.json",
+    "8 - nulls": "node   ./processing/nulls.js   ./dataset/encoding.csv   ./dataset/nulls.csv   ./dataset/auxiliary_nulls.csv    ./config.json",
+    "9 - normalize": "node   ./processing/normalize.js   ./dataset/nulls.csv   ./dataset/normalize.csv   ./dataset/auxiliary_normalize.csv    ./config.json",
     
-    "1- add": "node   ./prepare/add.js   ./dataset/normalize.csv   ./dataset/add.csv   ./dataset/auxiliary_weight.csv   ./config.json",
-        "1- separate": "node   ./prepare/separate.js   ./dataset/normalize.csv   ./config.json",
-
-    "2- index": "node   ./models/isolation_forest/index.js   ./dataset/add_r.csv   ./models/isolation_forest/result/isolation.csv   ./models/isolation_forest/result/scores.csv   ./models/isolation_forest/result/metrics.csv  ./dataset/auxiliary_weight.csv   ./models/isolation_forest/result/image1.png   ./models/isolation_forest/result/image2.png   ./models/isolation_forest/result/image3.png   ./models/isolation_forest/result/image4.png   ./models/isolation_forest/result/image5.png   ./models/isolation_forest/result/image6.png   ./models/isolation_forest/result/image7.png   25   ./config.json"
+    "10 - addColumn": "node   ./processing/addColumn.js   ./dataset/normalize.csv   ./dataset/addColumn.csv   ./dataset/auxiliary_weight.csv   ./config.json",
+        "10.1 - createGroups": "node   ./processing/createGroups.js   ./dataset/normalize.csv   ./config.json",
+    
+    "11 - index": "node   ./models/isolation_forest/index.js   ./dataset/addColumn_r.csv   ./models/isolation_forest/results/isolation.csv   ./models/isolation_forest/results/scores.csv   ./models/isolation_forest/results/metrics.csv  ./dataset/auxiliary_weight.csv   ./models/isolation_forest/results/image1.png   ./models/isolation_forest/results/image2.png   ./models/isolation_forest/results/image3.png   ./models/isolation_forest/results/image4.png   ./models/isolation_forest/results/image5.png   ./models/isolation_forest/results/image6.png   ./models/isolation_forest/results/image7.png   25   ./config.json"
   },
   "keywords": [
     "neural-network",
