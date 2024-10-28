@@ -29,23 +29,23 @@ function readData(filePath) {
 }
 
 // [ GUARDAR RESULTADO EN CSV ]
-function saveToCSV(data, outputFilename) {
+function saveCSV(data, outputFilename) {
   const csvRows = [];
   const headers = Object.keys(data[0]);
   csvRows.push(headers.join(',')); // AÑADIR CABECERAS
   data.forEach(obj => { // OBTENER VALORES DE CADA OBJETO
     const values = Object.values(obj).map(value => {
       let stringValue = (typeof value === 'string') ? value.replace(/"/g, '""') : String(value); // ESCAPAR COMILLAS
-      return (typeof value === 'string') ? `'${stringValue}'` : stringValue; // RODEAR CON COMILLAS SI ES CADENA
+      return (typeof value === 'string') ? `'${stringValue}'` : stringValue; // PONER COMILLAS SI ES CADENA
     });
     csvRows.push(values.join(',')); // AÑADIR FILA
   });
-  fs.writeFileSync(outputFilename, csvRows.join('\n')); // GUARDAR CSV CON EL NOMBRE DEL SEGUNDO PARÁMETRO
+  fs.writeFileSync(outputFilename, csvRows.join('\n')); // GUARDAR CSV
   console.log(`[ TO CSV: ${outputFilename} ]`);
 }
 
-// [ APLANAR EL JSON ]
-function flattenObject(ob) {
+// [ *** APLANAR EL JSON ]
+function flattenData(ob) {
   const result = {};
   function recurse(cur, prop) {
     if (Object(cur) !== cur) {
@@ -66,17 +66,17 @@ function flattenObject(ob) {
   return result;
 }
 
-// [ APLANAR Y TRANSFORMAR EL ARRAY DE MENSAJES ]
-function transformMessages(messages) {
-  return messages.map(message => flattenObject(message));
+// [ *** TRANSFORMAR ARRAY DE MENSAJES ]
+function transformData(messages) {
+  return messages.map(message => flattenData(message));
 }
 
-// [ MAIN: GUARDAR JSON APLANADO Y CODIFICADO ]
+// [ MAIN ]
 function main(inputFilename, outputFilename) {
   const messages = readData(inputFilename);
-  const flattenedMessages = transformMessages(messages); // APLANAR MENSAJES
-  if (flattenedMessages.length > 0) {
-    saveToCSV(flattenedMessages, outputFilename); // GUARDAR EN CSV
+  const flattenedMessages = transformData(messages); // APLANAR 
+  if (flattenedMessages.length > 0) { // SI HAY CONTENIDO
+    saveCSV(flattenedMessages, outputFilename); // GUARDAR CSV
   }
   else {
     console.error('! ERROR: JSON FILE CONTAINS NO DATA !');

@@ -31,11 +31,11 @@ const plot1 = (datos, outputPath, config) => {
                 borderWidth: 2,
                 pointRadius: (context) => (datos[context.dataIndex][1]) ? 10 : 5,
                 pointBackgroundColor: (context) => {
-                    const truthValue = datos[context.dataIndex][0].truth; // OBTENER EL VALOR TRUTH
+                    const truthValue = datos[context.dataIndex][0].truth; // VALOR DE TRUTH
                     if (truthValue === 1) {
                         return 'yellow'; // PINTAR DE AMARILLO SI TRUTH ES 1
                     }
-                    return (datos[context.dataIndex][1]) ? 'red' : 'blue'; // COLORES
+                    return (datos[context.dataIndex][1]) ? 'red' : 'blue'; // COLOR ROJO SI ES ANOMALIA
                 },
             }],
         },
@@ -76,7 +76,7 @@ const plot1 = (datos, outputPath, config) => {
 
 // [ PLOT 2 ]
 const plot2 = (datos, outputPath2, config) => {
-    const anomalyScores = datos.map(element => element[0].score); //  ANOMALÍAS
+    const anomalyScores = datos.map(element => element[0].score); // SCORE ANOMALÍAS
     const isAnomalies = datos.map(element => element[1]); // SI ES UNA ANOMALÍA
     const canvasWidth = 1000;
     const canvasHeight = 600;
@@ -98,7 +98,7 @@ const plot2 = (datos, outputPath2, config) => {
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: anomalyScores.map((_, index) => index + 1), // MANTENER ETIQUETAS DE ÍNDICE
+            labels: anomalyScores.map((_, index) => index + 1), // ETIQUETAS DE ÍNDICE
             datasets: dataset,
         },
         options: {
@@ -129,8 +129,8 @@ const plot3 = (datos, outputPath3, config) => {
     // CREAR DATOS 
     const scatterData = datos.map((element, index) => ({
         x: index + 1,  // USAR ÍNDICE COMO EJE X PARA QUE COINCIDA CON PLOT2
-        y: element[0].score,   // PUNTAJE DE ANOMALÍA EN EJE Y
-        isAnomaly: element[1]  // IDENTIFICAR SI ES UNA ANOMALÍA
+        y: element[0].score,   // SCORE DE ANOMALÍA EN EJE Y
+        isAnomaly: element[1]  // SI ES UNA ANOMALÍA O NO
     }));
 
     // NORMALIZAR COORDENADAS
@@ -171,8 +171,8 @@ const plot3 = (datos, outputPath3, config) => {
 
     // NUBE DE PUNTOS
     scatterData.forEach(point => {
-        const normalizedX = ((point.x - 1) / (scatterData.length - 1)) * (canvasWidth - 100) + 50; // NORMALIZAR X Y AJUSTAR
-        const normalizedY = (canvasHeight - 50) - ((point.y - yMin) / (yMax - yMin)) * (canvasHeight - 100); // NORMALIZAR Y Y AJUSTAR
+        const normalizedX = ((point.x - 1) / (scatterData.length - 1)) * (canvasWidth - 100) + 50; // NORMALIZAR X y Y 
+        const normalizedY = (canvasHeight - 50) - ((point.y - yMin) / (yMax - yMin)) * (canvasHeight - 100); // NORMALIZAR Y
         ctx.beginPath();
         ctx.arc(normalizedX, normalizedY, 5, 0, Math.PI * 2); // RADIO DE LOS PUNTOS
         ctx.fillStyle = point.isAnomaly ? 'red' : 'rgba(75, 192, 192, 1)'; // COLOR SEGÚN SI ES ANOMALÍA
@@ -424,18 +424,17 @@ const plot7 = (datos, outputPath, config) => {
 
     // GRÁFICO
     const datasets = Array.from({ length: datosPlot[0].values_y.length }, (_, i) => {
-        const color = `hsl(${(i * 360) / datosPlot[0].values_y.length}, 100%, 50%)`; // Color único para cada serie
+        const color = `hsl(${(i * 360) / datosPlot[0].values_y.length}, 100%, 50%)`; // COLOR ÚNICO POR SERIE
         return {
             label: `ELEMENT ${i + 1}`,
-            data: datosPlot.map(d => ({ x: d.value_x, y: d.values_y[i] })), // Cada serie de datos para el eje Y
-            backgroundColor: color, // Color de fondo para el área (no usado ya que fill es false)
-            borderColor: color, // Usar el mismo color para la línea
-            borderWidth: 3, // Aumentar el grosor de la línea
-            fill: false, // Asegura que las líneas no estén llenas
-            pointRadius: (context) => (datosPlot[context.dataIndex].isAnomaly) ? 10 : 5, // Cambiar el tamaño del punto si es una anomalía
+            data: datosPlot.map(d => ({ x: d.value_x, y: d.values_y[i] })), // DATOS EJE Y
+            backgroundColor: color, // COLOR FONDO
+            borderColor: color, // COLOR BORDE LÍNEA
+            borderWidth: 3, // GROSOR LÍNEA
+            fill: false, // LÍNEA NO LLENA
+            pointRadius: (context) => (datosPlot[context.dataIndex].isAnomaly) ? 10 : 5, // TAMAÑO PUNTO ANOMALÍA
             pointBackgroundColor: (context) => {
-                const truthValue = datosPlot[context.dataIndex].isAnomaly; // Obtener el valor de isAnomaly
-                return truthValue ? 'red' : 'blue'; // Color de los puntos
+                return datosPlot[context.dataIndex].isAnomaly ? 'red' : 'blue'; // COLOR PUNTO
             },
         };
     });

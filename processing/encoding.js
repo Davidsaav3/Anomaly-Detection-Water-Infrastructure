@@ -24,59 +24,6 @@ catch (error) {
   process.exit(1);
 }
 
-// [ CALCULAR MEDIA DE COLUMNA ]
-function calculateMean(column) {
-  const numericValues = column.filter(val => !isNaN(val)).map(Number);
-  if (numericValues.length === 0) return null;
-  const sum = numericValues.reduce((a, b) => a + b, 0);
-  return sum / numericValues.length;
-}
-
-// [ CALCULAR MEDIANA DE COLUMNA ]
-function calculateMedian(column) {
-  const numericValues = column.filter(val => !isNaN(val)).map(Number);
-  if (numericValues.length === 0) return null;
-  numericValues.sort((a, b) => a - b);
-  const middle = Math.floor(numericValues.length / 2);
-  return numericValues.length % 2 === 0
-    ? (numericValues[middle - 1] + numericValues[middle]) / 2
-    : numericValues[middle];
-}
-
-// [ GESTIONAR #fill# ]
-const fillHandling = config.encoding.fill_transform || "none"; // [ "none", "zero", "one", "mean", "median" ]
-function handleFill(value, columnValues) {
-  if (value === config.expandedColumn.expanded_value) {
-    switch (fillHandling) {
-      case "zero":
-        return 0;
-      case "one":
-        return 1;
-      case "mean":
-        return calculateMean(columnValues);
-      case "median":
-        return calculateMedian(columnValues);
-      default:
-        return value;
-    }
-  }
-  return value;
-}
-
-// [ MAPEADO ÚNICO POR COLUMNA ]
-function stringToNumeric(existingDictionary = {}) {
-  const uniqueMapping = existingDictionary;
-  let uniqueCounter = Object.keys(uniqueMapping).length;
-  const seenValues = new Set(Object.keys(uniqueMapping));
-  return (value) => {
-    if (!seenValues.has(value)) {
-      uniqueMapping[value] = uniqueCounter++;
-      seenValues.add(value);
-    }
-    return uniqueMapping[value];
-  };
-}
-
 // [ LEER CSV ]
 const readCSV = (filePath) => new Promise((resolve, reject) => {
   const results = [];
@@ -88,7 +35,7 @@ const readCSV = (filePath) => new Promise((resolve, reject) => {
 });
 
 // [ GUARDAR CSV ]
-const saveToCSV = (data, fileName) => {
+const saveCSV = (data, fileName) => {
   const csvContent = [
     Object.keys(data[0]).join(','),
     ...data.map(row => Object.values(row).map(value => value === null ? 'null' : value).join(','))
@@ -111,16 +58,16 @@ const saveDictionary = (dictionaries, dictFileName) => {
   console.log(`[ DICTIONARY: ${dictFileName} ]`);
 };
 
-// [ LEER DICCIONARIO ]
-const loadExistingDictionary = async (dictFilePath) => {
+// [ LEER DICCIONARIO EXISTENTE ]
+const loadDictionary = async (dictFilePath) => {
   const dictionaries = {};
   if (fs.existsSync(dictFilePath)) {
-    await new Promise((resolve, reject) => {
-      fs.createReadStream(dictFilePath)
+    await new Promise((resolve, reject) => { // PROMESA PARA LEER
+      fs.createReadStream(dictFilePath) // LEER
         .pipe(csv())
         .on('data', (row) => {
           if (!dictionaries[row.header]) dictionaries[row.header] = {};
-          dictionaries[row.header][row.value] = parseInt(row.key, 10);
+          dictionaries[row.header][row.value] = parseInt(row.key, 10); // PASAR TERCERA COLUMNA A INT
         })
         .on('end', () => resolve())
         .on('error', (error) => reject(error));
@@ -129,49 +76,101 @@ const loadExistingDictionary = async (dictFilePath) => {
   return dictionaries;
 };
 
-// [ COMPROBAR SI UN VALOR ES NÚMERO ]
-function isNumeric(value) {
-  return !isNaN(value) && !isNaN(parseFloat(value));
+// // //
+
+// [ MEDIA DE COLUMNA ]
+function calculateMean(column) {
+  const numericValues = column.filter(val => !isNaN(val)).map(Number);
+  if (numericValues.length === 0) return null; // VERIFICAR VALORES NUMÉRICOS 
+  const sum = numericValues.reduce((a, b) => a + b, 0); // CALCULAR SUMA 
+  return sum / numericValues.length; // DEVOLVER MEDIA 
 }
 
-// [ TRANSFORMAR DATOS A CÓDIGOS NUMÉRICOS POR COLUMNA ]
-const main = async (inputFilename, dictFilename) => {
-  const existingDictionaries = await loadExistingDictionary(dictFilename);
-  const data = await readCSV(inputFilename);
-  const dictionaries = { ...existingDictionaries };
-  // Extraer valores de cada columna para calcular media o mediana
-  const columnValues = {};
-  data.forEach(row => {
-    for (const key in row) {
-      if (!columnValues[key]) columnValues[key] = [];
-      columnValues[key].push(row[key]);
+// [ MEDIANA DE COLUMNA ]
+function calculateMedian(column) {
+  const numericValues = column.filter(val => !isNaN(val)).map(Number);
+  if (numericValues.length === 0) return null; // VERIFICAR VALORES NUMÉRICOS 
+  numericValues.sort((a, b) => a - b); // ORDENAR VALORES 
+  const middle = Math.floor(numericValues.length / 2); // ENCONTRAR MITAD 
+  return numericValues.length % 2 === 0 // COMPROBAR PAR O IMPAR 
+    ? (numericValues[middle - 1] + numericValues[middle]) / 2 // RETORNAR MEDIA DE MEDIANA 
+    : numericValues[middle]; // DEVOLVER MEDIANA 
+}
+
+// [ GESTIONAR RELLENADO: #fill# ]
+const fillHandling = config.encoding.fill_transform || "none"; // [ "none", "zero", "one", "mean", "median" ]
+function fillValues(value, columnValues) {
+  if (value === config.expandedColumn.expanded_value) {
+    switch (fillHandling) {
+      case "zero":
+        return 0;
+      case "one":
+        return 1;
+      case "mean":
+        return calculateMean(columnValues); // MEDIA
+      case "median":
+        return calculateMedian(columnValues); // MEDIANA
+      default:
+        return value; // NO HACER NADA
+    }
+  }
+  return value;
+}
+
+// [ STRING TO NUMERIC ]
+function stringToNumeric(existingDictionary = {}) {
+  const uniqueMapping = existingDictionary; // INICIALIZAR
+  let uniqueCounter = Object.keys(uniqueMapping).length; // CONTADOR DE VALORES ÚNICOS 
+  const seenValues = new Set(Object.keys(uniqueMapping)); // CONJUNTO DE VALORES VIVIDOS 
+  return (value) => {
+    if (!seenValues.has(value)) { // VALOR ES NUEVO ?
+      uniqueMapping[value] = uniqueCounter++; // ASIGNAR NUEVO ÍNDICE 
+      seenValues.add(value); // AGREGAR VALOR A CONJUNTO 
+    }
+    return uniqueMapping[value]; // DEVOLVER ÍNDICE ASIGNADO 
+  };
+}
+
+// [ *** VALOR ES NÚMERO ? ]
+function isNumeric(value) {
+  return !isNaN(value) && !isNaN(parseFloat(value)); // ES INT O FLOAT ?
+}
+
+const main = async (inputFilename, dictFilename) => { // TRANSFORMAR A NÚMERICO
+  const existingDictionaries = await loadDictionary(dictFilename); // CARGAR DICCIONARIOS
+  const data = await readCSV(inputFilename); // LEER CSV
+  const dictionaries = { ...existingDictionaries }; // COPIAR DICCIONARIOS
+  const columnValues = {}; // VALORES DE COLUMNA
+  data.forEach(row => { // RECORRER FILAS
+    for (const key in row) { // RECORRER CLAVES
+      if (!columnValues[key]) columnValues[key] = []; // INICIALIZAR
+      columnValues[key].push(row[key]); // AGREGAR VALOR
     }
   });
-  const transformedData = data.map(row => {
-    const newRow = {};
+  const transformedData = data.map(row => { // TRANSFORMAR DATOS
+    const newRow = {}; // NUEVA FILA
     for (const key in row) {
-      let value = row[key];
-      // Manejar el valor #fill# usando la función handleFill con los valores de la columna
-      value = handleFill(value, columnValues[key]);
-      if (!dictionaries[key]) dictionaries[key] = {};
-      const getNumericValue = stringToNumeric(dictionaries[key]);
-      if (typeof value === 'string' && value.startsWith('\'') && value.endsWith('\'')) {
-        const trimmedValue = value.slice(1, -1);
-        value = isNumeric(trimmedValue) ? parseFloat(trimmedValue) : getNumericValue(value);
+      let value = row[key]; // OBTENER VALORES
+      value = fillValues(value, columnValues[key]); // RELLENAR #fill#
+      if (!dictionaries[key]) dictionaries[key] = {}; // INICIALIZAR DICCIONARIO
+      const getNumericValue = stringToNumeric(dictionaries[key]); // OBTENER VALOR NUMÉRICO
+      if (typeof value === 'string' && value.startsWith('\'') && value.endsWith('\'')) { // ES UN STRING...
+        const trimmedValue = value.slice(1, -1); // ELIMINAR COMILLAS...
+        value = isNumeric(trimmedValue) ? parseFloat(trimmedValue) : getNumericValue(value); // CONVERTIR A NUMERICO
       }
       else {
-        value = getNumericValue(value);
+        value = getNumericValue(value); // CONVERTIR A NUMERICO
       }
-      newRow[key] = value === 'null' ? null : value;
+      newRow[key] = value === 'null' ? null : value; // ASIGNAR
     }
-    return newRow;
+    return newRow; 
   });
-  return { transformedData, dictionaries };
+  return { transformedData, dictionaries }; // RETORNAR RESULTADOS
 };
 
 main(inputFile, dictFile)
   .then(({ transformedData, dictionaries }) => {
-    saveToCSV(transformedData, outputFile);
-    saveDictionary(dictionaries, dictFile);
+    saveCSV(transformedData, outputFile); // GUARDAR CSV
+    saveDictionary(dictionaries, dictFile); // GUARDAR DICCIONARIO
   })
   .catch(error => console.error('! ERROR ! ', error));

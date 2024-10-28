@@ -36,32 +36,32 @@ function readCSV(filePath) {
 }
 
 // [ GUARDAR RESULTADO EN CSV ]
-function saveToCSV(data, outputFilename) {
+function saveCSV(data, outputFilename) {
   const csvRows = [];
-  const headers = Object.keys(data[0]);
+  const headers = Object.keys(data[0]); // CABECERAS
   csvRows.push(headers.join(',')); // AÑADIR CABECERAS
   data.forEach(obj => {
     const values = headers.map(header => {
-      let stringValue = (typeof obj[header] === 'string') ? obj[header].replace(/"/g, '""') : String(obj[header]); // ESCAPAR COMILLAS
-      return (typeof obj[header] === 'string') ? `${stringValue}` : stringValue; // FORMATEAR VALORES
+      let stringValue = String(obj[header]); // PASAR A STRING
+      return stringValue; 
     });
     csvRows.push(values.join(',')); // AÑADIR FILA
   });
-  fs.writeFileSync(outputFilename, csvRows.join('\n')); // ESCRIBIR ARCHIVO CSV
+  fs.writeFileSync(outputFilename, csvRows.join('\n')); // GUARDAR
   console.log(`[ DELETE COLUMN: ${outputFilename} ]`);
 }
 
-// [ MAIN: FILTRAR Y GUARDAR CSV ]
+// [ *** MAIN ]
 async function main(inputFilePath, outputFileName) {
   try {
     const data = await readCSV(inputFilePath);
-    const columnsToDelete = config.deleteColumn.delete; // ELIMINAR LAS COLUMNAS ESPECIFICADAS EN LA CONFIGURACIÓN
+    const columnsToDelete = config.deleteColumn.delete; //   COLUMNAS A ELIMINAR
     const filteredData = data.map(row => {
-      const newRow = { ...row }; // HACER UNA COPIA DEL OBJETO
+      const newRow = { ...row }; // COPIA DEL OBJETO
       columnsToDelete.forEach(col => delete newRow[col]); // ELIMINAR COLUMNAS
-      return newRow; // DEVOLVER NUEVA FILA FILTRADA
+      return newRow; // NUEVA FILA FILTRADA
     });
-    saveToCSV(filteredData, outputFileName); // GUARDAR DATOS FILTRADOS
+    saveCSV(filteredData, outputFileName); // GUARDAR
   }
   catch (error) {
     console.error('! ERROR ! ', error);

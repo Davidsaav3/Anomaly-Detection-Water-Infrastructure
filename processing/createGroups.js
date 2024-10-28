@@ -40,37 +40,37 @@ async function readCSV(filePath) {
 }
 
 // [ GUARDAR CSV ]
-function saveToCSV(data, headers, groupName) {
+function saveCSV(data, headers, groupName) {
   const csvContent = [
     headers.join(','),
-    ...data.map(row => headers.map(header => row[header] !== undefined ? row[header] : '').join(','))
+    ...data.map(row => headers.map(header => row[header] !== undefined ? row[header] : '').join(',')) // RELLENAR ARCHIVO DE CADA GRUPO
   ].join('\n');
-  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
-  const outputFileName = `${groupName.toLowerCase()}.csv`; // USAR NOMBRE DEL GRUPO
+  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true }); // CREAR DIRECTORIO
+  const outputFileName = `${groupName.toLowerCase()}.csv`; // NOMBRE DEL GRUPO COMO NOMBRE DEL ARCHIVO
   fs.writeFileSync(path.join(outputDir, outputFileName), csvContent);
   console.log(`[ CREATE GROUPS: ${outputFileName} ]`);
 }
 
-// [ DIVIDIR EN GRUPOS ]
-function divideIntoGroups(data, groupHeaders) {
+// [ *** DIVIDIR EN GRUPOS ]
+function divideGroups(data, groupHeaders) {
   return data.map(row => {
     const newRow = {};
-    groupHeaders.forEach(header => { newRow[header] = row[header] || ''; });
+    groupHeaders.forEach(header => { newRow[header] = row[header] || ''; }); // FORMAR LOS GRUPOS
     return newRow;
   });
 }
 
-// [ MAIN:  PREPARAR DATOS ]
+// [ MAIN ]
 async function main(inputFile) {
   try {
     const { headers, results } = await readCSV(inputFile);
-    const groups = config.createGroups.groups.reduce((acc, group) => { // OBTENER GRUPOS DE LA CONFIGURACIÓN
+    const groups = config.createGroups.groups.reduce((acc, group) => { // OBTENER GRUPOS
       acc[group.output] = group.fields;
       return acc;
     }, {});
     for (const [groupName, groupHeaders] of Object.entries(groups)) { // DIVIDIR Y GUARDAR CADA GRUPO
-      const groupData = divideIntoGroups(results, groupHeaders);
-      saveToCSV(groupData, groupHeaders, groupName); // NOMBRE DEL GRUPO
+      const groupData = divideGroups(results, groupHeaders);
+      saveCSV(groupData, groupHeaders, groupName); // GUARDAR CADA GRUPO
     }
   }
   catch (error) {

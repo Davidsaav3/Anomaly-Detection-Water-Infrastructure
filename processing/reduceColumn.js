@@ -28,39 +28,39 @@ function readData(filePath) {
   throw new Error('THE FILE DOES NOT EXIST');
 }
 
-// [ OBTENER CLAVES COMUNES A TODOS LOS OBJETOS ]
-function getCommonKeys(data) {
-  if (data.length === 0) return []; // SIN DATOS, SIN CLAVES COMUNES
-  let commonKeys = Object.keys(data[0]); // INICIAR CON CLAVES DEL PRIMER OBJETO
+// [ GUARDAR EL RESULTADO ]
+function saveJSON(data, outputFilename) {
+  fs.writeFileSync(outputFilename, JSON.stringify(data, null, 2)); // GUARDAR JSON
+  console.log(`[ REDUCE COLUMN: ${outputFilename} ]`);
+}
+
+// [ *** OBTENER CLAVES COMUNES A TODOS LOS OBJETOS ]
+function commonKey(data) {
+  if (data.length === 0) return []; // SIN CLAVES COMUNES...
+  let commonKeys = Object.keys(data[0]); // CLAVES DEL PRIMER OBJETO
   data.forEach(item => {
     commonKeys = commonKeys.filter(key => key in item); // FILTRAR CLAVES PRESENTES EN TODOS
   });
   return commonKeys;
 }
 
-// [ NORMALIZAR OBJETOS ]
-function normalizeData(data, commonKeys) {
+// [ *** REDUCIR DATOS ]
+function reduceData(data, commonKeys) {
   return data.map(item => {
-    const normalizedItem = {};
+    const normalizedItem = {}; // ARRAY
     commonKeys.forEach(key => {
-      normalizedItem[key] = item[key]; // ASIGNAR VALOR EXISTENTE
+      normalizedItem[key] = item[key]; // ASIGNAR VALOR EXISTENTES EN TODOS LOS OBJETOS
     });
     return normalizedItem;
   });
 }
 
-// [ GUARDAR EL RESULTADO ]
-function saveToJSON(data, outputFilename) {
-  fs.writeFileSync(outputFilename, JSON.stringify(data, null, 2)); // GUARDAR JSON
-  console.log(`[ REDUCE COLUMN: ${outputFilename} ]`);
-}
-
-// [ MAIN: PROCESAR Y GUARDAR LOS DATOS ]
+// [ MAIN ]
 function main(inputFilename, outputFilename) {
-  const jsonData = readData(inputFilename); // LEER DATOS DEL JSON
-  const commonKeys = getCommonKeys(jsonData); // OBTENER CLAVES COMUNES
-  const normalizedData = normalizeData(jsonData, commonKeys); // NORMALIZAR DATOS
-  saveToJSON(normalizedData, outputFilename);
+  const jsonData = readData(inputFilename); // LEER JSON
+  const commonKeys = commonKey(jsonData); // OBTENER CLAVES COMUNES
+  const reducedData = reduceData(jsonData, commonKeys); // REDUCIR DATOS
+  saveJSON(reducedData, outputFilename);
 }
 
 main(args[0], args[1]);

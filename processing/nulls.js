@@ -37,39 +37,38 @@ const readCSV = (filePath) => new Promise((resolve, reject) => {
 });
 
 // [ GUARDAR CSV ]
-const saveToCSV = (data, headers, fileName) => {
+const saveCSV = (data, headers, fileName) => {
   const csvContent = [
     headers.join(','),
-    ...data.map(row => headers.map(header => row[header] ?? '').join(','))
+    ...data.map(row => headers.map(header => row[header] ?? '').join(',')) // FORMAR ARCHIVO 
   ].join('\n');
-  fs.writeFileSync(fileName, csvContent);
+  fs.writeFileSync(fileName, csvContent); // GUARDAR
   console.log(`[ NULLS: ${fileName} ]`);
 };
 
-// [ MAIN: PREPARAR DATOS Y MANEJAR NULOS ]
-async function main(inputFile, nullsFile) {
+// [ *** MAIN ]
+async function main(inputFile, nullsFile) { 
   try {
-    const { headers, results } = await readCSV(inputFile); // LEER CSV
-    const { results: results1 } = await readCSV(nullsFile); // LEER ARCHIVO NULLS
-    if (results1.length === 0) throw new Error('EMPTY NULLS FILE');
-    const values1 = results1[0];
-    return results.map(row => {
-      // NORMALIZAR DATOS
-      return headers.reduce((newRow, header) => {
+    const { headers, results } = await readCSV(inputFile); // LEER CSV 
+    const { results: results1 } = await readCSV(nullsFile); // LEER NULOS
+    if (results1.length === 0) throw new Error('EMPTY NULLS FILE'); // ARCHIVO DE NULOS NO VACÍO
+    const values1 = results1[0]; // VALORES DE PRIMERA FILA DE NULOS
+    return results.map(row => { // MAPEAR CADA FILA DEL CSV 
+      return headers.reduce((newRow, header) => { // RECORRER CADA ENCABEZADO
         newRow[header] = row[header] === null || row[header] === 'null' || row[header] === '' || row[header] === '0'
-          ? (values1[header] === '0' ? '0' : null)
-          : row[header];
-        return newRow;
+          ? (values1[header] === '0' ? '0' : null) // SUSTITUIR VALORES NULOS SEGÚN ARCHIVO DE NULOS
+          : row[header]; // MANTENER VALOR ORIGINAL SI NO ES NULO
+        return newRow; // NUEVA FILA
       }, {});
     });
   }
   catch (error) {
-    console.error('! ERROR ! ', error);
+    console.error('! ERROR ! ', error); // CAPTURAR Y MOSTRAR ERRORES
   }
 }
 
 main(inputFile, nullsFile)
   .then(data => {
-    saveToCSV(data, data.length ? Object.keys(data[0]) : [], outputFile);
+    saveCSV(data, data.length ? Object.keys(data[0]) : [], outputFile); // GUARDAR
   })
   .catch(error => console.error('! ERROR ! ', error));

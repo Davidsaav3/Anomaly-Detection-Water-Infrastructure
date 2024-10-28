@@ -36,47 +36,46 @@ function readCSV(filePath) {
   });
 }
 
-// [ MAIN: PROCESAR CSV ]
-async function main(inputFilename) {
+// [ *** VERIFICAR NULLS POR COLUMNAS ]
+function getNulls(data, headers) {
+  const nullsMap = {};
+  headers.forEach(header => nullsMap[header] = false); // INICIALIZAR
+  for (const row of data) {
+    headers.forEach(header => {
+      if (row[header] === null || row[header] === '') nullsMap[header] = true; // SI HAY NULL O VACIO SE INDICA
+    });
+  }
+  return nullsMap;
+}
+
+// [ *** NULLS ]
+function saveNulls(headers, nullsMap) {
+  const nullsRow = headers.map(header => (nullsMap[header] ? 'null' : '0')).join(','); // GENERAR FILA
+  const csvContent = [headers.join(','), nullsRow].join('\n'); // GENERAR PLANTILLA NULLS
+  fs.writeFileSync(nullsFileName, csvContent);
+  console.log(`[ CREATE TEMPLATE - NULLS: ${nullsFileName} ]`);
+}
+
+// [ *** NORMALIZADO ]
+function saveNormalized(headers) {
+  const nullsRow = headers.map(() => '0').join(','); // SI HAY NULL -> 1
+  const onesRow = headers.map(() => '1').join(','); // SI NO HAY NULL -> 0
+  const csvContent = [headers.join(','), nullsRow, onesRow].join('\n'); // UNIR CLAVES VALOR
+  fs.writeFileSync(normalizeFileName, csvContent);
+  console.log(`[ CREATE TEMPLATE - NORMALIZE: ${normalizeFileName} ]`);
+}
+
+// [ MAIN ]
+async function main(inputFilename) { // LEER ENTRADA
   const data = await readCSV(inputFilename);
   if (data.length === 0) {
     console.error('! ERROR: EMPTY CSV !');
     return;
   }
   const headers = Object.keys(data[0]);
-  const nullsMap = getNullsByColumn(data, headers);
-  saveNullsFile(headers, nullsMap); // NULLS
-  saveNormalizedFile(headers); // NORMALIZADO
-}
-
-// [ VERIFICAR NULLS POR COLUMNAS ]
-function getNullsByColumn(data, headers) {
-  const nullsMap = {};
-  headers.forEach(header => nullsMap[header] = false); // INICIALIZAR SIN NULLS
-  for (const row of data) {
-    headers.forEach(header => {
-      if (row[header] === null || row[header] === '') nullsMap[header] = true; // MARCAR NULL
-    });
-  }
-  return nullsMap;
-}
-
-// [ NULLS ]
-function saveNullsFile(headers, nullsMap) {
-  const nullsRow = headers.map(header => (nullsMap[header] ? 'null' : '0')).join(','); // GENERAR FILA
-  const csvContent = [headers.join(','), nullsRow].join('\n');
-
-  fs.writeFileSync(nullsFileName, csvContent);
-  console.log(`[ CREATE TEMPLATE - NULLS: ${nullsFileName} ]`);
-}
-
-// [ NORMALIZADO ]
-function saveNormalizedFile(headers) {
-  const nullsRow = headers.map(() => '0').join(',');
-  const onesRow = headers.map(() => '1').join(',');
-  const csvContent = [headers.join(','), nullsRow, onesRow].join('\n');
-  fs.writeFileSync(normalizeFileName, csvContent);
-  console.log(`[ CREATE TEMPLATE - NORMALIZE: ${normalizeFileName} ]`);
+  const nullsMap = getNulls(data, headers);
+  saveNulls(headers, nullsMap); // NULLS
+  saveNormalized(headers); // NORMALIZADO
 }
 
 main(inputFile)

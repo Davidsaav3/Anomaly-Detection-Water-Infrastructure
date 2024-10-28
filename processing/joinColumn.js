@@ -37,44 +37,42 @@ async function readCSV(filePath) {
 }
 
 // [ GUARDAR CSV ]
-const saveToCSV = (data, headers, fileName) => {
+const saveCSV = (data, headers, fileName) => {
   const csvContent = [
     headers.join(','),
-    ...data.map(row => headers.map(header => row[header] ?? '').join(',')) // FORMATEAR CADA FILA
+    ...data.map(row => headers.map(header => row[header] ?? '').join(',')) // FORMATEAR FILAS
   ].join('\n');
-  fs.writeFileSync(fileName, csvContent);
+  fs.writeFileSync(fileName, csvContent); // GUARDAR
   console.log(`[ JOIN COLUMN: ${fileName} ]`);
 };
 
-// [ UNIR COLUMNAS ]
-function uniteColumns(data, columnsToUnite) {
-  // VERIFICAR SI HAY COLUMNAS PARA UNIR
-  if (!columnsToUnite || columnsToUnite.length === 0) {
+// [ *** UNIR COLUMNAS ]
+function joinColumns(data, columnsToUnite) {
+  if (!columnsToUnite || columnsToUnite.length === 0) { // HAY COLUMNAS PARA UNIR ?
     throw new Error("NO COLUMNS TO JOIN");
   }
   return data.map(row => {
-    // VERIFICAR QUE TODAS LAS COLUMNAS EXISTEN EN LA FILA
-    for (const col of columnsToUnite) {
+    for (const col of columnsToUnite) { // TODAS LAS COLUMNAS EXISTEN EN LA FILA ?
       if (!(col in row)) {
         throw new Error(`DO NOT EXIST IN THE ROW`);
       }
     }
     const newRow = { ...row };
     const newColumnName = columnsToUnite.join('_'); // NOMBRE NUEVO CON BARRA BAJA
-    const joinedValues = columnsToUnite.map(col => row[col].replace(/'/g, '')).join('_'); // UNIR VALORES SIN COMILLAS
-    newRow[newColumnName] = `'${joinedValues}'`; // AÑADIR COMILLAS AL VALOR UNIDO
+    const joinedValues = columnsToUnite.map(col => row[col].replace(/'/g, '')).join('_'); // QUITAR COMILLAS 
+    newRow[newColumnName] = `'${joinedValues}'`; // AÑADIR COMILLAS 
     return newRow;
   });
 }
 
-// [ MAIN: PREPARAR DATOS ]
+// [ MAIN ]
 async function main(inputFile) {
   try {
     const { headers, results } = await readCSV(inputFile);
-    const columnsToUnite = config.joinColumn.join_files; // OBTENER COLUMNAS DE LA CONFIGURACIÓN
-    const unitedData = uniteColumns(results, columnsToUnite); // UNIR COLUMNAS Y GUARDAR
-    const newHeaders = [...headers, columnsToUnite.join('_')]; // NUEVA CABECERA
-    saveToCSV(unitedData, newHeaders, args[1]);
+    const columnsToUnite = config.joinColumn.join_files; // OBTENER COLUMNAS A UNIR
+    const unitedData = joinColumns(results, columnsToUnite); // UNIR COLUMNAS
+    const newHeaders = [...headers, columnsToUnite.join('_')]; // NUEVA CABECERA (UNIÓN DE LAS DOS)
+    saveCSV(unitedData, newHeaders, args[1]);
   }
   catch (error) {
     console.error('ERROR:', error);

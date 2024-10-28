@@ -17,7 +17,7 @@ let config = {};
 
 // [ CARGAR CONFIGURACIÓN ]
 try {
-  const configFile = fs.readFileSync(configPath); // LEER CONFIGURACIÓN
+  const configFile = fs.readFileSync(configPath); 
   config = JSON.parse(configFile); // PARSEAR JSON
 }
 catch (error) {
@@ -38,44 +38,45 @@ function readCSV(filePath) {
 }
 
 // [ GUARDAR CSV ]
-function saveToCSV(data, headers, fileName) {
+function saveCSV(data, headers, fileName) {
   const csvContent = [
     headers.join(','), // CABECERAS
-    ...data.map(row => headers.map(header => row[header] !== undefined ? row[header] : '').join(',')) // VALORES
-  ].join('\n'); // UNIR LÍNEAS
+    ...data.map(row => headers.map(header => row[header] !== undefined ? row[header] : '').join(',')) // RELLENAR ARCHIVO DE CADA GRUPO
+  ].join('\n'); // UNIR LOS ELEMENTOS CON COMAS
   fs.writeFileSync(fileName, csvContent);
   console.log(`[ ADD COLUMN: ${fileName} ]`);
 }
 
-// AÑADIR COLUMNA TRUTH
-async function addGroundTruthColumn(results) {
-  const truthKeys = config.addColumn.truth_key;  // CLAVES DE CONFIG
-  const truthValues = config.addColumn.value;  // VALORES DE CONFIG
+// [ GUARDAR ARCHIVO WEIGHT ]
+function saveWeight(headers) {
+  const onesRow = headers.map(() => '1').join(','); // FILA DE VALORES (1) MULTIPLICADOR DE PESOS
+  const csvContent = [headers.join(','), onesRow].join('\n'); // UNIR VALORES Y CLAVES
+  fs.writeFileSync(weightFileName, csvContent); // GUARDAR
+  console.log(`[ ADD COLUMN - WEIGHT: ${weightFileName} ]`);
+}
+
+// [ *** AÑADIR COLUMNA ]
+async function addColumn(results) {
+  const truthKeys = config.addColumn.truth_key;  // NUEVAS CLAVES 
+  const truthValues = config.addColumn.value;  // NUEVOS VALORES 
   return results.map(row => {
-    const newRow = { ...row }; // CLONAR FILA
+    const newRow = { ...row }; // DUPLICAR DATOS
     truthKeys.forEach((key, index) => {
-      newRow[key] = truthValues[index]; // ASIGNAR VALORES
+      newRow[key] = truthValues[index]; // ASIGNAR VALORES A LA COLUMNA
     });
     return newRow;
   });
 }
 
-// [ CREAR ARCHIVO WEIGHT ]
-function saveWeightFile(headers) {
-  const onesRow = headers.map(() => '1').join(','); // FILA DE '1'
-  const csvContent = [headers.join(','), onesRow].join('\n'); // UNIR CABECERAS Y FILA
-  fs.writeFileSync(weightFileName, csvContent); // ESCRIBIR ARCHIVO DE PESO
-  console.log(`[ ADD COLUMN - WEIGHT: ${weightFileName} ]`);
-}
 
-// [ MAIN: PREPARAR DATOS ]
+// [ MAIN ]
 async function main(inputFile, outputFile) {
   try {
     const results = await readCSV(inputFile);
-    const updatedResults = await addGroundTruthColumn(results); // AGREGAR COLUMNA
+    const updatedResults = await addColumn(results); // AGREGAR COLUMNA
     const headers = [...Object.keys(results[0]), ...config.addColumn.truth_key]; // NUEVAS CABECERAS
-    saveToCSV(updatedResults, headers, outputFile);
-    saveWeightFile(headers);
+    saveCSV(updatedResults, headers, outputFile);
+    saveWeight(headers);
   }
   catch (error) {
     console.error('ERROR MAIN: ', error); // ERROR DE PROCESAMIENTO

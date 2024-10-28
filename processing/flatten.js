@@ -2,7 +2,6 @@ const fs = require('fs');
 const args = process.argv.slice(2);
 const configPath = args[2] ? args[2] : './config.json';
 
-// [ OBTENER NOMBREz DE ARCHIVO ]
 if (args.length < 2) {
   console.error('! ERROR: INPUT !');
   process.exit(1);
@@ -18,16 +17,30 @@ catch (error) {
   process.exit(1);
 }
 
-// [ APLANAR EL JSON ]
+// [ LEER EL ARCHIVO JSON ORIGINAL ]
+function readData(filePath) {
+  if (fs.existsSync(filePath)) { // SI EXISTE
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+  }
+  return [];
+}
+
+// [ *** APLANAR Y TRANSFORMAR EL ARRAY ]
+function flattenData(messages) {
+  return messages.map(message => flattenObject(message));
+}
+
+// [ *** APLANAR JSON ]
 function flattenObject(ob) {
   const result = {};
-  function recurse(cur, prop) {
+  function recurse(cur, prop) { // RECURSIVO
     if (Object(cur) !== cur) {
-      result[prop] = cur; // AÑADIR CLAVE-VALOR AL RESULTADO
+      result[prop] = cur; // AÑADIR CLAVE Y VALOR 
     }
     else if (Array.isArray(cur)) {
       cur.forEach((item, index) => {
-        recurse(item, `${prop}_${index}`); // APLANAR ARRAYS
+        recurse(item, `${prop}_${index}`); // APLANAR ARRAYS CON BARRAS BAJAS
       });
     }
     else {
@@ -36,29 +49,15 @@ function flattenObject(ob) {
       }
     }
   }
-  recurse(ob, '');
+  recurse(ob, ''); // DE FORMA RECURSIVA SE APLANA
   return result;
 }
 
-// [ LEER EL ARCHIVO JSON ORIGINAL ]
-function readData(filePath) {
-  if (fs.existsSync(filePath)) {
-    const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);
-  }
-  return [];
-}
-
-// [ APLANAR Y TRANSFORMAR EL ARRAY DE MENSAJES ]
-function transformMessages(messages) {
-  return messages.map(message => flattenObject(message));
-}
-
-// [ GUARDAR EL ARCHIVO JSON APLANADO ]
+// [ MAIN ]
 function main(inputFilename, outputFilename) {
-  const messages = readData(inputFilename);
-  const flattenedMessages = transformMessages(messages); // APLANAR MENSAJES
-  fs.writeFileSync(outputFilename, JSON.stringify(flattenedMessages, null, 2));
+  const messages = readData(inputFilename); // LEER ENTRADA
+  const flattenedMessages = flattenData(messages); // APLANAR JSON
+  fs.writeFileSync(outputFilename, JSON.stringify(flattenedMessages, null, 2)); // GUARDAR
   console.log(`[ FLATTEN: ${outputFilename} ]`);
 }
 

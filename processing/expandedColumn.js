@@ -28,38 +28,39 @@ function readData(filePath) {
   throw new Error('THE FILE DOES NOT EXIST');
 }
 
-// [ OBTENER CLAVES ÚNICAS DE TODOS LOS OBJETOS ]
-function getUniqueKeys(data) {
-  const keys = new Set(); // INICIALIZAR SET DE CLAVES
-  data.forEach(item => {
-    Object.keys(item).forEach(key => keys.add(key)); // AGREGAR CLAVES AL SET
-  });
-  return Array.from(keys); // ARRAY DE CLAVES
-}
-
-// [ NORMALIZAR OBJETOS ]
-function normalizeData(data, uniqueKeys) {
-  return data.map(item => {
-    const normalizedItem = {};
-    uniqueKeys.forEach(key => {
-      normalizedItem[key] = item[key] !== undefined ? item[key] : config.expandedColumn.expanded_value; // ASIGNAR VALOR O VALOR POR DEFECTO
-    });
-    return normalizedItem; // OBJETO NORMALIZADO
-  });
-}
-
 // [ GUARDAR EL RESULTADO ]
-function saveToJSON(data, outputFilename) {
+function saveJSON(data, outputFilename) {
   fs.writeFileSync(outputFilename, JSON.stringify(data, null, 2));
   console.log(`[ EXPANDED COLUMN: ${outputFilename} ]`);
 }
 
-// [ PROCESAR Y GUARDAR LOS DATOS ]
+// [ *** CLAVES ÚNICAS ]
+function uniquesKeys(data) {
+  const keys = new Set(); // INICIALIZAR
+  data.forEach(item => {
+    Object.keys(item).forEach(key => keys.add(key)); // AGREGAR CLAVES AL SET
+  });
+  return Array.from(keys); // SET DE CLAVES
+}
+
+// [ *** EXPANDIR DATOS ]
+function expandedData(data, uniqueKeys) {
+  return data.map(item => {
+    const expandedItem = {};
+    uniqueKeys.forEach(key => {
+      // SI NO EXISTE -> ASIGNAR VALOR O VALOR POR DEFECTO DEFINIDO
+      expandedItem[key] = item[key] !== undefined ? item[key] : config.expandedColumn.expanded_value; 
+    });
+    return expandedItem; // OBJETO NORMALIZADO
+  });
+}
+
+// [ MAIN ]
 function main(inputFilename, outputFilename) {
   const jsonData = readData(inputFilename); // LEER DATOS
-  const uniqueKeys = getUniqueKeys(jsonData); // OBTENER CLAVES
-  const normalizedData = normalizeData(jsonData, uniqueKeys); // NORMALIZAR
-  saveToJSON(normalizedData, outputFilename);
+  const uniqueKeys = uniquesKeys(jsonData); // OBTENER CLAVES UNICAS 
+  const normalizedData = expandedData(jsonData, uniqueKeys); // EXPANDIR DATOS
+  saveJSON(normalizedData, outputFilename);
 }
 
 main(args[0], args[1]);
