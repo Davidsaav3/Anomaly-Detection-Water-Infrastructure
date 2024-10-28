@@ -44,12 +44,12 @@ function saveToCSV(data, headers, fileName) {
     ...data.map(row => headers.map(header => row[header] !== undefined ? row[header] : '').join(',')) // VALORES
   ].join('\n'); // UNIR LÍNEAS
   fs.writeFileSync(fileName, csvContent);
-  console.log(`[ SAVED: ${fileName} ]`);
+  console.log(`[ ADD COLUMN: ${fileName} ]`);
 }
 
 // AÑADIR COLUMNA TRUTH
 async function addGroundTruthColumn(results) {
-  const truthKeys = config.addColumn.key;  // CLAVES DE CONFIG
+  const truthKeys = config.addColumn.truth_key;  // CLAVES DE CONFIG
   const truthValues = config.addColumn.value;  // VALORES DE CONFIG
   return results.map(row => {
     const newRow = { ...row }; // CLONAR FILA
@@ -65,7 +65,7 @@ function saveWeightFile(headers) {
   const onesRow = headers.map(() => '1').join(','); // FILA DE '1'
   const csvContent = [headers.join(','), onesRow].join('\n'); // UNIR CABECERAS Y FILA
   fs.writeFileSync(weightFileName, csvContent); // ESCRIBIR ARCHIVO DE PESO
-  console.log(`[ WEIGHT: ${weightFileName} ]`);
+  console.log(`[ ADD COLUMN - WEIGHT: ${weightFileName} ]`);
 }
 
 // [ MAIN: PREPARAR DATOS ]
@@ -73,7 +73,7 @@ async function main(inputFile, outputFile) {
   try {
     const results = await readCSV(inputFile);
     const updatedResults = await addGroundTruthColumn(results); // AGREGAR COLUMNA
-    const headers = [...Object.keys(results[0]), ...config.addColumn.key]; // NUEVAS CABECERAS
+    const headers = [...Object.keys(results[0]), ...config.addColumn.truth_key]; // NUEVAS CABECERAS
     saveToCSV(updatedResults, headers, outputFile);
     saveWeightFile(headers);
   }

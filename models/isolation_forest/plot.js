@@ -24,7 +24,7 @@ const plot1 = (datos, outputPath, config) => {
         type: 'line',
         data: {
             datasets: [{
-                label: config.index.label,
+                label: "NORMAL DATA",
                 data: data,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -44,7 +44,7 @@ const plot1 = (datos, outputPath, config) => {
             maintainAspectRatio: false,
             scales: {
                 x: {
-                    title: { display: true, text: config.index.text_X, font: { size: 16, family: 'Arial' } },
+                    title: { display: true, text: "INDEX", font: { size: 16, family: 'Arial' } },
                     grid: { color: 'rgba(200, 200, 200, 0.5)' },
                     ticks: {
                         stepSize: 1,
@@ -54,7 +54,7 @@ const plot1 = (datos, outputPath, config) => {
                     },
                 },
                 y: {
-                    title: { display: true, text: config.index.text_y, font: { size: 16, family: 'Arial' } },
+                    title: { display: true, text: "VALUE", font: { size: 16, family: 'Arial' } },
                     grid: { color: 'rgba(200, 200, 200, 0.5)' },
                     ticks: {
                         font: { size: 12 },

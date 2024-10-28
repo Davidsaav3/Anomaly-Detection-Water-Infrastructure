@@ -52,7 +52,7 @@ function normalizeData(data, commonKeys) {
 // [ GUARDAR EL RESULTADO ]
 function saveToJSON(data, outputFilename) {
   fs.writeFileSync(outputFilename, JSON.stringify(data, null, 2)); // GUARDAR JSON
-  console.log(`[ REDUCE: ${outputFilename} ]`);
+  console.log(`[ REDUCE COLUMN: ${outputFilename} ]`);
 }
 
 // [ MAIN: PROCESAR Y GUARDAR LOS DATOS ]

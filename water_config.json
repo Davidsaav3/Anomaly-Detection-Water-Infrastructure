@@ -8,14 +8,14 @@
     "flatten": {},
 
     "expandedColumn": {
-        "expand_value": "#fill#"
+        "expanded_value": "#fill#"
     },
     "reduceColumn": {},
 
     "toCsv": {},
     "encoding": {
         "fill_transform": "mean",
-        "": [
+        "_": [
             "none",
             "zero",
             "one",
@@ -34,7 +34,7 @@
     "normalize": {},
 
     "addColumn": {
-        "key": [
+        "truth_key": [
             "truth"
         ],
         "value": [
@@ -42,7 +42,7 @@
         ]
     },
     "createGroups": {
-        "folder_createGroups": "../dataset/createGroups/",
+        "folder_name": "../dataset/createGroups/",
         "groups": [
             {
                 "output": "DEVICE",
@@ -165,22 +165,18 @@
     },
 
     "joinColumn": {
-        "joinColumn_files": [
+        "join_files": [
             "﻿Fecha",
             "hora"
         ]
     },
-    
+
     "index": {
         "threshold": 0.55,
         "trees": 100,
         "score": 4,
         "value_y": 5,
         "value_x": "﻿Fecha_hora",
-        "_": "﻿Fecha_hora - 5 /// received_at - 0",
-        "truth": "truth",
-        "label": "Datos normales",
-        "text_x": "Índice",
-        "text_y": "value"
+        "truth_key": "truth"
     }
 }

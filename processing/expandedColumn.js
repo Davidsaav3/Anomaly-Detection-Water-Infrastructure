@@ -42,7 +42,7 @@ function normalizeData(data, uniqueKeys) {
   return data.map(item => {
     const normalizedItem = {};
     uniqueKeys.forEach(key => {
-      normalizedItem[key] = item[key] !== undefined ? item[key] : config.expandedColumn.expand_value; // ASIGNAR VALOR O VALOR POR DEFECTO
+      normalizedItem[key] = item[key] !== undefined ? item[key] : config.expandedColumn.expanded_value; // ASIGNAR VALOR O VALOR POR DEFECTO
     });
     return normalizedItem; // OBJETO NORMALIZADO
   });
@@ -51,7 +51,7 @@ function normalizeData(data, uniqueKeys) {
 // [ GUARDAR EL RESULTADO ]
 function saveToJSON(data, outputFilename) {
   fs.writeFileSync(outputFilename, JSON.stringify(data, null, 2));
-  console.log(`[ EXPANDED: ${outputFilename} ]`);
+  console.log(`[ EXPANDED COLUMN: ${outputFilename} ]`);
 }
 
 // [ PROCESAR Y GUARDAR LOS DATOS ]

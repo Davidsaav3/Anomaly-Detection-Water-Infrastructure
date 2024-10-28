@@ -67,7 +67,7 @@ function saveNullsFile(headers, nullsMap) {
   const csvContent = [headers.join(','), nullsRow].join('\n');
 
   fs.writeFileSync(nullsFileName, csvContent);
-  console.log(`[ NULLS: ${nullsFileName} ]`);
+  console.log(`[ CREATE TEMPLATE - NULLS: ${nullsFileName} ]`);
 }
 
 // [ NORMALIZADO ]
@@ -76,7 +76,7 @@ function saveNormalizedFile(headers) {
   const onesRow = headers.map(() => '1').join(',');
   const csvContent = [headers.join(','), nullsRow, onesRow].join('\n');
   fs.writeFileSync(normalizeFileName, csvContent);
-  console.log(`[ NORMALIZE: ${normalizeFileName} ]`);
+  console.log(`[ CREATE TEMPLATE - NORMALIZE: ${normalizeFileName} ]`);
 }
 
 main(inputFile)

@@ -23,7 +23,7 @@ catch (error) {
   process.exit(1);
 }
 
-const outputDir = path.join(__dirname, config.createGroups.folder_createGroups);
+const outputDir = path.join(__dirname, config.createGroups.folder_name);
 
 // [ LEER CSV ORIGINAL ]
 async function readCSV(filePath) {
@@ -48,7 +48,7 @@ function saveToCSV(data, headers, groupName) {
   if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
   const outputFileName = `${groupName.toLowerCase()}.csv`; // USAR NOMBRE DEL GRUPO
   fs.writeFileSync(path.join(outputDir, outputFileName), csvContent);
-  console.log(`[ SEPARATE: ${outputFileName} ]`);
+  console.log(`[ CREATE GROUPS: ${outputFileName} ]`);
 }
 
 // [ DIVIDIR EN GRUPOS ]

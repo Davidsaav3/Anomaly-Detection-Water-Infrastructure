@@ -99,7 +99,7 @@ const main = async () => {
 
         const scoresResults = [];
         const ids = csvData.map(row => row[config.index.id] || csvData.indexOf(row));
-        const y_true = csvData.map(row => parseInt(row[config.index.truth])); // COLUMNA "TRUTH"
+        const y_true = csvData.map(row => parseInt(row[config.index.truth_key])); // COLUMNA "TRUTH"
         const mseResults = [];
         const thresholdIncrement = (1 - 0.1) / iterations; // UMBRAL
         const isolationData = [];

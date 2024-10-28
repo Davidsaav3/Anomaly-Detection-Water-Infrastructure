@@ -46,7 +46,7 @@ function calculateMedian(column) {
 // [ GESTIONAR #fill# ]
 const fillHandling = config.encoding.fill_transform || "none"; // [ "none", "zero", "one", "mean", "median" ]
 function handleFill(value, columnValues) {
-  if (value === config.expandedColumn.expand_value) {
+  if (value === config.expandedColumn.expanded_value) {
     switch (fillHandling) {
       case "zero":
         return 0;
@@ -94,7 +94,7 @@ const saveToCSV = (data, fileName) => {
     ...data.map(row => Object.values(row).map(value => value === null ? 'null' : value).join(','))
   ].join('\n');
   fs.writeFileSync(fileName, csvContent);
-  console.log(`[ ONEHOT: ${fileName} ]`);
+  console.log(`[ ENCODING: ${fileName} ]`);
 };
 
 // [ GUARDAR DICCIONARIO ]

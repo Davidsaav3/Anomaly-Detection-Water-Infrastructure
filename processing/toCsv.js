@@ -41,7 +41,7 @@ function saveToCSV(data, outputFilename) {
     csvRows.push(values.join(',')); // AÑADIR FILA
   });
   fs.writeFileSync(outputFilename, csvRows.join('\n')); // GUARDAR CSV CON EL NOMBRE DEL SEGUNDO PARÁMETRO
-  console.log(`[ joinColumn: ${outputFilename} ]`);
+  console.log(`[ TO CSV: ${outputFilename} ]`);
 }
 
 // [ APLANAR EL JSON ]

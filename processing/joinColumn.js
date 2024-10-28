@@ -43,7 +43,7 @@ const saveToCSV = (data, headers, fileName) => {
     ...data.map(row => headers.map(header => row[header] ?? '').join(',')) // FORMATEAR CADA FILA
   ].join('\n');
   fs.writeFileSync(fileName, csvContent);
-  console.log(`[ JOIN COLUMNS: ${fileName} ]`);
+  console.log(`[ JOIN COLUMN: ${fileName} ]`);
 };
 
 // [ UNIR COLUMNAS ]
@@ -71,7 +71,7 @@ function uniteColumns(data, columnsToUnite) {
 async function main(inputFile) {
   try {
     const { headers, results } = await readCSV(inputFile);
-    const columnsToUnite = config.joinColumn.joinColumn_files; // OBTENER COLUMNAS DE LA CONFIGURACIÓN
+    const columnsToUnite = config.joinColumn.join_files; // OBTENER COLUMNAS DE LA CONFIGURACIÓN
     const unitedData = uniteColumns(results, columnsToUnite); // UNIR COLUMNAS Y GUARDAR
     const newHeaders = [...headers, columnsToUnite.join('_')]; // NUEVA CABECERA
     saveToCSV(unitedData, newHeaders, args[1]);

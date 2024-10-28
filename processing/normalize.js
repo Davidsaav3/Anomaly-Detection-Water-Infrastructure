@@ -47,7 +47,7 @@ const saveToCSV = (data, headers, fileName) => {
     ...data.map(row => headers.map(header => row[header] ?? '').join(','))
   ].join('\n');
   fs.writeFileSync(fileName, csvContent);
-  console.log(`[ SAVED: ${fileName} ]`);
+  console.log(`[ NORMALIZE: ${fileName} ]`);
 };
 
 // [ PREPARAR DATOS Y MANEJAR NULOS ]

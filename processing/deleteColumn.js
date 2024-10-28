@@ -48,7 +48,7 @@ function saveToCSV(data, outputFilename) {
     csvRows.push(values.join(',')); // AÑADIR FILA
   });
   fs.writeFileSync(outputFilename, csvRows.join('\n')); // ESCRIBIR ARCHIVO CSV
-  console.log(`[ OUTPUT: ${outputFilename} ]`);
+  console.log(`[ DELETE COLUMN: ${outputFilename} ]`);
 }
 
 // [ MAIN: FILTRAR Y GUARDAR CSV ]
