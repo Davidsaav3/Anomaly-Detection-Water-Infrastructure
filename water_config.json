@@ -25,7 +25,8 @@
     },
     "deleteColumn": {
         "delete": [
-            ""
+            "﻿Fecha",
+            "hora"
         ]
     },
 

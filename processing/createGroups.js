@@ -11,7 +11,7 @@ if (args.length < 2) {
 
 let config = {};
 const inputFile = args[0];
-const configPath = args[1] ? args[1] : './config.json';
+const configPath = args[1] ? args[1] : './sensors_config.json';
 
 // [ CARGAR CONFIGURACIÓN ]
 try {

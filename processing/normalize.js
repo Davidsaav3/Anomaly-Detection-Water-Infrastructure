@@ -11,7 +11,7 @@ if (args.length !== 4) {
 const inputFile = args[0];
 const outputFile = args[1];
 const normalizeFile = args[2];
-const configPath = args[3] ? args[3] : './config.json';
+const configPath = args[3] ? args[3] : './sensors_config.json';
 
 // [ CARGAR CONFIGURACIÓN ]
 const loadConfig = (configPath) => {
@@ -107,7 +107,6 @@ async function normalizeData(inputFile, normalizeFile) { // NORMALIZAR DATOS
   }
 }
 
-
 // [ MAIN ]
 async function main(inputFile, normalizeFile) {
   try {
@@ -117,9 +116,7 @@ async function main(inputFile, normalizeFile) {
     const values1 = results1[0]; // VALORES DE NORMALIZACIÓN
     return results.map(row => { // RECORRER FILAS CSV 
       return headers.reduce((newRow, header) => { 
-        newRow[header] = row[header] === null || row[header] === 'null' || row[header] === '' || row[header] === '0' 
-          ? (values1[header] === '0' ? '0' : null) // ASIGNAR 0 O NULL SEGÚN EL VALOR EN LA NORMALIZACIÓN
-          : row[header]; // MANTENER VALOR ORIGINAL SI NO HAY VALORES VACÍOS O NULOS
+        newRow[header] = row[header]; // MANTENER VALOR ORIGINAL
         return newRow;
       }, {});
     });

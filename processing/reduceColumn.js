@@ -1,6 +1,6 @@
 const fs = require('fs');
 const args = process.argv.slice(2);
-const configPath = args[2] ? args[2] : './config.json';
+const configPath = args[2] ? args[2] : './sensors_config.json';
 let config = {};
 
 // [ OBTENER NOMBRES DE ARCHIVO ]

@@ -136,6 +136,7 @@ function isNumeric(value) {
   return !isNaN(value) && !isNaN(parseFloat(value)); // ES INT O FLOAT ?
 }
 
+// [ main ]
 const main = async (inputFilename, dictFilename) => { // TRANSFORMAR A NÚMERICO
   const existingDictionaries = await loadDictionary(dictFilename); // CARGAR DICCIONARIOS
   const data = await readCSV(inputFilename); // LEER CSV
@@ -151,23 +152,28 @@ const main = async (inputFilename, dictFilename) => { // TRANSFORMAR A NÚMERICO
     const newRow = {}; // NUEVA FILA
     for (const key in row) {
       let value = row[key]; // OBTENER VALORES
+      // RELLENAR SI ES NULO O CADENA VACÍA
+      if (value === null || value === '' || value === undefined || value === 'null') {
+        newRow[key] = null; // MANTENER COMO NULO
+        continue; 
+      }
       value = fillValues(value, columnValues[key]); // RELLENAR #fill#
       if (!dictionaries[key]) dictionaries[key] = {}; // INICIALIZAR DICCIONARIO
       const getNumericValue = stringToNumeric(dictionaries[key]); // OBTENER VALOR NUMÉRICO
-      if (typeof value === 'string' && value.startsWith('\'') && value.endsWith('\'')) { // ES UN STRING...
-        const trimmedValue = value.slice(1, -1); // ELIMINAR COMILLAS...
-        value = isNumeric(trimmedValue) ? parseFloat(trimmedValue) : getNumericValue(value); // CONVERTIR A NUMERICO
-      }
+      // Comprobar si el valor es numérico
+      if (typeof value === 'string' && isNumeric(value.trim())) {
+        value = parseFloat(value.trim()); // CONVERTIR A NÚMERICO
+      } 
       else {
-        value = getNumericValue(value); // CONVERTIR A NUMERICO
+        value = getNumericValue(value); // CONVERTIR A NÚMERICO
       }
-      newRow[key] = value === 'null' ? null : value; // ASIGNAR
+      newRow[key] = value; // ASIGNAR EL VALOR TRANSFORMADO
     }
     return newRow; 
   });
+
   return { transformedData, dictionaries }; // RETORNAR RESULTADOS
 };
-
 main(inputFile, dictFile)
   .then(({ transformedData, dictionaries }) => {
     saveCSV(transformedData, outputFile); // GUARDAR CSV
