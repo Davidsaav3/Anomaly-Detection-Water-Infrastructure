@@ -50,6 +50,20 @@ const readCSV = (filePath) => {
     });
 };
 
+// [ LEER CABECERAS CSV ]
+const readCSVHeaders = (filePath) => {
+    return new Promise((resolve, reject) => {
+        const stream = fs.createReadStream(filePath)
+            .pipe(csv({ headers: false }))
+            .on('data', (row) => {
+                stream.pause(); // SOLO LAMPRIMERA FILA
+                resolve(row); // DEVUELVE
+            })
+            .on('error', reject);
+    });
+};
+
+
 // [ LEER PESOS ]
 const readWeightCSV = async (filePath) => {
     if (!filePath) {
@@ -97,6 +111,7 @@ const calculateMSE = (yTrue, yPred) => {
 // [ ISOLATION FOREST ]
 const main = async () => {
     try {
+        const headers = await readCSVHeaders(inputFilename)
         const csvData = await readCSV(inputFilename); // LEER CSV
         const weights = await readWeightCSV(weightFilePath); // LEER PESOS
         let features = processWeight(csvData, weights); // PROCESAR PESOS
@@ -112,7 +127,7 @@ const main = async () => {
         const mseResults = []; // RESULTADOS MSE
         const thresholdIncrement = (1 - 0.1) / iterations; // INCREMENTO UMBRAL
         const isolationData = []; // DATOS AISLAMIENTO
-        
+
         // 0. ISOLATION
         for (let i = 1; i < iterations + 1; i++) {
             if(config.index.variable_trees){
@@ -139,15 +154,17 @@ const main = async () => {
         }
 
         // 1. SCORES
-        const scoresHeader = ['id', 'value_y', 'value_x', ...Array.from({ length: iterations }, (_, i) => `score_${i + 1}`), 'scores_total', 'score', 'anomaly'].join(','); // CABECERA DE SCORES
+        const scoresHeader = ['id', 'value_y_name', 'value_y', 'value_x_name', 'value_x', ...Array.from({ length: iterations }, (_, i) => `score_${i + 1}`), 'scores_total', 'score', 'anomaly'].join(','); // CABECERA DE SCORES
         const scoresRows = scoresResults[0].map((_, index) => {
             const scores = scoresResults.map(scoreArray => scoreArray[index].toFixed(2)); // OBTENER PUNTUACIONES
             const scoresTotal = scores.reduce((acc, score) => acc + parseFloat(score), 0); // TOTAL DE PUNTUACIONES
             const scoresPercent = (scoresTotal / iterations).toFixed(2); // PORCENTAJE DE PUNTUACIONES
-            const value_y = features[index][config.index.value_y]; // VALUE_Y
-            const value_x = csvData[index][config.index.value_x]; // VALUE_X
+            const value_y_name = headers[config.index.value_y]; // VALUE Y NAME
+            const value_y = features[index][config.index.value_y]; // VALUE Y
+            const value_x_name = csvData[0][config.index.value_x]; // VALUE X NME
+            const value_x = csvData[index][config.index.value_x]; // VALUE X
             const isAnomaly = scoresPercent > config.index.threshold; // DETERMINAR ANOMALÍA
-            return [ids[index], value_y, value_x, ...scores, scoresTotal.toFixed(2), scoresPercent, isAnomaly].join(','); // DEVOLVER FILA
+            return [ids[index], value_y_name, value_y, value_x_name, value_x, ...scores, scoresTotal.toFixed(2), scoresPercent, isAnomaly].join(','); // DEVOLVER FILA
         }).join('\n');
         fs.writeFileSync(scoresOutputPath, `${scoresHeader}\n${scoresRows}`, 'utf8'); // ESCRIBIR SCORES
         console.log(`[ SCORES: ${scoresOutputPath} ]`); 

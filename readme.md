@@ -5,6 +5,5 @@ A system capable of processing large volumes of data from distributed sensors ha
 ---
 -Crear grupos...
 
--Guardar max y minimo para despues desnormalizar ?
--Y tambien destraducir el diccinario ?
+-Destraducir y Desnormalizar...
 -

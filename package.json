@@ -29,7 +29,7 @@
   
     "sensors 7 - createTemplate": "node   ./processing/createTemplate.js   ./dataset/encoding.csv   ./dataset/auxiliary_nulls.csv   ./dataset/auxiliary_normalize.csv   ./sensors_config.json",
     "sensors 8 - nulls": "node   ./processing/nulls.js   ./dataset/encoding.csv   ./dataset/nulls.csv   ./dataset/auxiliary_nulls.csv    ./sensors_config.json",
-    "sensors 9 - normalize": "node   ./processing/normalize.js   ./dataset/nulls.csv   ./dataset/normalize.csv   ./dataset/auxiliary_normalize.csv    ./sensors_config.json",
+    "sensors 9 - normalize": "node   ./processing/normalize.js   ./dataset/nulls.csv   ./dataset/normalize.csv   ./dataset/auxiliary_normalize.csv    ./dataset/auxiliary_maxmin.csv   ./sensors_config.json",
     
     "sensors 10 - addColumn": "node   ./processing/addColumn.js   ./dataset/normalize.csv   ./dataset/addColumn.csv   ./dataset/auxiliary_weight.csv   ./sensors_config.json",
         "sensors 10.1 - createGroups": "node   ./processing/createGroups.js   ./dataset/normalize.csv   ./sensors_config.json",
@@ -51,7 +51,7 @@
   
     "water 7 - createTemplate": "node   ./processing/createTemplate.js   ./dataset/encoding.csv   ./dataset/auxiliary_nulls.csv   ./dataset/auxiliary_normalize.csv   ./water_config.json",
     "water 8 - nulls": "node   ./processing/nulls.js   ./dataset/encoding.csv   ./dataset/nulls.csv   ./dataset/auxiliary_nulls.csv    ./water_config.json",
-    "water 9 - normalize": "node   ./processing/normalize.js   ./dataset/nulls.csv   ./dataset/normalize.csv   ./dataset/auxiliary_normalize.csv    ./water_config.json",
+    "water 9 - normalize": "node   ./processing/normalize.js   ./dataset/nulls.csv   ./dataset/normalize.csv   ./dataset/auxiliary_normalize.csv    ./dataset/auxiliary_maxmin.csv   ./water_config.json",
     
     "water 10 - addColumn": "node   ./processing/addColumn.js   ./dataset/normalize.csv   ./dataset/addColumn.csv   ./dataset/auxiliary_weight.csv   ./water_config.json",
         "water 10.1 - createGroups": "node   ./processing/createGroups.js   ./dataset/normalize.csv   ./water_config.json",
