@@ -175,7 +175,9 @@
     "index": {
         "threshold": 0.55,
         "trees": 100,
+        "variable_trees":false,
         "score": 4,
+        "variable_score":false,
         "value_y": 5,
         "value_x": "﻿Fecha_hora",
         "truth_key": "truth"

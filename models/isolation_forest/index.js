@@ -56,7 +56,7 @@ const readWeightCSV = async (filePath) => {
         return null;
     }
     const weights = await readCSV(filePath); // LEER 
-    return Object.values(weights[0]).map(parseFloat); // CREAR OBJTO CON LOS PESOS
+    return Object.values(weights[0]).map(parseFloat); // CREAR OBJETO CON LOS PESOS
 };
 
 // [ APLICAR PESOS ]
@@ -115,8 +115,12 @@ const main = async () => {
         
         // 0. ISOLATION
         for (let i = 1; i < iterations + 1; i++) {
-            //config.index.trees = i; 
-            //config.index.score = i;
+            if(config.index.variable_trees){
+                config.index.trees = i; 
+            }
+            if(config.index.variable_score){
+                config.index.score = i;
+            }
 
             const myForest = new IsolationForest(features, config.index.trees, features.length); // INICIALIZAR FOREST
             const scores = myForest.dataAnomalyScore(config.index.score); // CALCULAR SCORES

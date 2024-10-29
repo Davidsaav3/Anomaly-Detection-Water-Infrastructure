@@ -1,31 +1,19 @@
 {
-  "name": "sensorsNeuralNetwork",
+  "name": "Anomaly-Detection",
   "version": "1.0.0",
-  "description": "Processing sensor data using neural networks.",
+  "description": "Processing sensor data using isolation forest algorithm.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Davidsaav/sensorsNeuralNetwork.git"
+    "url": "https://github.com/Davidsaav3/Anomaly-Detection.git"
   },
   "dependencies": {
-    "@tensorflow/tfjs-node": "^0.1.21",
     "canvas": "^2.11.2",
     "chart.js": "^4.4.4",
-    "chartjs-adapter-moment": "^1.0.1",
-    "crypto-js": "^4.2.0",
     "csv-parser": "^3.0.0",
-    "csv-writer": "^1.6.0",
-    "express": "^4.21.0",
     "fs": "^0.0.1-security",
     "isolation-forest-visualization": "^1.0.7",
-    "json2csv": "^6.0.0-alpha.2",
-    "lodash": "^4.17.11",
-    "mqtt": "^5.10.1",
-    "mysql2": "^3.11.3",
-    "node-remote-plot": "^1.2.0",
-    "one-hot": "^2.1.4",
-    "scikitjs": "^1.24.0",
-    "shuffle-seed": "^1.1.6"
+    "mqtt": "^5.10.1"
   },
   "scripts": {
     "sensors 1 - acquisition": "node   ./processing/acquisition.js   ./dataset/acquisition.json   ./sensors_config.json",
@@ -72,11 +60,9 @@
   
   },
   "keywords": [
-    "neural-network",
+    "isolation-forest",
     "sensors",
-    "machine-learning",
-    "nodejs",
-    "tensorflow"
+    "anomaly-detection"
   ],
   "author": {
     "name": "David Saavedra Pastor",
@@ -85,9 +71,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/davidsaav/sensorsNeuralNetwork/issues"
+    "url": "https://github.com/davidsaav/Anomaly-Detection/issues"
   },
-  "homepage": "https://github.com/davidsaav/sensorsNeuralNetwork",
+  "homepage": "https://github.com/davidsaav/Anomaly-Detection",
   "engines": {
     "node": ">=14.0.0",
     "npm": ">=6.0.0"
