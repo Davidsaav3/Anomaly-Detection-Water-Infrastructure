@@ -52,10 +52,14 @@ function saveCSV(data, headers, groupName) {
 }
 
 // [ *** DIVIDIR EN GRUPOS ]
-function divideGroups(data, groupHeaders) {
+function divideGroups(data, groupHeaders, headers) {
   return data.map(row => {
     const newRow = {};
-    groupHeaders.forEach(header => { newRow[header] = row[header] || ''; }); // FORMAR LOS GRUPOS
+    groupHeaders.forEach(header => {
+      if (headers.includes(header)) { // VERIFICAR QUE EXISTE
+        newRow[header] = row[header]; // FORMAR GRUPOS
+      }
+    });
     return newRow;
   });
 }
@@ -68,12 +72,12 @@ async function main(inputFile) {
       acc[group.output] = group.fields;
       return acc;
     }, {});
+
     for (const [groupName, groupHeaders] of Object.entries(groups)) { // DIVIDIR Y GUARDAR CADA GRUPO
-      const groupData = divideGroups(results, groupHeaders);
-      saveCSV(groupData, groupHeaders, groupName); // GUARDAR CADA GRUPO
+      const groupData = divideGroups(results, groupHeaders, headers);
+      saveCSV(groupData, groupHeaders.filter(header => headers.includes(header)), groupName); // GUARDAR CADA GRUPO
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error('PROCESSING ERROR: ', error);
   }
 }

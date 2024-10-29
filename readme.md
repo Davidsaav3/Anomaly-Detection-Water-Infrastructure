@@ -3,8 +3,8 @@ The growing volume of data from IoT devices poses significant challenges for its
 A system capable of processing large volumes of data from distributed sensors has been developed. Performing data cleaning and transformation tasks before applying the Isolation Forest model, which allows the detection of unusual behaviors. In addition, analyzing the results obtained from different data sets with the aim of evaluating the performance of the model under various conditions.
 
 ---
-criterios flojos pq lo pasa todo a encodig
-los numeros iguales no funcionan bien
-parametrizar valores
----valore vacios
----null debe sustituir por lo q contiene
+-Crear grupos...
+
+-Guardar max y minimo para despues desnormalizar ?
+-Y tambien destraducir el diccinario ?
+-

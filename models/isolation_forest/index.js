@@ -79,10 +79,19 @@ const calculateMetrics = (yTrue, yPred) => {
     const recall = tp / (tp + fn || 1); // RECALL: VERDADEROS POSITIVOS / (VERDADEROS POSITIVOS + FALSOS NEGATIVOS)
     const f1Score = (2 * precision * recall) / (precision + recall || 1); // F1 SCORE: MEDIA ARMÓNICA DE PRECISIÓN Y RECALL
     const accuracy = (tp + tn) / yTrue.length; // EXACTITUD: (VERDADEROS POSITIVOS + VERDADEROS NEGATIVOS) / TOTAL
+
     const falsePositiveRate = fp / (fp + tn || 1); // TASA DE FALSOS POSITIVOS: FALSOS POSITIVOS / (FALSOS POSITIVOS + VERDADEROS NEGATIVOS)
     const trueNegativeRate = tn / (tn + fp || 1); // TASA DE VERDADEROS NEGATIVOS: VERDADEROS NEGATIVOS / (VERDADEROS NEGATIVOS + FALSOS POSITIVOS)
 
     return { iteration: iterationCounter, precision, recall, f1Score, accuracy, trueNegativeRate, falsePositiveRate };
+};
+
+// [ERROR CUADRÁTICO MEDIO (ECM)]
+const calculateMSE = (yTrue, yPred) => {
+    return yTrue.reduce((sum, trueVal, idx) => { // CALCULAR SUMA DE DIFERENCIAS AL CUADRADO
+        const diff = trueVal - yPred[idx]; // CALCULAR DIFERENCIA
+        return sum + diff * diff; // ACUMULAR DIFERENCIAS AL CUADRADO
+    }, 0) / yTrue.length; // DIVIDIR POR EL NÚMERO DE ELEMENTOS
 };
 
 // [ ISOLATION FOREST ]
@@ -121,7 +130,7 @@ const main = async () => {
                 'iteration': i, // ITERACIÓN
                 'data_size': csvData.length, // TAMAÑO DE DATOS
                 'number_of_attributes': features[0].length, // NÚMERO DE ATRIBUTOS
-                'number_of_trees': config.index.trees, // NÚ
+                'number_of_trees': config.index.trees, // NÚMERO DE ARBOLES
             });
         }
 
@@ -193,14 +202,6 @@ const main = async () => {
     catch (error) {
         console.error('! ERROR: ISOLATION !', error);
     }
-};
-
-// [ERROR CUADRÁTICO MEDIO (ECM)]
-const calculateMSE = (yTrue, yPred) => {
-    return yTrue.reduce((sum, trueVal, idx) => { // CALCULAR SUMA DE DIFERENCIAS AL CUADRADO
-        const diff = trueVal - yPred[idx]; // CALCULAR DIFERENCIA
-        return sum + diff * diff; // ACUMULAR DIFERENCIAS AL CUADRADO
-    }, 0) / yTrue.length; // DIVIDIR POR EL NÚMERO DE ELEMENTOS
 };
 
 main();

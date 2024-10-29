@@ -51,7 +51,8 @@
                     "end_device_ids.application_ids.application_id",
                     "end_device_ids.dev_eui",
                     "end_device_ids.join_eui",
-                    "end_device_ids.dev_addr"
+                    "end_device_ids.dev_addr",
+                    "received_at"
                 ]
             },
             {
@@ -137,7 +138,8 @@
                     "uplink_message.rx_metadata_4.location.source",
                     "uplink_message.rx_metadata_4.uplink_token",
                     "uplink_message.rx_metadata_4.channel_index",
-                    "uplink_message.rx_metadata_4.received_at"
+                    "uplink_message.rx_metadata_4.received_at",
+                    "received_at"
                 ]
             },
             {
@@ -158,7 +160,8 @@
                     "uplink_message.network_ids.ns_id",
                     "uplink_message.network_ids.tenant_id",
                     "uplink_message.network_ids.cluster_id",
-                    "uplink_message.network_ids.cluster_address"
+                    "uplink_message.network_ids.cluster_address",
+                    "received_at"
                 ]
             }
         ]
@@ -171,7 +174,7 @@
     },
 
     "index": {
-        "threshold": 0.55,
+        "threshold": 0.65,
         "trees": 100,
         "score": 4,
         "value_y": 0,

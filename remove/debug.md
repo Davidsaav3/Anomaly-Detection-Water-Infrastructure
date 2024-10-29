@@ -68,3 +68,9 @@ normalizar va mal si la columna todo es 13
 separav pesos de temlate 
 y alicar pesos
 sumar 1
+---
+criterios flojos pq lo pasa todo a encodig
+los numeros iguales no funcionan bien
+parametrizar valores
+---valore vacios
+---null debe sustituir por lo q contiene
