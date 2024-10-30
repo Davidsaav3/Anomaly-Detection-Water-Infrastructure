@@ -202,12 +202,12 @@ const main = async () => {
             return [{ value_y, value_x, rowFeatures, id, score }, isAnomaly]; 
         });
 
-        const datos2 = scoresResults[0].map((score, index) => {
-            const isAnomaly = score > config.index.threshold; // SI ES UNA ANOMALÍA
-            const values_y = Object.values(features[index]); // TODOS LOS VALORES DE FEATURES[INDEX]
-            const value_x = csvData[index][config.index.value_x]; // VALOR X (FECHA)
-            const rowFeatures = features[index]; // CARACTERÍSTICAS DE CADA FILA
-            const id = csvData[index][config.index.id] || index; // UN IDENTIFICADOR ÚNICO
+        const datos2 = scoresResults.map((score, index) => {
+            const isAnomaly = score > config.index.threshold;
+            const values_y = Object.values(features[index]); 
+            const value_x = csvData[index][config.index.value_x];
+            const rowFeatures = features[index];
+            const id = csvData[index][config.index.id] || index;
             return [{ values_y, value_x, rowFeatures, id, score }, isAnomaly];
         });
 
