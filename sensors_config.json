@@ -34,7 +34,7 @@
     "normalize": {},
 
     "addColumn": {
-        "truth_key": [
+        "newColumns": [
             "truth"
         ],
         "value": [
