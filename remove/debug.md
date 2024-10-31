@@ -74,3 +74,23 @@ los numeros iguales no funcionan bien
 parametrizar valores
 ---valore vacios
 ---null debe sustituir por lo q contiene
+
+
+----------------------------------------------------
+-config genral
+-quitar 
+-diccionario propio
+-
+eliminar registro, fila... dode hay null
+,R,0,0
+TRUTH KEY
+
+organizar entrada y salidas...
+ruta y nombre base...  nombres archivos...
+
+
+incremento...
+
+anomalias x iteracion
+
+thrut entra cmovalor
