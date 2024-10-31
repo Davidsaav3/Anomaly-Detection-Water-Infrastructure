@@ -11,7 +11,7 @@ if (args.length !== 4) {
 const inputFile = args[0];
 const nullsFile = args[1];
 const outputFile = args[2];
-const configPath = args[3] ? args[3] : './config.json';
+const configPath = args[3] ? args[3] : '../exec/config.json';
 let config = {};
 
 // [ CARGAR CONFIGURACIÓN ]

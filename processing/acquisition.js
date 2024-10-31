@@ -3,7 +3,7 @@ const mqtt = require('mqtt');
 const path = require('path');
 
 const args = process.argv.slice(2);
-const configPath = args[1] ? args[1] : './config.json';
+const configPath = args[1] ? args[1] : '../exec/config.json';
 let config = {};
 
 // [ CARGAR CONFIGURACIÓN ]

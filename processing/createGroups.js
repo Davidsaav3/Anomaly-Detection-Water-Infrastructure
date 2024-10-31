@@ -12,7 +12,7 @@ if (args.length < 2) {
 let config = {};
 const inputFile = args[0];
 const sal = args[1];
-const configPath = args[2] ? args[2] : './config.json';
+const configPath = args[2] ? args[2] : '../exec/config.json';
 
 // [ CARGAR CONFIGURACIÓN ]
 try {
