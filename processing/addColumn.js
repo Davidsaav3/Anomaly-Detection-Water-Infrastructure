@@ -57,12 +57,12 @@ function saveWeight(headers) {
 
 // [ *** AÑADIR COLUMNA ]
 async function addColumn(results) {
-  const truthKeys = config.addColumn.truth_key;  // NUEVAS CLAVES 
-  const truthValues = config.addColumn.value;  // NUEVOS VALORES 
+  const newColumns = config.addColumn.newColumns;  // NUEVAS CLAVES 
+  const columnsValue = config.addColumn.value;  // NUEVOS VALORES 
   return results.map(row => {
     const newRow = { ...row }; // DUPLICAR DATOS
-    truthKeys.forEach((key, index) => {
-      newRow[key] = truthValues[index]; // ASIGNAR VALORES A LA COLUMNA
+    newColumns.forEach((key, index) => {
+      newRow[key] = columnsValue[index]; // ASIGNAR VALORES A LA COLUMNA
     });
     return newRow;
   });
@@ -74,7 +74,7 @@ async function main(inputFile, outputFile) {
   try {
     const results = await readCSV(inputFile);
     const updatedResults = await addColumn(results); // AGREGAR COLUMNA
-    const headers = [...Object.keys(results[0]), ...config.addColumn.truth_key]; // NUEVAS CABECERAS
+    const headers = [...Object.keys(results[0]), ...config.addColumn.newColumns]; // NUEVAS CABECERAS
     saveCSV(updatedResults, headers, outputFile);
     saveWeight(headers);
   }

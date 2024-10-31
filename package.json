@@ -24,7 +24,7 @@
     
     "sensors 5 - toCsv": "node   ./processing/toCsv.js   ./dataset/expandedColumn.json   ./dataset/toCsv.csv   ./sensors_config.json",
         "sensors 5.1 - joinColumn": "node   ./processing/joinColumn.js   ./dataset/toCsv.csv   ./dataset/joinColumn.csv   ./sensors_config.json",
-    "sensors 6 - encoding": "node   ./processing/encoding.js   ./dataset/toCsv.csv   ./dataset/encoding.csv   ./common/dictionary.csv    ./sensors_config.json",
+    "sensors 6 - encoding": "node   ./processing/encoding.js   ./dataset/toCsv.csv   ./dataset/encoding.csv   ./dataset/sensordictionary.csv    ./sensors_config.json",
         "sensors 6.1 - deleteColumn": "node   ./processing/deleteColumn.js   ./dataset/encoding.csv   ./dataset/deleteColumn.csv   ./sensors_config.json",
   
     "sensors 7 - createTemplate": "node   ./processing/createTemplate.js   ./dataset/encoding.csv   ./dataset/auxiliary_nulls.csv   ./dataset/auxiliary_normalize.csv   ./sensors_config.json",
