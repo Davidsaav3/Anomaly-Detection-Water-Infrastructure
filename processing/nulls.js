@@ -9,9 +9,9 @@ if (args.length !== 4) {
 }
 
 const inputFile = args[0];
-const outputFile = args[1];
-const nullsFile = args[2];
-const configPath = args[3] ? args[3] : './sensors_config.json';
+const nullsFile = args[1];
+const outputFile = args[2];
+const configPath = args[3] ? args[3] : './config.json';
 let config = {};
 
 // [ CARGAR CONFIGURACIÓN ]

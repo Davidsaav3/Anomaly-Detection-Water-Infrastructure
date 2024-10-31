@@ -9,8 +9,8 @@ if (args.length !== 4) {
 }
 
 const inputFile = args[0];
-const outputFile = args[1];
-const dictFile = args[2];
+const dictFile = args[1];
+const outputFile = args[2];
 const configPath = args[3];
 let config = {};
 
@@ -98,9 +98,9 @@ function calculateMedian(column) {
 }
 
 // [ GESTIONAR RELLENADO: #fill# ]
-const fillHandling = config.encoding.fill_transform || "none"; // [ "none", "zero", "one", "mean", "median" ]
+const fillHandling = config.encoding.fillTransform || "none"; // [ "none", "zero", "one", "mean", "median" ]
 function fillValues(value, columnValues) {
-  if (value === config.expandedColumn.expanded_value) {
+  if (value === config.expandedColumn.expandedValue) {
     switch (fillHandling) {
       case "zero":
         return 0;

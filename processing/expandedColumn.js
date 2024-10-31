@@ -1,6 +1,6 @@
 const fs = require('fs');
 const args = process.argv.slice(2);
-const configPath = args[2] ? args[2] : './sensors_config.json';
+const configPath = args[2] ? args[2] : './config.json';
 let config = {};
 
 // [ NOMBRES DE ARCHIVO ]
@@ -49,7 +49,7 @@ function expandedData(data, uniqueKeys) {
     const expandedItem = {};
     uniqueKeys.forEach(key => {
       // SI NO EXISTE -> ASIGNAR VALOR O VALOR POR DEFECTO DEFINIDO
-      expandedItem[key] = item[key] !== undefined ? item[key] : config.expandedColumn.expanded_value; 
+      expandedItem[key] = item[key] !== undefined ? item[key] : config.expandedColumn.expandedValue; 
     });
     return expandedItem; // OBJETO NORMALIZADO
   });

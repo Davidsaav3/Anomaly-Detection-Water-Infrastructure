@@ -10,7 +10,7 @@ if (args.length < 3) {
 
 let config = {};
 const inputFile = args[0];
-const configPath = args[2] ? args[2] : './sensors_config.json';
+const configPath = args[2] ? args[2] : './config.json';
 
 // [ CARGAR CONFIGURACIÓN ]
 try {
@@ -69,7 +69,7 @@ function joinColumns(data, columnsToUnite) {
 async function main(inputFile) {
   try {
     const { headers, results } = await readCSV(inputFile);
-    const columnsToUnite = config.joinColumn.join_files; // OBTENER COLUMNAS A UNIR
+    const columnsToUnite = config.joinColumn.joinFiles; // OBTENER COLUMNAS A UNIR
     const unitedData = joinColumns(results, columnsToUnite); // UNIR COLUMNAS
     const newHeaders = [...headers, columnsToUnite.join('_')]; // NUEVA CABECERA (UNIÓN DE LAS DOS)
     saveCSV(unitedData, newHeaders, args[1]);

@@ -76,21 +76,36 @@ parametrizar valores
 ---null debe sustituir por lo q contiene
 
 
+-------------------------  6 ---------------------------
+----Config general
+-Quitar ???
+-Diccionario propio
+-Eliminar registro, fila... dode hay null ,R,0,0
+----TRUTH KEY
+-Organizar entrada y salidas...
+-Ruta y nombre base...  nombres archivos...
+----Incremento... mas tal 
+-Anomalias x iteracion, ejemlo excel--- otra tabla seguda
+-Thrut entra como valor
+-al crear grupos las _
+----bat ejecutable
+-sumr 1
 ----------------------------------------------------
--config genral
--quitar 
--diccionario propio
+-Dos articulo, primero PODS, Hasta el dia 9
+-Config metaparamtros
+-Hacer prubas con grupos
+-Que grupos ?
+-Crear grupos...
+-Destraducir y Desnormalizar...
 -
-eliminar registro, fila... dode hay null
-,R,0,0
-TRUTH KEY
-
-organizar entrada y salidas...
-ruta y nombre base...  nombres archivos...
-
-
-incremento...
-
-anomalias x iteracion
-
-thrut entra cmovalor
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-

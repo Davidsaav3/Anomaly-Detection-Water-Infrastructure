@@ -9,10 +9,10 @@ if (args.length !== 5) {
 }
 
 const inputFile = args[0];
-const outputFile = args[1];
-const normalizeFile = args[2];
+const normalizeFile = args[1];
+const outputFile = args[2];
 const outputMinMaxFile = args[3];
-const configPath = args[4] ? args[4] : './sensors_config.json';
+const configPath = args[4] ? args[4] : './config.json';
 
 // [ CARGAR CONFIGURACIÓN ]
 const loadConfig = (configPath) => {
@@ -84,7 +84,6 @@ function saveMinMaxToCSV(headers, minMaxValues, outputFile) {
   
   fs.writeFile(outputFile, csvContent, (error) => {
     if (error) console.error('Error al guardar el archivo:', error);
-    else console.log('Archivo guardado como', outputFile);
   });
 }
 

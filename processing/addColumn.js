@@ -12,7 +12,7 @@ if (args.length < 4) {
 const inputFile = args[0]; // ENTRADA
 const outputFile = args[1]; // SALIDA
 const weightFileName = args[2]; // PESO
-const configPath = args[3] ? args[3] : './sensors_config.json'; // CONFIGURACIÓN
+const configPath = args[3] ? args[3] : './config.json'; // CONFIGURACIÓN
 let config = {};
 
 // [ CARGAR CONFIGURACIÓN ]
@@ -57,11 +57,11 @@ function saveWeight(headers) {
 
 // [ *** AÑADIR COLUMNA ]
 async function addColumn(results) {
-  const newColumns = config.addColumn.newColumns;  // NUEVAS CLAVES 
+  const columnName = config.addColumn.columnName;  // NUEVAS CLAVES 
   const columnsValue = config.addColumn.value;  // NUEVOS VALORES 
   return results.map(row => {
     const newRow = { ...row }; // DUPLICAR DATOS
-    newColumns.forEach((key, index) => {
+    columnName.forEach((key, index) => {
       newRow[key] = columnsValue[index]; // ASIGNAR VALORES A LA COLUMNA
     });
     return newRow;
@@ -74,7 +74,7 @@ async function main(inputFile, outputFile) {
   try {
     const results = await readCSV(inputFile);
     const updatedResults = await addColumn(results); // AGREGAR COLUMNA
-    const headers = [...Object.keys(results[0]), ...config.addColumn.newColumns]; // NUEVAS CABECERAS
+    const headers = [...Object.keys(results[0]), ...config.addColumn.columnName]; // NUEVAS CABECERAS
     saveCSV(updatedResults, headers, outputFile);
     saveWeight(headers);
   }

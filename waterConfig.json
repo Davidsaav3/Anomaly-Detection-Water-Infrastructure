@@ -1,0 +1,80 @@
+{
+    "acquisition": {
+        "accesKey": "NNSXS.5TNLKEZMIOLEGLUYYQ7UNXNFPJKCH5SRBTR5YVY.6IQK5GKVMAJ6WQBET4ZMXW7OXIKLAY4H4HCF4OFBQ26LMOMLTEXA",
+        "subscribe": "v3/ua-bim@ttn/devices/+/up",
+        "appID": "ua-bim@ttn",
+        "mqttQeue": "mqtt://eu1.cloud.thethings.network:1883"
+    },
+    "flatten": {},
+
+    "expandedColumn": {
+        "expandedValue": "#fill#"
+    },
+    "reduceColumn": {},
+
+    "toCsv": {},
+    "encoding": {
+        "fillTransform": "mean",
+        "_": [
+            "none",
+            "zero",
+            "one",
+            "mean",
+            "median"
+        ]
+    },
+    "deleteColumn": {
+        "delete": [
+            "﻿Fecha",
+            "hora"
+        ]
+    },
+
+    "createTemplate": {},
+    "nulls": {},
+    "normalize": {},
+
+    "addColumn": {
+        "columnName": [
+            "truth"
+        ],
+        "value": [
+            0
+        ]
+    },
+    "createGroups": {
+        "folderName": "../dataset/createGroups/",
+        "groups": [
+            {
+                "output": "",
+                "fields": [
+                    ""
+                ]
+            },
+            {
+                "output": "",
+                "fields": [
+                    ""
+                ]
+            }
+        ]
+    },
+
+    "joinColumn": {
+        "joinFiles": [
+            "﻿Fecha",
+            "hora"
+        ]
+    },
+
+    "index": {
+        "threshold": 0.55,
+        "trees": 100,
+        "variableTrees":false,
+        "score": 4,
+        "variableScore":false,
+        "valueY": 5,
+        "valueX": "﻿Fecha_hora",
+        "columnName": "truth"
+    }
+}
