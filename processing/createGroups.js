@@ -11,7 +11,7 @@ if (args.length < 2) {
 
 let config = {};
 const inputFile = args[0];
-const sal = args[1];
+const outputDir = args[1];
 const configPath = args[2] ? args[2] : './config.json';
 
 // [ CARGAR CONFIGURACIÓN ]
@@ -23,8 +23,6 @@ catch (error) {
   console.error(`! ERROR: CONFIG ${configPath} !`, error);
   process.exit(1);
 }
-
-const outputDir = path.join(__dirname, sal);
 
 // [ LEER CSV ORIGINAL ]
 async function readCSV(filePath) {

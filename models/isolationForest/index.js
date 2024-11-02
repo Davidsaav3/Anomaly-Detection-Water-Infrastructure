@@ -158,21 +158,42 @@ const main = async () => {
             });
         }
 
+
         // 1. SCORES
-        const scoresHeader = ['id', 'valueYName', 'valueY', 'valueXName', 'valueX', ...Array.from({ length: iterations }, (_, i) => `score_${i + 1}`), 'scores_total', 'score', 'anomaly'].join(','); // CABECERA DE SCORES
+        const scoresHeader = [
+            'id','valueYName','valueY','valueXName','valueX',
+            ...Array.from({ length: iterations }, (_, i) => `score_${i + 1}`),
+            'scores_total','score','anomaly',
+            ...Array.from({ length: iterations }, (_, i) => `anomaly_${i + 1}`),
+            'anomaly_average','anomaly_probability'
+        ].join(',');
+        
+        // GENERAR FILAS DE DATOS
         const scoresRows = scoresResults[0].map((_, index) => {
             const scores = scoresResults.map(scoreArray => scoreArray[index].toFixed(2)); // OBTENER PUNTUACIONES
-            const scoresTotal = scores.reduce((acc, score) => acc + parseFloat(score), 0); // TOTAL DE PUNTUACIONES
-            const scoresPercent = (scoresTotal / iterations).toFixed(2); // PORCENTAJE DE PUNTUACIONES
-            const valueYName = headers[config.index.valueY]; // VALUE Y NAME
-            const valueY = features[index][config.index.valueY]; // VALUE Y
-            const valueXName = config.index.valueX; // VALUE X NME
-            const valueX = csvData[index][config.index.valueX]; // VALUE X
-            const isAnomaly = scoresPercent > config.index.threshold; // DETERMINAR ANOMALÍA
-            return [ids[index], valueYName, valueY, valueXName, valueX, ...scores, scoresTotal.toFixed(2), scoresPercent, isAnomaly].join(','); // DEVOLVER FILA
+            const scoresTotal = scores.reduce((acc, score) => acc + parseFloat(score), 0); // TOTAL PUNTUACIONES
+            const scoresPercent = (scoresTotal / iterations).toFixed(2); // PORCENTAJE PUNTUACIONES
+            const valueYName = headers[config.index.valueY];
+            const valueY = features[index][config.index.valueY];
+            const valueXName = config.index.valueX;
+            const valueX = csvData[index][config.index.valueX];
+            const isAnomaly = scoresPercent > config.index.threshold;
+        
+            // CALCULAR ANOMALÍAS SEGÚN THRESHOLD
+            const anomalies = scores.map(score => (parseFloat(score) > config.index.threshold ? 1 : 0));
+            const anomalyAverage = (anomalies.reduce((sum, value) => sum + value, 0) / iterations).toFixed(2);
+            
+            // Cambiar este cálculo
+            const anomalyProv = parseFloat(anomalyAverage) > config.index.anomalyThreshold;
+        
+            return [
+                ids[index], valueYName, valueY, valueXName, valueX, ...scores, scoresTotal.toFixed(2), scoresPercent, isAnomaly, ...anomalies, anomalyAverage, anomalyProv
+            ].join(',');
         }).join('\n');
-        fs.writeFileSync(scoresOutputPath, `${scoresHeader}\n${scoresRows}`, 'utf8'); // ESCRIBIR SCORES
-        console.log(`[ SCORES: ${scoresOutputPath} ]`); 
+        
+        // ESCRIBIR ARCHIVO
+        fs.writeFileSync(scoresOutputPath, `${scoresHeader}\n${scoresRows}`, 'utf8');
+
 
         // 2. MÉTRICAS
         const y_pred = scoresResults.map(scoreArray => scoreArray.map((score, idx) => score > config.index.threshold ? 1 : 0)); // PREDICCIONES
@@ -199,20 +220,27 @@ const main = async () => {
 
         // 4. PLOTS
         const datos = scoresResults[0].map((score, index) => {
-            const isAnomaly = score > config.index.threshold; // SI ES UNA ANOMALÍA
             const valueY = features[index][config.index.valueY]; // VALOR Y
             const valueX = csvData[index][config.index.valueX]; // VALOR X (FECHA)
             const rowFeatures = features[index]; // CARACTERÍSTICAS DE CADA FILA
             const id = csvData[index][config.index.id] || index; // UN IDENTIFICADOR ÚNICO
+            const scores = scoresResults.map(scoreArray => scoreArray[index].toFixed(2)); // OBTENER PUNTUACIONES
+            const anomalies = scores.map(score => (parseFloat(score) > config.index.threshold ? 1 : 0));
+            const anomalyAverage = (anomalies.reduce((sum, value) => sum + value, 0) / iterations).toFixed(2);
+            const isAnomaly = parseFloat(anomalyAverage) > config.index.anomalyThreshold;
             return [{ valueY, valueX, rowFeatures, id, score }, isAnomaly]; 
         });
 
         const datos2 = scoresResults.map((score, index) => {
-            const isAnomaly = score > config.index.threshold;
+            //const isAnomaly = score > config.index.threshold;
             const values_y = Object.values(features[index]); 
             const valueX = csvData[index][config.index.valueX];
             const rowFeatures = features[index];
             const id = csvData[index][config.index.id] || index;
+            const scores = scoresResults.map(scoreArray => scoreArray[index].toFixed(2)); // OBTENER PUNTUACIONES
+            const anomalies = scores.map(score => (parseFloat(score) > config.index.threshold ? 1 : 0));
+            const anomalyAverage = (anomalies.reduce((sum, value) => sum + value, 0) / iterations).toFixed(2);
+            const isAnomaly = parseFloat(anomalyAverage) > config.index.anomalyThreshold;
             return [{ values_y, valueX, rowFeatures, id, score }, isAnomaly];
         });
 

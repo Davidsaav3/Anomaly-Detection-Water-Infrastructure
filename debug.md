@@ -90,9 +90,9 @@ parametrizar valores
 -valueXName
 -Hacer prubas con grupos
 -arreglar no repreentacion
-
-------------------------- 6 --------------------------
 -Anomalias x iteracion, ejemlo excel--- otra tabla seguda
+------------------------- 6 --------------------------
+-represenar lo optenido
 ------------------------------------------------------
 
 -REDACTAR

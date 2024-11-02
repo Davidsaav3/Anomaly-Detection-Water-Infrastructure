@@ -1,5 +1,5 @@
 {
-  "name": "Anomaly-Detection",
+  "name": "anomaly-detection",
   "version": "1.0.0",
   "description": "Processing sensor data using isolation forest algorithm.",
   "main": "index.js",
