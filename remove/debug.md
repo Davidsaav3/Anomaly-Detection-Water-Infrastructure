@@ -85,14 +85,15 @@ parametrizar valores
 -Eliminar registro, fila... dode hay null ,R,0,0
 ----sumr 1
 ----Organizar entrada y salidas...
+----Thrut entra como valor
+-Config metaparamtros
+-valueXName
 ------------------------- 6 --------------------------
 -Anomalias x iteracion, ejemlo excel--- otra tabla seguda
--Thrut entra como valor
 -Hacer prubas con grupos
--Config metaparamtros
+-arreglar no repreentacion
 ------------------------------------------------------
 -Destraducir y Desnormalizar...
-
 -
 -
 -

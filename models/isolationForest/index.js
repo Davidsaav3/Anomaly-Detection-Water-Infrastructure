@@ -12,14 +12,15 @@ if (args.length < 6) {
 
 // [ ARGUMENTOS ]
 const inputFilename = args[0]; // ENTRADA
-const weightFilePath = args[1]; // PESOS
-const iterations = parseInt(args[2], 10); // ITERACIONES ISOALTION
-const ruta = args[3]; // PLOT 1
-const isolationOutputPath = `${ruta}${args[4]}`; // ISOLATION
-const scoresOutputPath = `${ruta}${args[5]}`; // SCORES
-const metricsOutputPath = `${ruta}${args[6]}`; // MÉTRICAS
-const nombre_plot = args[7]; // PLOT
-const configPath = args[8]; // CONFIGURACIÓN
+const inputFilename2 = args[1]; // ENTRADA
+const weightFilePath = args[2]; // PESOS
+const iterations = parseInt(args[3], 10); // ITERACIONES ISOALTION
+const ruta = args[4]; // PLOT 1
+const isolationOutputPath = `${ruta}${args[5]}`; // ISOLATION
+const scoresOutputPath = `${ruta}${args[6]}`; // SCORES
+const metricsOutputPath = `${ruta}${args[7]}`; // MÉTRICAS
+const nombre_plot = args[8]; // PLOT
+const configPath = args[9]; // CONFIGURACIÓN
 let config = {};
 let iterationCounter = 0;
 
@@ -116,6 +117,7 @@ const main = async () => {
     try {
         const headers = await readCSVHeaders(inputFilename)
         const csvData = await readCSV(inputFilename); // LEER CSV
+        const csvData2 = await readCSV(inputFilename2); // LEER CSV
         const weights = await readWeightCSV(weightFilePath); // LEER PESOS
         let features = processWeight(csvData, weights); // PROCESAR PESOS
         
@@ -126,7 +128,7 @@ const main = async () => {
         
         const scoresResults = []; // RESULTADOS PUNTUACIONES
         const ids = csvData.map(row => row[config.index.id] || csvData.indexOf(row)); // IDENTIFICADORES
-        const y_true = csvData.map(row => parseInt(row[config.index.columnName])); // COLUMNA "TRUTH"
+        const y_true = csvData2.map(row => parseInt(row[config.index.columnName])); // COLUMNA "TRUTH"
         const mseResults = []; // RESULTADOS MSE
         const thresholdIncrement = (1 - 0.1) / iterations; // INCREMENTO UMBRAL
         const isolationData = []; // DATOS AISLAMIENTO
@@ -164,7 +166,7 @@ const main = async () => {
             const scoresPercent = (scoresTotal / iterations).toFixed(2); // PORCENTAJE DE PUNTUACIONES
             const valueYName = headers[config.index.valueY]; // VALUE Y NAME
             const valueY = features[index][config.index.valueY]; // VALUE Y
-            const valueXName = csvData[0][config.index.valueX]; // VALUE X NME
+            const valueXName = config.index.valueX; // VALUE X NME
             const valueX = csvData[index][config.index.valueX]; // VALUE X
             const isAnomaly = scoresPercent > config.index.threshold; // DETERMINAR ANOMALÍA
             return [ids[index], valueYName, valueY, valueXName, valueX, ...scores, scoresTotal.toFixed(2), scoresPercent, isAnomaly].join(','); // DEVOLVER FILA

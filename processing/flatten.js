@@ -1,6 +1,6 @@
 const fs = require('fs');
 const args = process.argv.slice(2);
-//const configPath = args[2] ? args[2] : './config.json';
+const configPath = args[2] ? args[2] : './config.json';
 
 if (args.length < 2) {
   console.error('! ERROR: INPUT !');
@@ -8,14 +8,14 @@ if (args.length < 2) {
 }
 
 // [ CARGAR CONFIGURACIÓN ]
-// try {
-//   const configFile = fs.readFileSync(configPath);
-//   config = JSON.parse(configFile);
-// }
-// catch (error) {
-//   console.error(`! ERROR: CONFIG ${configPath} !`, error);
-//   process.exit(1);
-// }
+try {
+  const configFile = fs.readFileSync(configPath);
+  config = JSON.parse(configFile);
+}
+catch (error) {
+  console.error(`! ERROR: CONFIG ${configPath} !`, error);
+  process.exit(1);
+}
 
 // [ LEER EL ARCHIVO JSON ORIGINAL ]
 function readData(filePath) {

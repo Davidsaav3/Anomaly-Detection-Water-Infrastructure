@@ -74,7 +74,7 @@ async function main(inputFile, outputFile) {
   try {
     const results = await readCSV(inputFile);
     const updatedResults = await addColumn(results); // AGREGAR COLUMNA
-    const headers = [...Object.keys(results[0]), ...config.addColumn.columnName]; // NUEVAS CABECERAS
+    const headers = [...Object.keys(results[0])]; // NUEVAS CABECERAS
     saveCSV(updatedResults, headers, outputFile);
     saveWeight(headers);
   }
