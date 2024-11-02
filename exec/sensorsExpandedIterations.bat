@@ -34,6 +34,10 @@ echo SENSORS EXPANDED 10 - Add Column..
 node ../processing/addColumn.js ../results/!treesFolder!/normalize.csv ../results/!treesFolder!/addColumn.csv ../results/!treesFolder!/auxiliaryWeight.csv ./sensorsConfig.json
 if %errorlevel% neq 0 exit /b %errorlevel%
 
+echo WATER 10.1 - Create Groups...
+node ../processing/createGroups.js ../results/!treesFolder!/addColumn.csv ../results/!treesFolder!/createGroups ./sensorsConfig.json
+if !errorlevel! neq 0 exit /b !errorlevel!
+
 for /L %%i in (1,1,10) do (
     set "iterFolder=iteration%%i"
 

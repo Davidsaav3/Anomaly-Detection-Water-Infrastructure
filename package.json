@@ -16,47 +16,78 @@
     "mqtt": "^5.10.1"
   },
   "scripts": {
-    "sensors 1 - acquisition": "node   ./processing/acquisition.js   ./dataset/acquisition.json   ./exec/sensorsConfig.json",
-    "sensors 2 - flatten": "node   ./processing/flatten.js   ./dataset/acquisition.json   ./dataset/flatten.json   ./exec/sensorsConfig.json",
+    "1 - acquisition": "node   ./processing/acquisition.js   ./results/sensorsExpanded/acquisition.json   ./exec/sensorsConfig.json",
+    "2 - flatten": "node   ./processing/flatten.js   ./results/sensorsExpanded/acquisition.json   ./results/sensorsExpanded/flatten.json   ./exec/sensorsConfig.json",
     
-    "sensors 3 - expandedColumn": "node   ./processing/expandedColumn.js   ./dataset/flatten.json   ./dataset/expandedColumn.json   ./exec/sensorsConfig.json",
-    "sensors 4 - reduceColumn": "node   ./processing/reduceColumn.js   ./dataset/flatten.json   ./dataset/reduceColumn.json   ./exec/sensorsConfig.json",
+    "3 - expandedColumn": "node   ./processing/expandedColumn.js   ./results/sensorsExpanded/flatten.json   ./results/sensorsExpanded/expandedColumn.json   ./exec/sensorsConfig.json",
+    "4 - reduceColumn": "node   ./processing/reduceColumn.js   ./results/sensorsReduce/flatten.json   ./results/sensorsReduce/reduceColumn.json   ./exec/sensorsConfig.json",
+
+    "5 - toCsv": "node   ./processing/toCsv.js   ./results/sensorsExpanded/expandedColumn.json   ./results/sensorsExpanded/toCsv.csv   ./exec/sensorsConfig.json",
+      "5.1 - joinColumn": "node   ./processing/joinColumn.js   ./results/water/toCsv.csv   ./results/water/joinColumn.csv   ./exec/sensorsConfig.json",
+    "6 - encoding": "node   ./processing/encoding.js   ./results/sensorsExpanded/toCsv.csv   ./results/sensorsExpanded/auxiliaryDictionary.csv    ./results/sensorsExpanded/encoding.csv   ./exec/sensorsConfig.json",
+      "6.1 - deleteColumn": "node   ./processing/deleteColumn.js   ./results/water/encoding.csv   ./results/water/deleteColumn.csv   ./exec/sensorsConfig.json",
+
+    "7 - createTemplate": "node   ./processing/createTemplate.js   ./results/sensorsExpanded/encoding.csv   ./results/sensorsExpanded/auxiliaryNulls.csv   ./results/sensorsExpanded/auxiliaryNormalize.csv   ./exec/sensorsConfig.json",
+    "8 - nulls": "node   ./processing/nulls.js   ./results/sensorsExpanded/encoding.csv   ./results/sensorsExpanded/auxiliaryNulls.csv   ./results/sensorsExpanded/nulls.csv    ./exec/sensorsConfig.json",
+    "9 - normalize": "node   ./processing/normalize.js   ./results/sensorsExpanded/nulls.csv   ./results/sensorsExpanded/auxiliaryNormalize.csv    ./results/sensorsExpanded/normalize.csv   ./results/sensorsExpanded/auxiliaryMaxMin.csv   ./exec/sensorsConfig.json",
     
-    "sensors 5 - toCsv": "node   ./processing/toCsv.js   ./dataset/expandedColumn.json   ./dataset/toCsv.csv   ./exec/sensorsConfig.json",
-        "sensors 5.1 - joinColumn": "node   ./processing/joinColumn.js   ./dataset/toCsv.csv   ./dataset/joinColumn.csv   ./exec/sensorsConfig.json",
-    "sensors 6 - encoding": "node   ./processing/encoding.js   ./dataset/toCsv.csv   ./dataset/auxiliaryDictionary.csv    ./dataset/encoding.csv   ./exec/sensorsConfig.json",
-        "sensors 6.1 - deleteColumn": "node   ./processing/deleteColumn.js   ./dataset/encoding.csv   ./dataset/deleteColumn.csv   ./exec/sensorsConfig.json",
-  
-    "sensors 7 - createTemplate": "node   ./processing/createTemplate.js   ./dataset/encoding.csv   ./dataset/auxiliaryNulls.csv   ./dataset/auxiliaryNormalize.csv   ./exec/sensorsConfig.json",
-    "sensors 8 - nulls": "node   ./processing/nulls.js   ./dataset/encoding.csv   ./dataset/auxiliaryNulls.csv   ./dataset/nulls.csv    ./exec/sensorsConfig.json",
-    "sensors 9 - normalize": "node   ./processing/normalize.js   ./dataset/nulls.csv   ./dataset/auxiliaryNormalize.csv    ./dataset/normalize.csv   ./dataset/auxiliaryMaxMin.csv   ./exec/sensorsConfig.json",
+    "10 - addColumn": "node   ./processing/addColumn.js   ./results/sensorsExpanded/normalize.csv   ./results/sensorsExpanded/addColumn.csv   ./results/sensorsExpanded/auxiliaryWeight.csv   ./exec/sensorsConfig.json",
+        "10.1 - createGroups": "node   ./processing/createGroups.js   ./results/sensorsExpanded/addColumn.csv   ./results/sensorsExpanded/createGroups   ./exec/sensorsConfig.json",
     
-    "sensors 10 - addColumn": "node   ./processing/addColumn.js   ./dataset/normalize.csv   ./dataset/addColumn.csv   ./dataset/auxiliaryWeight.csv   ./exec/sensorsConfig.json",
-        "sensors 10.1 - createGroups": "node   ./processing/createGroups.js   ./dataset/normalize.csv   ./exec/sensorsConfig.json",
+      "11 - index": "node ./models/isolationForest/index.js ./results/sensorsExpanded/addColumn.csv ./results/sensorsExpanded/auxiliaryWeight.csv 25 ./results/sensorsExpanded/result/ isolation.csv scores.csv metrics.csv image ./exec/sensorsConfig.json",
+
+
+
+    "sensorsExpanded 1 - acquisition": "node   ./processing/acquisition.js   ./results/sensorsExpanded/acquisition.json   ./exec/sensorsConfig.json",
+    "sensorsExpanded 2 - flatten": "node   ./processing/flatten.js   ./results/sensorsExpanded/acquisition.json   ./results/sensorsExpanded/flatten.json   ./exec/sensorsConfig.json",
     
-    "sensors 11 - index": "node   ./models/isolationForest/index.js   ./dataset/addColumn.csv   ./dataset/auxiliaryWeight.csv   25   ./models/isolationForest/results/   isolation.csv   scores.csv   metrics.csv   image   ./exec/sensorsConfig.json",
+    "sensorsExpanded 3 - expandedColumn": "node   ./processing/expandedColumn.js   ./results/sensorsExpanded/flatten.json   ./results/sensorsExpanded/expandedColumn.json   ./exec/sensorsConfig.json",
+    
+    "sensorsExpanded 5 - toCsv": "node   ./processing/toCsv.js   ./results/sensorsExpanded/expandedColumn.json   ./results/sensorsExpanded/toCsv.csv   ./exec/sensorsConfig.json",
+    "sensorsExpanded 6 - encoding": "node   ./processing/encoding.js   ./results/sensorsExpanded/toCsv.csv   ./results/sensorsExpanded/auxiliaryDictionary.csv    ./results/sensorsExpanded/encoding.csv   ./exec/sensorsConfig.json",
+
+    "sensorsExpanded 7 - createTemplate": "node   ./processing/createTemplate.js   ./results/sensorsExpanded/encoding.csv   ./results/sensorsExpanded/auxiliaryNulls.csv   ./results/sensorsExpanded/auxiliaryNormalize.csv   ./exec/sensorsConfig.json",
+    "sensorsExpanded 8 - nulls": "node   ./processing/nulls.js   ./results/sensorsExpanded/encoding.csv   ./results/sensorsExpanded/auxiliaryNulls.csv   ./results/sensorsExpanded/nulls.csv    ./exec/sensorsConfig.json",
+    "sensorsExpanded 9 - normalize": "node   ./processing/normalize.js   ./results/sensorsExpanded/nulls.csv   ./results/sensorsExpanded/auxiliaryNormalize.csv    ./results/sensorsExpanded/normalize.csv   ./results/sensorsExpanded/auxiliaryMaxMin.csv   ./exec/sensorsConfig.json",
+    
+    "sensorsExpanded 10 - addColumn": "node   ./processing/addColumn.js   ./results/sensorsExpanded/normalize.csv   ./results/sensorsExpanded/addColumn.csv   ./results/sensorsExpanded/auxiliaryWeight.csv   ./exec/sensorsConfig.json",
+        "sensorsExpanded 10.1 - createGroups": "node   ./processing/createGroups.js   ./results/sensorsExpanded/addColumn.csv   ./results/sensorsExpanded/createGroups   ./exec/sensorsConfig.json",
+    
+    "sensorsExpanded 11 - index": "node ./models/isolationForest/index.js ./results/sensorsExpanded/addColumn.csv ./results/sensorsExpanded/auxiliaryWeight.csv 25 ./results/sensorsExpanded/result/ isolation.csv scores.csv metrics.csv image ./exec/sensorsConfig.json",
   
 
 
-    "water 1 - acquisition": "node   ./processing/acquisition.js   ./dataset/acquisition.json   ./exec/waterConfig.json",
-    "water 2 - flatten": "node   ./processing/flatten.js   ./dataset/acquisition.json   ./dataset/flatten.json   ./exec/waterConfig.json",
+    "sensorsReduce 1 - acquisition": "node   ./processing/acquisition.js   ./results/sensorsReduce/acquisition.json   ./exec/sensorsConfig.json",
+    "sensorsReduce 2 - flatten": "node   ./processing/flatten.js   ./results/sensorsReduce/acquisition.json   ./results/sensorsReduce/flatten.json   ./exec/sensorsConfig.json",
     
-    "water 3 - expandedColumn": "node   ./processing/expandedColumn.js   ./dataset/flatten.json   ./dataset/expandedColumn.json   ./exec/waterConfig.json",
-    "water 4 - reduceColumn": "node   ./processing/reduceColumn.js   ./dataset/flatten.json   ./dataset/reduceColumn.json   ./exec/waterConfig.json",
+    "sensorsReduce 4 - reduceColumn": "node   ./processing/reduceColumn.js   ./results/sensorsReduce/flatten.json   ./results/sensorsReduce/reduceColumn.json   ./exec/sensorsConfig.json",
     
-    "water 5 - toCsv": "node   ./processing/toCsv.js   ./dataset/expandedColumn.json   ./dataset/toCsv.csv   ./exec/waterConfig.json",
-        "5.1 - joinColumn": "node   ./processing/joinColumn.js   ./dataset/toCsv.csv   ./dataset/joinColumn.csv   ./exec/waterConfig.json",
-    "water 6 - encoding": "node   ./processing/encoding.js    ./dataset/toCsv.csv   ./dataset/auxiliaryDictionary.csv   ./dataset/encoding.csv    ./exec/waterConfig.json",
-        "water 6.1 - deleteColumn": "node   ./processing/deleteColumn.js   ./dataset/encoding.csv   ./dataset/deleteColumn.csv   ./exec/waterConfig.json",
+    "sensorsReduce 5 - toCsv": "node   ./processing/toCsv.js   ./results/sensorsReduce/reduceColumn.json   ./results/sensorsReduce/toCsv.csv   ./exec/sensorsConfig.json",
+    "sensorsReduce 6 - encoding": "node   ./processing/encoding.js   ./results/sensorsReduce/toCsv.csv   ./results/sensorsReduce/auxiliaryDictionary.csv    ./results/sensorsReduce/encoding.csv   ./exec/sensorsConfig.json",
   
-    "water 7 - createTemplate": "node   ./processing/createTemplate.js   ./dataset/encoding.csv   ./dataset/auxiliaryNulls.csv   ./dataset/auxiliaryNormalize.csv   ./exec/waterConfig.json",
-    "water 8 - nulls": "node   ./processing/nulls.js   ./dataset/encoding.csv   ./dataset/auxiliaryNulls.csv   ./dataset/nulls.csv    ./exec/waterConfig.json",
-    "water 9 - normalize": "node   ./processing/normalize.js   ./dataset/nulls.csv   ./dataset/auxiliaryNormalize.csv   ./dataset/normalize.csv   ./dataset/auxiliaryMaxMin.csv   ./exec/waterConfig.json",
+    "sensorsReduce 7 - createTemplate": "node   ./processing/createTemplate.js   ./results/sensorsReduce/encoding.csv   ./results/sensorsReduce/auxiliaryNulls.csv   ./results/sensorsReduce/auxiliaryNormalize.csv   ./exec/sensorsConfig.json",
+    "sensorsReduce 8 - nulls": "node   ./processing/nulls.js   ./results/sensorsReduce/encoding.csv   ./results/sensorsReduce/auxiliaryNulls.csv   ./results/sensorsReduce/nulls.csv    ./exec/sensorsConfig.json",
+    "sensorsReduce 9 - normalize": "node   ./processing/normalize.js   ./results/sensorsReduce/nulls.csv   ./results/sensorsReduce/auxiliaryNormalize.csv    ./results/sensorsReduce/normalize.csv   ./results/sensorsReduce/auxiliaryMaxMin.csv   ./exec/sensorsConfig.json",
     
-    "water 10 - addColumn": "node   ./processing/addColumn.js   ./dataset/normalize.csv   ./dataset/addColumn.csv   ./dataset/auxiliaryWeight.csv   ./exec/waterConfig.json",
-        "water 10.1 - createGroups": "node   ./processing/createGroups.js   ./dataset/normalize.csv   ./exec/waterConfig.json",
+    "sensorsReduce 10 - addColumn": "node   ./processing/addColumn.js   ./results/sensorsReduce/normalize.csv   ./results/sensorsReduce/addColumn.csv   ./results/sensorsReduce/auxiliaryWeight.csv   ./exec/sensorsConfig.json",
+        "sensorsReduce 10.1 - createGroups": "node   ./processing/createGroups.js   ./results/sensorsExpanded/addColumn.csv   ./results/sensorsReduce/createGroups  ./exec/sensorsConfig.json",
     
-    "water 11 - index": "node   ./models/isolationForest/index.js   ./dataset/addColumn.csv   ./dataset/auxiliaryWeight.csv   25   ./models/isolationForest/results/   isolation.csv   scores.csv   metrics.csv   image   ./exec/waterConfig.json"
+    "sensorsReduce 11 - index": "node ./models/isolationForest/index.js ./results/sensorsReduce/addColumn.csv ./results/sensorsReduce/auxiliaryWeight.csv 25 ./results/sensorsReduce/result/ isolation.csv scores.csv metrics.csv image ./exec/sensorsConfig.json",
+  
+
+
+        "water 5.1 - joinColumn": "node   ./processing/joinColumn.js   ./results/water/toCsv.csv   ./results/water/joinColumn.csv   ./exec/waterConfig.json",
+    "water 6 - encoding": "node   ./processing/encoding.js    ./results/water/toCsv.csv   ./results/water/auxiliaryDictionary.csv   ./results/water/encoding.csv    ./exec/waterConfig.json",
+        "water 6.1 - deleteColumn": "node   ./processing/deleteColumn.js   ./results/water/encoding.csv   ./results/water/deleteColumn.csv   ./exec/waterConfig.json",
+  
+    "water 7 - createTemplate": "node   ./processing/createTemplate.js   ./results/water/encoding.csv   ./results/water/auxiliaryNulls.csv   ./results/water/auxiliaryNormalize.csv   ./exec/waterConfig.json",
+    "water 8 - nulls": "node   ./processing/nulls.js   ./results/water/encoding.csv   ./results/water/auxiliaryNulls.csv   ./results/water/nulls.csv    ./exec/waterConfig.json",
+    "water 9 - normalize": "node   ./processing/normalize.js   ./results/water/nulls.csv   ./results/water/auxiliaryNormalize.csv   ./results/water/normalize.csv   ./results/water/auxiliaryMaxMin.csv   ./exec/waterConfig.json",
+    
+    "water 10 - addColumn": "node   ./processing/addColumn.js   ./results/water/normalize.csv   ./results/water/addColumn.csv   ./results/water/auxiliaryWeight.csv   ./exec/waterConfig.json",
+        "water 10.1 - createGroups": "node   ./processing/createGroups.js   ./results/water/addColumn.csv   ./results/water/createGroups   ./exec/waterConfig.json",
+    
+    "water 11 - index": "node ./models/isolationForest/index.js ./results/water/addColumn.csv ./results/water/auxiliaryWeight.csv 25 ./results/water/result/ isolation.csv scores.csv metrics.csv image ./exec/waterConfig.json"
   
   },
   "keywords": [

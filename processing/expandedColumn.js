@@ -1,6 +1,6 @@
 const fs = require('fs');
 const args = process.argv.slice(2);
-const configPath = args[2] ? args[2] : '../exec/config.json';
+const configPath = args[2] ? args[2] : './exec/config.json';
 let config = {};
 
 // [ NOMBRES DE ARCHIVO ]

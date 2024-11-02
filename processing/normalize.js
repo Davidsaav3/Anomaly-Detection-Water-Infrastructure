@@ -12,7 +12,7 @@ const inputFile = args[0];
 const normalizeFile = args[1];
 const outputFile = args[2];
 const outputMinMaxFile = args[3];
-const configPath = args[4] ? args[4] : '../exec/config.json';
+const configPath = args[4] ? args[4] : './exec/config.json';
 
 // [ CARGAR CONFIGURACIÓN ]
 const loadConfig = (configPath) => {

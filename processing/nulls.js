@@ -11,15 +11,14 @@ if (args.length !== 4) {
 const inputFile = args[0];
 const nullsFile = args[1];
 const outputFile = args[2];
-const configPath = args[3] ? args[3] : '../exec/config.json';
+const configPath = args[3] ? args[3] : './exec/config.json';
 let config = {};
 
 // [ CARGAR CONFIGURACIÓN ]
 try {
   const configFile = fs.readFileSync(configPath);
   config = JSON.parse(configFile);
-}
-catch (error) {
+} catch (error) {
   console.error(`! ERROR: CONFIG ${configPath} !`, error);
   process.exit(1);
 }
@@ -40,7 +39,7 @@ const readCSV = (filePath) => new Promise((resolve, reject) => {
 const saveCSV = (data, headers, fileName) => {
   const csvContent = [
     headers.join(','), // CABECERAS
-    ...data.map(row => headers.map(header => row[header] ?? '').join(',')) // FORMAR ARCHIVO 
+    ...data.map(row => headers.map(header => row[header] ?? '').join(',')) // FORMAR ARCHIVO
   ].join('\n');
   fs.writeFileSync(fileName, csvContent); // GUARDAR
   console.log(`[ NULLS: ${fileName} ]`);
@@ -49,27 +48,39 @@ const saveCSV = (data, headers, fileName) => {
 // [ *** MAIN ]
 async function main(inputFile, nullsFile) { 
   try {
-    const { headers, results } = await readCSV(inputFile); // LEER CSV 
-    const { results: nullValues } = await readCSV(nullsFile); // LEER NULOS
+    const { headers, results } = await readCSV(inputFile); // LEER CSV PRINCIPAL
+    const { results: nullValues } = await readCSV(nullsFile); // LEER CSV DE NULOS
     if (nullValues.length === 0) throw new Error('EMPTY NULLS FILE'); // ARCHIVO DE NULOS NO VACÍO
     const values1 = nullValues[0]; // VALORES DE PRIMERA FILA DE NULOS
-    return results.map(row => { // MAPEAR CADA FILA DEL CSV 
-      return headers.reduce((newRow, header) => { // RECORRER CADA ENCABEZADO
-        // SUSTITUIR VALORES NULOS SEGÚN ARCHIVO DE NULOS
+
+    // ENCONTRAR COLUMNAS CON 'R', 'r', 'D' O 'd' EN NULLSFILE
+    const columnsToCheck = Object.keys(values1).filter(
+      (header) => ['R', 'r', 'D', 'd'].includes(values1[header])
+    );
+
+    // FILTRAR FILAS EN BASE A COLUMNAS ESPECIFICADAS EN columnsToCheck
+    const filteredResults = results.filter(row => {
+      return columnsToCheck.every(header => row[header] !== null && row[header] !== 'null' && row[header] !== '');
+    });
+
+    // MAPEAR Y NORMALIZAR DATOS
+    const normalizedData = filteredResults.map(row => {
+      return headers.reduce((newRow, header) => {
         newRow[header] = (row[header] === null || row[header] === 'null' || row[header] === '')
           ? (header in values1 ? values1[header] : null) // REMPLAZAR CON LO DEL ARCHIVO NULLS
           : row[header]; // MANTENER VALOR ORIGINAL SI NO ES NULO
-        return newRow; // NUEVA FILA
+        return newRow;
       }, {});
     });
-  } 
-  catch (error) {
-    console.error('! ERROR ! ', error); // CAPTURAR Y MOSTRAR ERRORES
+
+    return normalizedData;
+  } catch (error) {
+    console.error('! ERROR ! ', error);
   }
 }
 
 main(inputFile, nullsFile)
   .then(data => {
-    saveCSV(data, data.length ? Object.keys(data[0]) : [], outputFile); // GUARDAR
+    saveCSV(data, data.length ? Object.keys(data[0]) : [], outputFile); // GUARDAR RESULTADOS
   })
   .catch(error => console.error('! ERROR ! ', error));

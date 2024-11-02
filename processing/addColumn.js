@@ -12,7 +12,7 @@ if (args.length < 4) {
 const inputFile = args[0]; // ENTRADA
 const outputFile = args[1]; // SALIDA
 const weightFileName = args[2]; // PESO
-const configPath = args[3] ? args[3] : '../exec/config.json'; // CONFIGURACIÓN
+const configPath = args[3] ? args[3] : './exec/config.json'; // CONFIGURACIÓN
 let config = {};
 
 // [ CARGAR CONFIGURACIÓN ]

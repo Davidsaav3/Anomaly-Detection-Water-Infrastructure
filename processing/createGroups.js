@@ -12,7 +12,7 @@ if (args.length < 2) {
 let config = {};
 const inputFile = args[0];
 const sal = args[1];
-const configPath = args[2] ? args[2] : '../exec/config.json';
+const configPath = args[2] ? args[2] : './exec/config.json';
 
 // [ CARGAR CONFIGURACIÓN ]
 try {
@@ -49,7 +49,7 @@ function saveCSV(data, headers, groupName) {
   if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true }); // CREAR DIRECTORIO
   const outputFileName = `${groupName.toLowerCase()}.csv`; // NOMBRE DEL GRUPO COMO NOMBRE DEL ARCHIVO
   fs.writeFileSync(path.join(outputDir, outputFileName), csvContent);
-  console.log(`[ CREATE GROUPS: ${outputFileName} ]`);
+  console.log(`[ CREATE GROUPS: ${outputDir}${outputFileName} ]`);
 }
 
 // [ *** DIVIDIR EN GRUPOS ]
