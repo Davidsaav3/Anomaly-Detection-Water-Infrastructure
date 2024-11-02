@@ -176,7 +176,7 @@
     "index": {
         "threshold": 0.65,
         "trees": 100,
-        "variableTrees":true,
+        "variableTrees":false,
         "score": 4,
         "variableScore":false,
         "valueY": 0,
