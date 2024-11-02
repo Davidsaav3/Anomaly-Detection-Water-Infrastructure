@@ -88,12 +88,11 @@ parametrizar valores
 ----Thrut entra como valor
 -Config metaparamtros
 -valueXName
+-Hacer prubas con grupos
+-arreglar no repreentacion
 
 ------------------------- 6 --------------------------
 -Anomalias x iteracion, ejemlo excel--- otra tabla seguda
-
--Hacer prubas con grupos
--arreglar no repreentacion
 ------------------------------------------------------
 
 -REDACTAR

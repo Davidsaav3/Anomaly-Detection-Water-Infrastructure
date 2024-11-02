@@ -43,7 +43,7 @@
         ]
     },
     "createGroups": {
-        "folderName": "../dataset/createGroups/",
+        
         "groups": [
             {
                 "output": "",
@@ -71,7 +71,7 @@
         "threshold": 0.55,
         "trees": 100,
         "variableTrees":false,
-        "score": 4,
+        "score": 0,
         "variableScore":false,
         "valueY": 5,
         "valueX": "﻿Fecha_Hora",

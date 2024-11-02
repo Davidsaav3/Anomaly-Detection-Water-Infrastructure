@@ -43,7 +43,7 @@
         ]
     },
     "createGroups": {
-        "folderName": "../dataset/createGroups/",
+        
         "groups": [
             {
                 "output": "",

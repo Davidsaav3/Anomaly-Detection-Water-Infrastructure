@@ -42,7 +42,7 @@
         ]
     },
     "createGroups": {
-        "folderName": "../dataset/createGroups/",
+        
         "groups": [
             {
                 "output": "DEVICE",
@@ -179,7 +179,7 @@
         "variableTrees":false,
         "score": 4,
         "variableScore":false,
-        "valueY": 0,
+        "valueY": 2,
         "valueX": "received_at",
         "columnName": "truth"
     }

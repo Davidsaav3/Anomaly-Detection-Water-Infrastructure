@@ -108,14 +108,16 @@ async function normalizeData(inputFile, normalizeFile, outputMinMaxFile) {
         if (!isNaN(min) && !isNaN(max) && min !== max) {
           const normalizedValue = normalizeValue(row[header], min, max, parseFloat(results1[0][header]), parseFloat(results1[1][header]));
           newRow[header] = (normalizedValue === 0) ? '0' : normalizedValue;
-        } else {
-          newRow[header] = row[header];
+        } 
+        else {
+          newRow[header] = 0;
         }
       });
       return newRow;
     });
     return normalizedData;
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('! ERROR ! ', error);
   }
 }
