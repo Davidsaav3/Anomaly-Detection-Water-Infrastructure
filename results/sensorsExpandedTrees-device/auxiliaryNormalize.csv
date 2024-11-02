@@ -1,0 +1,3 @@
+end_device_ids.device_id,end_device_ids.application_ids.application_id,end_device_ids.dev_eui,end_device_ids.join_eui,end_device_ids.dev_addr,received_at
+0,0,0,0,0,0
+1,1,1,1,1,1

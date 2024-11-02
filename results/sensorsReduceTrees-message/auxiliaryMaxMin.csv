@@ -1,0 +1,3 @@
+correlation_ids_0,received_at,uplink_message.session_key_id,uplink_message.f_port,uplink_message.f_cnt,uplink_message.frm_payload
+512,512,14,85,12279,326
+0,0,0,2,2182,0

@@ -1,0 +1,3 @@
+uplink_message.rx_metadata_0.gateway_ids.gateway_id,uplink_message.rx_metadata_0.gateway_ids.eui,uplink_message.rx_metadata_0.time,uplink_message.rx_metadata_0.timestamp,uplink_message.rx_metadata_0.rssi,uplink_message.rx_metadata_0.channel_rssi,uplink_message.rx_metadata_0.location.latitude,uplink_message.rx_metadata_0.location.longitude,uplink_message.rx_metadata_0.location.altitude,uplink_message.rx_metadata_0.location.source,uplink_message.rx_metadata_0.uplink_token,uplink_message.rx_metadata_0.received_at,received_at
+4,4,512,4290181089,-67,-67,38.385917659159134,-0.5101910233497621,20,0,512,512,512
+0,0,0,35324087,-116,-116,38.3833301416072,-0.5170252919197084,8,0,0,0,0
