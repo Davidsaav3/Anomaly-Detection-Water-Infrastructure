@@ -40,12 +40,12 @@ function flattenObject(ob) {
     }
     else if (Array.isArray(cur)) {
       cur.forEach((item, index) => {
-        recurse(item, `${prop}_${index}`); // APLANAR ARRAYS CON BARRAS BAJAS
+        recurse(item, `${prop}${config.flatten.separator}${index}`); // APLANAR ARRAYS CON BARRAS BAJAS
       });
     }
     else {
       for (const key in cur) {
-        recurse(cur[key], prop ? `${prop}.${key}` : key); // CONCATENAR CLAVES
+        recurse(cur[key], prop ? `${prop}${config.flatten.keySeparator}${key}` : key); // CONCATENAR CLAVES
       }
     }
   }

@@ -5,7 +5,10 @@
         "appID": "ua-bim@ttn",
         "mqttQeue": "mqtt://eu1.cloud.thethings.network:1883"
     },
-    "flatten": {},
+    "flatten": {
+        "separator": "_",
+        "keySeparator": "."
+    },
 
     "expandedColumn": {
         "expandedValue": "#fill#"
@@ -30,11 +33,16 @@
         ]
     },
 
-    "createTemplate": {},
+    "createTemplate": {
+        "nulls": "0",
+        "normalize1": "0",
+        "normalize2": "1"
+    },
     "nulls": {},
     "normalize": {},
 
     "addColumn": {
+        "weight": "1",
         "columnName": [
             "truth"
         ],
@@ -61,6 +69,8 @@
     },
 
     "joinColumn": {
+        "separator1": "_",
+        "separator2": "_",
         "joinFiles": [
             "﻿Fecha",
             "hora"

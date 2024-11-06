@@ -49,7 +49,7 @@ function saveCSV(data, headers, fileName) {
 
 // [ GUARDAR ARCHIVO WEIGHT ]
 function saveWeight(headers) {
-  const onesRow = headers.map(() => '1').join(','); // FILA DE VALORES (1) MULTIPLICADOR DE PESOS
+  const onesRow = headers.map(() => config.addColumn.weight).join(','); // FILA DE VALORES (1) MULTIPLICADOR DE PESOS
   const csvContent = [headers.join(','), onesRow].join('\n'); // UNIR VALORES Y CLAVES
   fs.writeFileSync(weightFileName, csvContent); // GUARDAR
   console.log(`[ ADD COLUMN - WEIGHT: ${weightFileName} ]`);

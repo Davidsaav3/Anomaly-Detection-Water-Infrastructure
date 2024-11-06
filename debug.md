@@ -75,6 +75,7 @@ parametrizar valores
 ---valore vacios
 ---null debe sustituir por lo q contiene
 
+------------------------------------------------------
 ----TRUTH KEY
 ----Config general
 ----Diccionario propio
@@ -91,12 +92,17 @@ parametrizar valores
 -Hacer prubas con grupos
 -arreglar no repreentacion
 -Anomalias x iteracion, ejemlo excel--- otra tabla seguda
-------------------------- 6 --------------------------
 -represenar lo optenido
 ------------------------------------------------------
+Lo de nulls con R,0,0 fila...
+Tabla excel aplicadas... explicar
+prubas con grupos
+Organizar entrada y salidas
+bat ejecutable - explicar esqueas de ejcutables...
 
+agrupacion agua
 -REDACTAR
--Destraducir y Desnormalizar...
+-Destraducir y Desnormalizar ???
 -
 -
 -

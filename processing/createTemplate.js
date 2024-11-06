@@ -50,7 +50,7 @@ function getNulls(data, headers) {
 
 // [ *** NULLS ]
 function saveNulls(headers, nullsMap) {
-  const nullsRow = headers.map(header => (nullsMap[header] ? 'null' : '0')).join(','); // GENERAR FILA
+  const nullsRow = headers.map(header => (nullsMap[header] ? 'null' : config.createTemplate.nulls)).join(','); // GENERAR FILA
   const csvContent = [headers.join(','), nullsRow].join('\n'); // GENERAR PLANTILLA NULLS
   fs.writeFileSync(nullsFileName, csvContent);
   console.log(`[ CREATE TEMPLATE - NULLS: ${nullsFileName} ]`);
@@ -58,8 +58,8 @@ function saveNulls(headers, nullsMap) {
 
 // [ *** NORMALIZADO ]
 function saveNormalized(headers) {
-  const nullsRow = headers.map(() => '0').join(','); // SI HAY NULL -> 1
-  const onesRow = headers.map(() => '1').join(','); // SI NO HAY NULL -> 0
+  const nullsRow = headers.map(() => config.createTemplate.normalize1).join(','); // SI HAY NULL -> 1
+  const onesRow = headers.map(() => config.createTemplate.normalize2).join(','); // SI NO HAY NULL -> 0
   const csvContent = [headers.join(','), nullsRow, onesRow].join('\n'); // UNIR CLAVES VALOR
   fs.writeFileSync(normalizeFileName, csvContent);
   console.log(`[ CREATE TEMPLATE - NORMALIZE: ${normalizeFileName} ]`);
