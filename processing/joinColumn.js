@@ -59,7 +59,7 @@ function joinColumns(data, columnsToUnite) {
     }
     const newRow = { ...row };
     const newColumnName = columnsToUnite.join('_'); // NOMBRE NUEVO CON BARRA BAJA
-    const joinedValues = columnsToUnite.map(col => row[col].replace(/'/g, '')).join('_'); // QUITAR COMILLAS 
+    const joinedValues = columnsToUnite.map(col => row[col].replace(/'/g, '')).join(config.joinColumn.separator1); // QUITAR COMILLAS 
     newRow[newColumnName] = `'${joinedValues}'`; // AÑADIR COMILLAS 
     return newRow;
   });
@@ -71,7 +71,7 @@ async function main(inputFile) {
     const { headers, results } = await readCSV(inputFile);
     const columnsToUnite = config.joinColumn.joinFiles; // OBTENER COLUMNAS A UNIR
     const unitedData = joinColumns(results, columnsToUnite); // UNIR COLUMNAS
-    const newHeaders = [...headers, columnsToUnite.join('_')]; // NUEVA CABECERA (UNIÓN DE LAS DOS)
+    const newHeaders = [...headers, columnsToUnite.join(config.joinColumn.separator2)]; // NUEVA CABECERA (UNIÓN DE LAS DOS)
     saveCSV(unitedData, newHeaders, args[1]);
   }
   catch (error) {
