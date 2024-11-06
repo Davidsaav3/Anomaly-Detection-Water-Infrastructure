@@ -15,8 +15,12 @@
     },
     "reduceColumn": {},
 
-    "toCsv": {},
+    "toCsv": {
+        "separator": "_",
+        "keySeparator": "."
+    },
     "encoding": {
+        "headers": "header,value,key",
         "fillTransform": "mean",
         "_": [
             "none",
@@ -28,8 +32,8 @@
     },
     "deleteColumn": {
         "delete": [
-            "﻿Fecha",
-            "Hora"
+            "",
+            ""
         ]
     },
 
@@ -38,7 +42,14 @@
         "normalize1": "0",
         "normalize2": "1"
     },
-    "nulls": {},
+    "nulls": {
+        "remove": [
+            "R", 
+            "r", 
+            "D", 
+            "d"
+        ]
+    },
     "normalize": {},
 
     "addColumn": {
@@ -79,9 +90,10 @@
 
     "index": {
         "threshold": 0.50,
+        "anomalyThreshold": 0.01,
         "trees": 100,
         "variableTrees":false,
-        "score": 0,
+        "score": 4,
         "variableScore":false,
         "valueY": 5,
         "valueX": "﻿Fecha_Hora",

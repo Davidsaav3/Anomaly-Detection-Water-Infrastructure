@@ -53,9 +53,9 @@ async function main(inputFile, nullsFile) {
     if (nullValues.length === 0) throw new Error('EMPTY NULLS FILE'); // ARCHIVO DE NULOS NO VACÍO
     const values1 = nullValues[0]; // VALORES DE PRIMERA FILA DE NULOS
 
-    // ENCONTRAR COLUMNAS CON 'R', 'r', 'D' O 'd' EN NULLSFILE
+    // ENCONTRAR COLUMNAS CON 'R'
     const columnsToCheck = Object.keys(values1).filter(
-      (header) => ['R', 'r', 'D', 'd'].includes(values1[header])
+      (header) => config.nulls.remove.includes(values1[header])
     );
 
     // FILTRAR FILAS EN BASE A COLUMNAS ESPECIFICADAS EN columnsToCheck

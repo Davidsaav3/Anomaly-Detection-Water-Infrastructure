@@ -12,8 +12,12 @@
     },
     "reduceColumn": {},
 
-    "toCsv": {},
+    "toCsv": {
+        "separator": "_",
+        "keySeparator": "."
+    },
     "encoding": {
+        "headers": "header,value,key",
         "fillTransform": "mean",
         "_": [
             "none",
@@ -30,7 +34,14 @@
     },
 
     "createTemplate": {},
-    "nulls": {},
+    "nulls": {
+        "remove": [
+            "R", 
+            "r", 
+            "D", 
+            "d"
+        ]
+    },
     "normalize": {},
 
     "addColumn": {

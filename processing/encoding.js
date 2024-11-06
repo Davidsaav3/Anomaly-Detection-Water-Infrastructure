@@ -47,7 +47,7 @@ const saveCSV = (data, fileName) => {
 // [ GUARDAR DICCIONARIO ]
 const saveDictionary = (dictionaries, dictFileName) => {
   const dictContent = [
-    'header,value,key',
+    config.encoding.headers,
     ...Object.entries(dictionaries).flatMap(([header, dictionary]) =>
       Object.entries(dictionary)
         .sort(([, a], [, b]) => a - b)

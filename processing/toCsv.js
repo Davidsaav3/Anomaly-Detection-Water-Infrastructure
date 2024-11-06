@@ -53,12 +53,12 @@ function flattenData(ob) {
     }
     else if (Array.isArray(cur)) {
       cur.forEach((item, index) => {
-        recurse(item, `${prop}_${index}`); // APLANAR ARRAYS
+        recurse(item, `${prop}${config.toCsv.separator}${index}`); // APLANAR ARRAYS
       });
     }
     else {
       for (const key in cur) {
-        recurse(cur[key], prop ? `${prop}.${key}` : key); // CONCATENAR CLAVES
+        recurse(cur[key], prop ? `${prop}${config.toCsv.keySeparator}${key}` : key); // CONCATENAR CLAVES
       }
     }
   }
