@@ -143,16 +143,13 @@ const main = async () => {
             }
 
             const myForest = new IsolationForest(features, config.index.trees, features.length); // INICIALIZAR FOREST
-            const scores = myForest.dataAnomalyScore(); // CALCULAR SCORES
-            const scores2 = myForest.dataAnomalyScore(10); // CALCULAR SCORES
-
-           
-
-            //scoresResults.push(scores); // ALMACENAR RESULTADOS
-            scoresResults.push(scores2); // ALMACENAR RESULTADOS
-
-            console.log(scoresResults)
-            return;
+            const scores = myForest.dataAnomalyScore(config.index.score); // CALCULAR SCORES
+            //const scores2 = myForest.dataAnomalyScore(10); // CALCULAR SCORES
+            
+            scoresResults.push(scores); // ALMACENAR RESULTADOS
+            //scoresResults.push(scores2); // ALMACENAR RESULTADOS
+            //console.log(scoresResults)
+            //return;
 
             const y_pred = scores.map(score => score > config.index.threshold ? 1 : 0); // PREDICCIÓN DE ANOMALÍAS
             const mse = calculateMSE(y_true, y_pred); // CALCULAR MSE

@@ -1,23 +1,61 @@
 {
-    "acquisition": {
-        "accesKey": "NNSXS.5TNLKEZMIOLEGLUYYQ7UNXNFPJKCH5SRBTR5YVY.6IQK5GKVMAJ6WQBET4ZMXW7OXIKLAY4H4HCF4OFBQ26LMOMLTEXA",
-        "subscribe": "v3/ua-bim@ttn/devices/+/up",
-        "appID": "ua-bim@ttn",
-        "mqttQeue": "mqtt://eu1.cloud.thethings.network:1883"
+    "joinColumn": {
+        "separator1": "_",
+        "separator2": "_",
+        "joinFiles": [
+            "month",
+            "day",
+            "hour",
+            "min"
+        ]
     },
-    "flatten": {
-        "separator": "_",
-        "keySeparator": "."
-    },
+    "createGroups": {
+        "groups": [
+            {
+                "output": "position_level",
+                "fields": [
+                    "n_px","n_p"
+                ]
+            },
+            {
+                "output": "position_drive",
+                "fields": [
+                    "i_uiip","i_f","i_uiipu"
+                ]
+            },
+            {
+                "output": "position_pressure",
+                "fields": [
+                    "p_uiip","p_f","p_pu"
+                ]
+            },
 
-    "expandedColumn": {
-        "expandedValue": "#fill#"
-    },
-    "reduceColumn": {},
 
-    "toCsv": {
-        "separator": "_",
-        "keySeparator": "."
+            {
+                "output": "operation_plaXiquet",
+                "fields": [
+                    "n_px","ce_px","cs_px"
+                ]
+            },
+            {
+                "output": "operation_playa",
+                "fields": [
+                    "n_p","i_uiip","p_uiip"
+                ]
+            },
+            {
+                "output": "operation_falcon",
+                "fields": [
+                    "i_f","p_f"
+                ]
+            },
+            {
+                "output": "operation_pueblo",
+                "fields": [
+                    "i_uiipu","c_pu_p","p_pu"
+                ]
+            }
+        ]
     },
     "encoding": {
         "headers": "header,value,key",
@@ -32,11 +70,12 @@
     },
     "deleteColumn": {
         "delete": [
-            "﻿Fecha",
-            "hora"
+            "month",
+            "day",
+            "hour",
+            "min"
         ]
     },
-
     "createTemplate": {
         "nulls": "0",
         "normalize1": "0",
@@ -51,7 +90,6 @@
         ]
     },
     "normalize": {},
-
     "addColumn": {
         "weight": "1",
         "columnName": [
@@ -61,33 +99,6 @@
             0
         ]
     },
-    "createGroups": {
-        
-        "groups": [
-            {
-                "output": "",
-                "fields": [
-                    ""
-                ]
-            },
-            {
-                "output": "",
-                "fields": [
-                    ""
-                ]
-            }
-        ]
-    },
-
-    "joinColumn": {
-        "separator1": "_",
-        "separator2": "_",
-        "joinFiles": [
-            "﻿Fecha",
-            "hora"
-        ]
-    },
-
     "index": {
         "threshold": 0.50,
         "anomalyThreshold": 0.01,
@@ -95,8 +106,8 @@
         "variableTrees":false,
         "score": 4,
         "variableScore":false,
-        "valueY": 5,
-        "valueX": "﻿Fecha_hora",
+        "valueY": 4,
+        "valueX": "month_day_hour_min",
         "columnName": "truth"
     }
 }

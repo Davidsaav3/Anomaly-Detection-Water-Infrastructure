@@ -1,9 +1,9 @@
 @echo off
 setlocal enabledelayedexpansion
-set "treesFolder=waterTrees"
+set "treesFolder=waterInfrastructureTrees"
 
 echo WATER 5.1 - Join Column...
-node ../processing/joinColumn.js ../results/!treesFolder!/toCsv.csv ../results/!treesFolder!/joinColumn.csv ./waterConfig.json
+node ../processing/joinColumn.js ../results/!treesFolder!/waterInfrastructure.csv ../results/!treesFolder!/joinColumn.csv ./waterConfig.json
 
 echo WATER 5.2 - Create Groups...
 node ../processing/createGroups.js ../results/!treesFolder!/joinColumn.csv ../results/!treesFolder!/createGroups ./waterConfig.json
