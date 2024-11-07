@@ -17,19 +17,19 @@
             {
                 "output": "position_level",
                 "fields": [
-                    "month_day_hour_min","n_px","n_p"
+                    "month_day_hour_min","n_px","n_p","truth"
                 ]
             },
             {
                 "output": "position_drive",
                 "fields": [
-                    "month_day_hour_min","i_uiip","i_f","i_uiipu"
+                    "month_day_hour_min","i_uiip","i_f","i_uiipu","truth"
                 ]
             },
             {
                 "output": "position_pressure",
                 "fields": [
-                    "month_day_hour_min","p_uiip","p_f","p_pu"
+                    "month_day_hour_min","p_uiip","p_f","p_pu","truth"
                 ]
             },
 
@@ -37,25 +37,25 @@
             {
                 "output": "operation_plaXiquet",
                 "fields": [
-                    "month_day_hour_min","n_px","ce_px","cs_px"
+                    "month_day_hour_min","n_px","ce_px","cs_px","truth"
                 ]
             },
             {
                 "output": "operation_playa",
                 "fields": [
-                    "month_day_hour_min","n_p","i_uiip","p_uiip"
+                    "month_day_hour_min","n_p","i_uiip","p_uiip","truth"
                 ]
             },
             {
                 "output": "operation_falcon",
                 "fields": [
-                    "month_day_hour_min","i_f","p_f"
+                    "month_day_hour_min","i_f","p_f","truth"
                 ]
             },
             {
                 "output": "operation_pueblo",
                 "fields": [
-                    "month_day_hour_min","i_uiipu","c_pu_p","p_pu"
+                    "month_day_hour_min","i_uiipu","c_pu_p","p_pu","truth"
                 ]
             }
         ]
@@ -79,6 +79,11 @@
             "min"
         ]
     },
+    "deleteTruth": {
+        "delete": [
+            "truth"
+        ]
+    },
     "createTemplate": {
         "nulls": "0",
         "normalize1": "0",
@@ -92,7 +97,6 @@
             "d"
         ]
     },
-    "normalize": {},
     "addColumn": {
         "weight": "1",
         "columnName": [
@@ -107,7 +111,7 @@
         "anomalyThreshold": 0.01,
         "trees": 0,
         "variableTrees":true,
-        "score": 4,
+        "score": 10,
         "variableScore":false,
         "valueY": 4,
         "valueX": "month_day_hour_min",

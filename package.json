@@ -16,20 +16,20 @@
     "mqtt": "^5.10.1"
   },
   "scripts": {
-        "water 5.1 - joinColumn": "node   ./processing/joinColumn.js   ./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/joinColumn.csv   ./exec/waterConfig.json",
-      "water 6 - encoding": "node   ./processing/encoding.js    ./results/waterInfrastructure/joinColumn.csv   ./results/waterInfrastructure/auxiliaryDictionary.csv   ./results/waterInfrastructure/encoding.csv    ./exec/waterConfig.json",
-        "water 6.1 - deleteColumn": "node   ./processing/deleteColumn.js   ./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/deleteColumn.csv   ./exec/waterConfig.json",
-  
-    "water 7 - createTemplate": "node   ./processing/createTemplate.js   ./results/waterInfrastructure/deleteColumn.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/auxiliaryNormalize.csv   ./exec/waterConfig.json",
-    "water 8 - nulls": "node   ./processing/nulls.js   ./results/waterInfrastructure/deleteColumn.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/nulls.csv    ./exec/waterConfig.json",
-    "water 9 - normalize": "node   ./processing/normalize.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/auxiliaryNormalize.csv   ./results/waterInfrastructure/normalize.csv   ./results/waterInfrastructure/auxiliaryMaxMin.csv   ./exec/waterConfig.json",
-    
-    "water 10 - addColumn": "node   ./processing/addColumn.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/addColumn.csv   ./results/waterInfrastructure/auxiliaryWeight.csv   ./exec/waterConfig.json",
-    
-    "water 5.2 - createGroups": "node   ./processing/createGroups.js   ./results/waterInfrastructure/addColumn.csv   ./results/waterInfrastructure/createGroups   ./exec/waterConfig.json",
+    "waterInfrastructure 1.1 - joinColumn": "node   ./processing/joinColumn.js   ./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/joinColumn.csv   ./exec/waterConfig.json",
+    "waterInfrastructure 1.2 - deleteColumn": "node   ./processing/deleteColumn.js   ./results/waterInfrastructure/joinColumn.csv   ./results/waterInfrastructure/deleteColumn.csv   ./exec/waterConfig.json",
+    "waterInfrastructure 1.3 - addColumn": "node   ./processing/addColumn.js   ./results/waterInfrastructure/deleteColumn.csv   ./results/waterInfrastructure/addColumn.csv    ./exec/waterConfig.json",
 
-    "water 11 - index": "node ./models/isolationForest/index.js ./results/waterInfrastructure/nulls.csv ./results/waterInfrastructure/addColumn.csv ./results/waterInfrastructure/auxiliaryWeight.csv 25 ./results/waterInfrastructure/result/ isolation.csv scores.csv metrics.csv image ./exec/waterConfig.json"
-  
+    "waterInfrastructure 2.1 - encoding": "node   ./processing/encoding.js    ./results/waterInfrastructure/addColumn.csv   ./results/waterInfrastructure/auxiliaryDictionary.csv   ./results/waterInfrastructure/encoding.csv    ./exec/waterConfig.json",
+
+    "waterInfrastructure 3.1 - createTemplate": "node   ./processing/createTemplate.js   ./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/auxiliaryNormalize.csv   ./exec/waterConfig.json",
+    "waterInfrastructure 3.2 - nulls": "node   ./processing/nulls.js   ./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/nulls.csv    ./exec/waterConfig.json",
+    "waterInfrastructure 3.3 - createWeight": "node   ./processing/createWeight.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/auxiliaryWeight.csv   ./exec/waterConfig.json",
+    "waterInfrastructure 3.4 - deleteTruth": "node   ./processing/deleteTruth.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/deleteTruth.csv   ./exec/waterConfig.json",
+
+    "waterInfrastructure 4.1 - createGroups": "node   ./processing/createGroups.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/createGroups   ./exec/waterConfig.json",
+
+    "waterInfrastructure - index": "node ./models/isolationForest/index.js ./results/waterInfrastructure/deleteTruth.csv ./results/waterInfrastructure/nulls.csv ./results/waterInfrastructure/auxiliaryWeight.csv 25 ./results/waterInfrastructure/result/ isolation.csv scores.csv metrics.csv image ./exec/waterConfig.json"
   },
   "keywords": [
     "isolation-forest",

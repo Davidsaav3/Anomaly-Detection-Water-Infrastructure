@@ -1,27 +1,24 @@
 const fs = require('fs');
-const path = require('path');
 const csv = require('csv-parser');
 
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
-if (args.length < 4) {
+if (args.length < 3) {
   console.error('! ERROR: INPUT !');
   process.exit(1);
 }
 
 const inputFile = args[0]; // ENTRADA
 const outputFile = args[1]; // SALIDA
-const weightFileName = args[2]; // PESO
-const configPath = args[3] ? args[3] : './config.json'; // CONFIGURACIÓN
+const configPath = args[2] ? args[2] : './config.json'; // CONFIGURACIÓN
 let config = {};
 
 // [ CARGAR CONFIGURACIÓN ]
 try {
   const configFile = fs.readFileSync(configPath); 
   config = JSON.parse(configFile); // PARSEAR JSON
-}
-catch (error) {
-  console.error(`! ERROR: CONFIG ${configPath} !`, error); // ERROR EN LECTURA
+} catch (error) {
+  console.error(`! ERROR: CONFIG ${configPath} !`, error);
   process.exit(1);
 }
 
@@ -47,14 +44,6 @@ function saveCSV(data, headers, fileName) {
   console.log(`[ ADD COLUMN: ${fileName} ]`);
 }
 
-// [ GUARDAR ARCHIVO WEIGHT ]
-function saveWeight(headers) {
-  const onesRow = headers.map(() => config.addColumn.weight).join(','); // FILA DE VALORES (1) MULTIPLICADOR DE PESOS
-  const csvContent = [headers.join(','), onesRow].join('\n'); // UNIR VALORES Y CLAVES
-  fs.writeFileSync(weightFileName, csvContent); // GUARDAR
-  console.log(`[ ADD COLUMN - WEIGHT: ${weightFileName} ]`);
-}
-
 // [ *** AÑADIR COLUMNA ]
 async function addColumn(results) {
   const columnName = config.addColumn.columnName;  // NUEVAS CLAVES 
@@ -68,7 +57,6 @@ async function addColumn(results) {
   });
 }
 
-
 // [ MAIN ]
 async function main(inputFile, outputFile) {
   try {
@@ -76,11 +64,9 @@ async function main(inputFile, outputFile) {
     const updatedResults = await addColumn(results); // AGREGAR COLUMNA
     const headers = [...Object.keys(results[0])]; // NUEVAS CABECERAS
     saveCSV(updatedResults, headers, outputFile);
-    saveWeight(headers);
-  }
-  catch (error) {
+  } catch (error) {
     console.error('ERROR MAIN: ', error); // ERROR DE PROCESAMIENTO
   }
 }
 
-main(inputFile, outputFile); 
+main(inputFile, outputFile);
