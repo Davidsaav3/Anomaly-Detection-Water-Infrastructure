@@ -1,7 +1,4 @@
 {
-    "expandedColumn": {
-        "expandedValue": "#fill#"
-    },
     "joinColumn": {
         "separator1": "_",
         "separator2": "_",
@@ -11,7 +8,62 @@
             "hour",
             "min"
         ]
+    },    
+    "deleteColumn": {
+        "delete": [
+            "month",
+            "day",
+            "hour",
+            "min"
+        ]
     },
+    "addColumn": {
+        "columnName": [
+            "truth"
+        ],
+        "value": [
+            0
+        ]
+    },
+
+
+    "encoding": {
+        "expandedValue": "#fill#",
+        "headers": "header,value,key",
+        "fillTransform": "mean",
+        "_": [
+            "none",
+            "zero",
+            "one",
+            "mean",
+            "median"
+        ]
+    },
+
+
+    "createTemplate": {
+        "nulls": "0",
+        "normalize1": "0",
+        "normalize2": "1"
+    },
+    "nulls": {
+        "remove": [
+            "R", 
+            "r", 
+            "D", 
+            "d"
+        ]
+    },
+    "createWeight": {
+        "weight": "1"
+    },
+    "deleteTruth": {
+        "delete": [
+            "truth"
+        ]
+    },
+
+    
     "createGroups": {
         "groups": [
             {
@@ -60,52 +112,8 @@
             }
         ]
     },
-    "encoding": {
-        "headers": "header,value,key",
-        "fillTransform": "mean",
-        "_": [
-            "none",
-            "zero",
-            "one",
-            "mean",
-            "median"
-        ]
-    },
-    "deleteColumn": {
-        "delete": [
-            "month",
-            "day",
-            "hour",
-            "min"
-        ]
-    },
-    "deleteTruth": {
-        "delete": [
-            "truth"
-        ]
-    },
-    "createTemplate": {
-        "nulls": "0",
-        "normalize1": "0",
-        "normalize2": "1"
-    },
-    "nulls": {
-        "remove": [
-            "R", 
-            "r", 
-            "D", 
-            "d"
-        ]
-    },
-    "addColumn": {
-        "weight": "1",
-        "columnName": [
-            "truth"
-        ],
-        "value": [
-            0
-        ]
-    },
+
+
     "index": {
         "threshold": 0.65,
         "anomalyThreshold": 0.01,

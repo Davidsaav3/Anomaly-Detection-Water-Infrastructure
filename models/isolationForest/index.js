@@ -136,10 +136,10 @@ const main = async () => {
         // 0. ISOLATION
         for (let i = 1; i < iterations + 1; i++) {
             if(config.index.variableTrees){
-                config.index.trees = config.index.trees+5; 
+                config.index.trees = config.index.trees+config.index.treesIncrement; 
             }
             if(config.index.variableScore){
-                config.index.score = config.index.score+i;
+                config.index.score = config.index.score+config.index.scoreIncrement;
             }
 
             const myForest = new IsolationForest(features, config.index.trees, features.length); // INICIALIZAR FOREST

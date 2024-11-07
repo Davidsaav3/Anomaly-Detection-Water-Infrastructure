@@ -100,7 +100,7 @@ function calculateMedian(column) {
 // [ GESTIONAR RELLENADO: #fill# ]
 const fillHandling = config.encoding.fillTransform || "none"; // [ "none", "zero", "one", "mean", "median" ]
 function fillValues(value, columnValues) {
-  if (value === config.expandedColumn.expandedValue) {
+  if (value === config.encoding.expandedValue) {
     switch (fillHandling) {
       case "zero":
         return 0;

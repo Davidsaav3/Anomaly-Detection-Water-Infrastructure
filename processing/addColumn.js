@@ -23,16 +23,16 @@ try {
 }
 
 // [ LEER CSV ORIGINAL ]
-function readCSV(filePath) {
+const readCSV = (filePath) => {
   return new Promise((resolve, reject) => {
-    const results = []; // RESULTADOS VACÍOS
-    fs.createReadStream(filePath) // LEER CSV
-      .pipe(csv()) // PARSEAR CSV
-      .on('data', data => results.push(data)) // ALMACENAR DATOS
-      .on('end', () => resolve(results)) // RESOLVER PROMESA
-      .on('error', reject); // RECHAZAR EN ERROR
+      const results = [];
+      fs.createReadStream(filePath)
+          .pipe(csv())
+          .on('data', (data) => results.push(data))
+          .on('end', () => resolve(results))
+          .on('error', reject);
   });
-}
+};
 
 // [ GUARDAR CSV ]
 function saveCSV(data, headers, fileName) {
@@ -62,9 +62,10 @@ async function main(inputFile, outputFile) {
   try {
     const results = await readCSV(inputFile);
     const updatedResults = await addColumn(results); // AGREGAR COLUMNA
-    const headers = [...Object.keys(results[0])]; // NUEVAS CABECERAS
+    const headers = [...Object.keys(results[0]), ...config.addColumn.columnName]; // NUEVAS CABECERAS
     saveCSV(updatedResults, headers, outputFile);
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('ERROR MAIN: ', error); // ERROR DE PROCESAMIENTO
   }
 }
