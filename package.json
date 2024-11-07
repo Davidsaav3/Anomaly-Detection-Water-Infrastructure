@@ -17,7 +17,6 @@
   },
   "scripts": {
         "water 5.1 - joinColumn": "node   ./processing/joinColumn.js   ./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/joinColumn.csv   ./exec/waterConfig.json",
-        "water 5.2 - createGroups": "node   ./processing/createGroups.js   ./results/waterInfrastructure/toCsv.csv   ./results/waterInfrastructure/createGroups   ./exec/waterConfig.json",
       "water 6 - encoding": "node   ./processing/encoding.js    ./results/waterInfrastructure/joinColumn.csv   ./results/waterInfrastructure/auxiliaryDictionary.csv   ./results/waterInfrastructure/encoding.csv    ./exec/waterConfig.json",
         "water 6.1 - deleteColumn": "node   ./processing/deleteColumn.js   ./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/deleteColumn.csv   ./exec/waterConfig.json",
   
@@ -25,9 +24,11 @@
     "water 8 - nulls": "node   ./processing/nulls.js   ./results/waterInfrastructure/deleteColumn.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/nulls.csv    ./exec/waterConfig.json",
     "water 9 - normalize": "node   ./processing/normalize.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/auxiliaryNormalize.csv   ./results/waterInfrastructure/normalize.csv   ./results/waterInfrastructure/auxiliaryMaxMin.csv   ./exec/waterConfig.json",
     
-    "water 10 - addColumn": "node   ./processing/addColumn.js   ./results/waterInfrastructure/normalize.csv   ./results/waterInfrastructure/addColumn.csv   ./results/waterInfrastructure/auxiliaryWeight.csv   ./exec/waterConfig.json",
+    "water 10 - addColumn": "node   ./processing/addColumn.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/addColumn.csv   ./results/waterInfrastructure/auxiliaryWeight.csv   ./exec/waterConfig.json",
     
-    "water 11 - index": "node ./models/isolationForest/index.js ./results/waterInfrastructure/normalize.csv ./results/waterInfrastructure/addColumn.csv ./results/waterInfrastructure/auxiliaryWeight.csv 25 ./results/waterInfrastructure/result/ isolation.csv scores.csv metrics.csv image ./exec/waterConfig.json"
+    "water 5.2 - createGroups": "node   ./processing/createGroups.js   ./results/waterInfrastructure/addColumn.csv   ./results/waterInfrastructure/createGroups   ./exec/waterConfig.json",
+
+    "water 11 - index": "node ./models/isolationForest/index.js ./results/waterInfrastructure/nulls.csv ./results/waterInfrastructure/addColumn.csv ./results/waterInfrastructure/auxiliaryWeight.csv 25 ./results/waterInfrastructure/result/ isolation.csv scores.csv metrics.csv image ./exec/waterConfig.json"
   
   },
   "keywords": [

@@ -136,7 +136,7 @@ const main = async () => {
         // 0. ISOLATION
         for (let i = 1; i < iterations + 1; i++) {
             if(config.index.variableTrees){
-                config.index.trees = config.index.trees+i; 
+                config.index.trees = config.index.trees+5; 
             }
             if(config.index.variableScore){
                 config.index.score = config.index.score+i;

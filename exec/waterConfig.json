@@ -1,4 +1,7 @@
 {
+    "expandedColumn": {
+        "expandedValue": "#fill#"
+    },
     "joinColumn": {
         "separator1": "_",
         "separator2": "_",
@@ -14,19 +17,19 @@
             {
                 "output": "position_level",
                 "fields": [
-                    "n_px","n_p"
+                    "month_day_hour_min","n_px","n_p"
                 ]
             },
             {
                 "output": "position_drive",
                 "fields": [
-                    "i_uiip","i_f","i_uiipu"
+                    "month_day_hour_min","i_uiip","i_f","i_uiipu"
                 ]
             },
             {
                 "output": "position_pressure",
                 "fields": [
-                    "p_uiip","p_f","p_pu"
+                    "month_day_hour_min","p_uiip","p_f","p_pu"
                 ]
             },
 
@@ -34,25 +37,25 @@
             {
                 "output": "operation_plaXiquet",
                 "fields": [
-                    "n_px","ce_px","cs_px"
+                    "month_day_hour_min","n_px","ce_px","cs_px"
                 ]
             },
             {
                 "output": "operation_playa",
                 "fields": [
-                    "n_p","i_uiip","p_uiip"
+                    "month_day_hour_min","n_p","i_uiip","p_uiip"
                 ]
             },
             {
                 "output": "operation_falcon",
                 "fields": [
-                    "i_f","p_f"
+                    "month_day_hour_min","i_f","p_f"
                 ]
             },
             {
                 "output": "operation_pueblo",
                 "fields": [
-                    "i_uiipu","c_pu_p","p_pu"
+                    "month_day_hour_min","i_uiipu","c_pu_p","p_pu"
                 ]
             }
         ]
@@ -100,10 +103,10 @@
         ]
     },
     "index": {
-        "threshold": 0.50,
+        "threshold": 0.65,
         "anomalyThreshold": 0.01,
-        "trees": 100,
-        "variableTrees":false,
+        "trees": 0,
+        "variableTrees":true,
         "score": 4,
         "variableScore":false,
         "valueY": 4,
