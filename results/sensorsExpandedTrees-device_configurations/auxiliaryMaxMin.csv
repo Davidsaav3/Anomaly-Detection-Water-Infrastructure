@@ -1,3 +1,0 @@
-uplink_message.settings.data_rate.lora.bandwidth,uplink_message.settings.data_rate.lora.spreading_factor,uplink_message.settings.data_rate.lora.coding_rate,uplink_message.settings.frequency,uplink_message.settings.timestamp,uplink_message.settings.time,uplink_message.version_ids.brand_id,uplink_message.version_ids.model_id,uplink_message.version_ids.hardware_version,uplink_message.version_ids.firmware_version,uplink_message.version_ids.band_id,uplink_message.network_ids.net_id,uplink_message.network_ids.ns_id,uplink_message.network_ids.tenant_id,uplink_message.network_ids.cluster_id,uplink_message.network_ids.cluster_address,received_at
-125000,7,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1
-125000,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
