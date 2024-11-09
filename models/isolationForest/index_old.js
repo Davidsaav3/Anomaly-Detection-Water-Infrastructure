@@ -15,13 +15,12 @@ const inputFilename = args[0]; // ENTRADA
 const inputFilename2 = args[1]; // ENTRADA
 const weightFilePath = args[2]; // PESOS
 const iterations = parseInt(args[3], 10); // ITERACIONES ISOALTION
-const numTrees = parseInt(args[4], 10); // ITERACIONES ISOALTION
-const ruta = args[5]; // PLOT 1
-const isolationOutputPath = `${ruta}${args[6]}`; // ISOLATION
-const scoresOutputPath = `${ruta}${args[7]}`; // SCORES
-const metricsOutputPath = `${ruta}${args[8]}`; // MÉTRICAS
-const nombre_plot = args[9]; // PLOT
-const configPath = args[10]; // CONFIGURACIÓN
+const ruta = args[4]; // PLOT 1
+const isolationOutputPath = `${ruta}${args[5]}`; // ISOLATION
+const scoresOutputPath = `${ruta}${args[6]}`; // SCORES
+const metricsOutputPath = `${ruta}${args[7]}`; // MÉTRICAS
+const nombre_plot = args[8]; // PLOT
+const configPath = args[9]; // CONFIGURACIÓN
 let config = {};
 let iterationCounter = 0;
 
@@ -102,16 +101,7 @@ const calculateMetrics = (yTrue, yPred) => {
     const falsePositiveRate = fp / (fp + tn || 1); // TASA DE FALSOS POSITIVOS: FALSOS POSITIVOS / (FALSOS POSITIVOS + VERDADEROS NEGATIVOS)
     const trueNegativeRate = tn / (tn + fp || 1); // TASA DE VERDADEROS NEGATIVOS: VERDADEROS NEGATIVOS / (VERDADEROS NEGATIVOS + FALSOS POSITIVOS)
 
-    return { iteration: iterationCounter, tp, fp, tn, fn };
-};
-
-// Nueva función para calcular métricas finales basadas en los totales
-const calculateMetricsFromTotals = (tp, fp, tn, fn) => {
-    const precision = tp / (tp + fp); // PRECISIÓN
-    const recall = tp / (tp + fn); // RECALL
-    const f1Score = (2 * precision * recall) / (precision + recall); // F1 SCORE
-    const accuracy = (tp + tn) / (tp + fp + tn + fn * iterations); // EXACTITUD
-    return { precision, recall, f1Score, accuracy };
+    return { iteration: iterationCounter, precision, recall, f1Score, accuracy, trueNegativeRate, falsePositiveRate };
 };
 
 // [ERROR CUADRÁTICO MEDIO (ECM)]
@@ -140,13 +130,27 @@ const main = async () => {
         const ids = csvData.map(row => row[config.index.id] || csvData.indexOf(row)); // IDENTIFICADORES
         const y_true = csvData2.map(row => parseInt(row[config.index.columnName])); // COLUMNA "TRUTH"
         const mseResults = []; // RESULTADOS MSE
+        const thresholdIncrement = (1 - 0.1) / iterations; // INCREMENTO UMBRAL
         const isolationData = []; // DATOS AISLAMIENTO
 
         // 0. ISOLATION
         for (let i = 1; i < iterations + 1; i++) {
-            const myForest = new IsolationForest(features, numTrees, features.length); // INICIALIZAR FOREST
+            if(config.index.variableTrees){
+                config.index.trees = config.index.trees+config.index.treesIncrement; 
+            }
+            if(config.index.variableScore){
+                config.index.score = config.index.score+config.index.scoreIncrement;
+            }
+
+            const myForest = new IsolationForest(features, config.index.trees, features.length); // INICIALIZAR FOREST
             const scores = myForest.dataAnomalyScore(config.index.score); // CALCULAR SCORES
+            //const scores2 = myForest.dataAnomalyScore(10); // CALCULAR SCORES
+            
             scoresResults.push(scores); // ALMACENAR RESULTADOS
+            //scoresResults.push(scores2); // ALMACENAR RESULTADOS
+            //console.log(scoresResults)
+            //return;
+
             const y_pred = scores.map(score => score > config.index.threshold ? 1 : 0); // PREDICCIÓN DE ANOMALÍAS
             const mse = calculateMSE(y_true, y_pred); // CALCULAR MSE
             mseResults.push(mse); // MSE
@@ -155,7 +159,7 @@ const main = async () => {
                 'iteration': i, // ITERACIÓN
                 'data_size': csvData.length, // TAMAÑO DE DATOS
                 'number_of_attributes': features[0].length, // NÚMERO DE ATRIBUTOS
-                'number_of_trees': numTrees, // NÚMERO DE ARBOLES
+                'number_of_trees': config.index.trees, // NÚMERO DE ARBOLES
             });
         }
 
@@ -164,7 +168,9 @@ const main = async () => {
         const scoresHeader = [
             'id','valueYName','valueY','valueXName','valueX',
             ...Array.from({ length: iterations }, (_, i) => `score_${i + 1}`),
-            'scores_total','score','anomaly'
+            'scores_total','score','anomaly',
+            ...Array.from({ length: iterations }, (_, i) => `anomaly_${i + 1}`),
+            'anomaly_average','anomaly_probability'
         ].join(',');
         
         // GENERAR FILAS DE DATOS
@@ -177,9 +183,16 @@ const main = async () => {
             const valueXName = config.index.valueX;
             const valueX = csvData[index][config.index.valueX];
             const isAnomaly = scoresPercent > config.index.threshold;
-    
+        
+            // CALCULAR ANOMALÍAS SEGÚN THRESHOLD
+            const anomalies = scores.map(score => (parseFloat(score) > config.index.threshold ? 1 : 0));
+            const anomalyAverage = (anomalies.reduce((sum, value) => sum + value, 0) / iterations).toFixed(2);
+            
+            // Cambiar este cálculo
+            const anomalyProv = parseFloat(anomalyAverage) > config.index.anomalyThreshold;
+        
             return [
-                ids[index], valueYName, valueY, valueXName, valueX, ...scores, scoresTotal.toFixed(2), scoresPercent, isAnomaly
+                ids[index], valueYName, valueY, valueXName, valueX, ...scores, scoresTotal.toFixed(2), scoresPercent, isAnomaly, ...anomalies, anomalyAverage, anomalyProv
             ].join(',');
         }).join('\n');
         
@@ -188,83 +201,20 @@ const main = async () => {
 
 
         // 2. MÉTRICAS
-        /*const y_pred = scoresResults.map(scoreArray => scoreArray.map((score, idx) => score > config.index.threshold ? 1 : 0)); // PREDICCIONES
+        const y_pred = scoresResults.map(scoreArray => scoreArray.map((score, idx) => score > config.index.threshold ? 1 : 0)); // PREDICCIONES
         const metricsResults = [];
-
-        let totalTp = 0, totalFp = 0, totalTn = 0, totalFn = 0;
-
         for (let i = 0; i < iterations; i++) {
             const metrics = calculateMetrics(y_true, y_pred[i]); // CALCULAR MÉTRICAS
             metricsResults.push({ iteration: i + 1, ...metrics }); // ALMACENAR RESULTADOS
-
-            // Acumular totales para cada columna
-            totalTp += metrics.tp;
-            totalFp += metrics.fp;
-            totalTn += metrics.tn;
-            totalFn += metrics.fn;
         }
-
-        // Calcular las métricas finales basadas en los totales
-        const finalMetrics = calculateMetricsFromTotals(totalTp, totalFp, totalTn, totalFn);
-
-        // Agregar la fila de totales "S" con las métricas adicionales
-        metricsResults.push({ 
-            iteration: 'S', 
-            tp: totalTp, 
-            fp: totalFp, 
-            tn: totalTn, 
-            fn: totalFn, 
-            precision: finalMetrics.precision, 
-            recall: finalMetrics.recall, 
-            f1Score: finalMetrics.f1Score, 
-            accuracy: finalMetrics.accuracy 
-        });
-
-        const metricsHeader = 'iteration,tp,fp,tn,fn,precision,recall,f1Score,accuracy\n'; // CABECERA DE MÉTRICAS
-        const metricsRows = metricsResults.map(({ iteration, tp, fp, tn, fn, precision = '', recall = '', f1Score = '', accuracy = '' }) => {
-            return `${iteration},${tp},${fp},${tn},${fn},${precision},${recall},${f1Score},${accuracy}`; // DEVOLVER FILA DE MÉTRICAS
+        const metricsHeader = 'iteration,precision,recall,f1Score,accuracy,trueNegativeRate,falsePositiveRate,mse\n'; // CABECERA DE MÉTRICAS
+        const metricsRows = metricsResults.map(({ iteration, precision, recall, f1Score, accuracy, trueNegativeRate, falsePositiveRate }, i) => {
+            const mse = mseResults[i]; // OBTENER MSE
+            return `${iteration},${precision.toFixed(2)},${recall.toFixed(2)},${f1Score.toFixed(2)},${accuracy.toFixed(2)},${trueNegativeRate.toFixed(2)},${falsePositiveRate.toFixed(2)},${mse.toFixed(2)}`; // DEVOLVER FILA DE MÉTRICAS
         }).join('\n');
+        fs.writeFileSync(metricsOutputPath, `${metricsHeader}${metricsRows}`, 'utf8'); // ESCRIBIR MÉTRICAS 
+        console.log(`[ METRICS: ${metricsOutputPath} ]`); 
 
-        // ESCRIBIR MÉTRICAS 
-        fs.writeFileSync(metricsOutputPath, `${metricsHeader}${metricsRows}`, 'utf8'); 
-        console.log(`[ METRICS: ${metricsOutputPath} ]`);*/
-
-        // Definir matrices para almacenar las métricas por iteración
-
-
-
-
-        // 2.2 MÉTRICAS
-        const tpArray = [];
-        const tnArray = [];
-        const fpArray = [];
-        const fnArray = [];
-
-        // Calcular métricas por cada iteración
-        for (let i = 0; i < iterations; i++) {
-            const y_pred = scoresResults[i].map(score => score > config.index.threshold ? 1 : 0);
-            const metrics = calculateMetrics(y_true, y_pred); // Calcula tp, tn, fp, fn para cada iteración
-            
-            // Agregar cada métrica a su respectiva matriz
-            tpArray.push(metrics.tp);
-            tnArray.push(metrics.tn);
-            fpArray.push(metrics.fp);
-            fnArray.push(metrics.fn);
-        }
-
-        // Construir el contenido del archivo CSV
-        const metricsHeader = [...Array.from({ length: iterations }, (_, i) => i + 1)].join(',');
-        const metricsRows = [
-            `${tpArray.join(',')}`,
-            `${tnArray.join(',')}`,
-            `${fpArray.join(',')}`,
-            `${fnArray.join(',')}`
-        ].join('\n');
-
-        fs.writeFileSync(metricsOutputPath, `${metricsHeader}\n${metricsRows}`, 'utf8');
-        console.log(`[ METRICS: ${metricsOutputPath} ]`);
-
-        
         // 3. ISOLATION INFO
         const isolationHeader = 'iteration,data_size,number_of_attributes,number_of_trees\n'; // CABECERA DE AISLAMIENTO
         const isolationRows = isolationData.map(({ iteration, data_size, number_of_attributes, number_of_trees }) =>
