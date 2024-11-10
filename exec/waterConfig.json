@@ -66,19 +66,19 @@
             {
                 "output": "position_level",
                 "fields": [
-                    "month_day_hour_min","n_px","n_p","truth"
+                    "month","day","hour","min","n_px","n_p","truth"
                 ]
             },
             {
                 "output": "position_drive",
                 "fields": [
-                    "month_day_hour_min","i_uiip","i_f","i_uiipu","truth"
+                    "month","day","hour","min","i_uiip","i_f","i_uiipu","truth"
                 ]
             },
             {
                 "output": "position_pressure",
                 "fields": [
-                    "month_day_hour_min","p_uiip","p_f","p_pu","truth"
+                    "month","day","hour","min","p_uiip","p_f","p_pu","truth"
                 ]
             },
 
@@ -86,25 +86,25 @@
             {
                 "output": "operation_plaXiquet",
                 "fields": [
-                    "month_day_hour_min","n_px","ce_px","cs_px","truth"
+                    "month","day","hour","min","n_px","ce_px","cs_px","truth"
                 ]
             },
             {
                 "output": "operation_playa",
                 "fields": [
-                    "month_day_hour_min","n_p","i_uiip","p_uiip","truth"
+                    "month","day","hour","min","n_p","i_uiip","p_uiip","truth"
                 ]
             },
             {
                 "output": "operation_falcon",
                 "fields": [
-                    "month_day_hour_min","i_f","p_f","truth"
+                    "month","day","hour","min","i_f","p_f","truth"
                 ]
             },
             {
                 "output": "operation_pueblo",
                 "fields": [
-                    "month_day_hour_min","i_uiipu","c_pu_p","p_pu","truth"
+                    "month","day","hour","min","i_uiipu","c_pu_p","p_pu","truth"
                 ]
             }
         ]

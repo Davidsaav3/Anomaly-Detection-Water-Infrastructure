@@ -31,9 +31,9 @@
     "x waterInfrastructure x - pollution": "node   ./processing/pollution.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/pollution.csv    70   1.5   ./exec/waterConfig.json",
     "waterInfrastructure 3.4 - deleteTruth": "node   ./processing/deleteTruth.js   ./results/waterInfrastructure/pollution.csv   ./results/waterInfrastructure/deleteTruth.csv   ./exec/waterConfig.json",
 
-    "waterInfrastructure 4.1 - createGroups": "node   ./processing/createGroups.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/createGroups   ./exec/waterConfig.json",
+    "waterInfrastructure 4.1 - createGroups": "node   ./processing/createGroups.js   ./results/waterInfrastructure/pollution.csv   ./results/waterInfrastructure/createGroups   ./exec/waterConfig.json",
 
-    "waterInfrastructure - index": "node ./models/isolationForest/index.js ./results/waterInfrastructure/deleteTruth.csv ./results/waterInfrastructure/pollution.csv ./results/waterInfrastructure/auxiliaryWeight.csv 10 100 ./results/waterInfrastructure/result/ isolation.csv scores.csv metrics.csv image ./exec/waterConfig.json"
+    "waterInfrastructure - index": "node ./models/isolationForest/index.js ./results/waterInfrastructure/deleteTruth.csv ./results/waterInfrastructure/pollution.csv ./results/waterInfrastructure/auxiliaryWeight.csv 10 22 ./results/waterInfrastructure/result/ isolation.csv scores.csv metrics.csv image ./exec/waterConfig.json"
   },
   "keywords": [
     "isolation-forest",
