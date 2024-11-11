@@ -1,6 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
-set "treesFolder=/groups/position_pressure"
+set "treesFolder=/groups/function_flow
+"
 
 echo WATER 3.3 - Create Weight...
 node ../processing/createWeight.js ../results/!treesFolder!/pollution.csv ../results/!treesFolder!/auxiliaryWeight.csv ./waterConfig.json
