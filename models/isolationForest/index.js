@@ -188,7 +188,7 @@ const main = async () => {
 
 
         // 2. MÉTRICAS
-        /*const y_pred = scoresResults.map(scoreArray => scoreArray.map((score, idx) => score > config.index.threshold ? 1 : 0)); // PREDICCIONES
+        const y_pred = scoresResults.map(scoreArray => scoreArray.map((score, idx) => score > config.index.threshold ? 1 : 0)); // PREDICCIONES
         const metricsResults = [];
 
         let totalTp = 0, totalFp = 0, totalTn = 0, totalFn = 0;
@@ -220,14 +220,14 @@ const main = async () => {
             accuracy: finalMetrics.accuracy 
         });
 
-        const metricsHeader = 'iteration,tp,fp,tn,fn,precision,recall,f1Score,accuracy\n'; // CABECERA DE MÉTRICAS
-        const metricsRows = metricsResults.map(({ iteration, tp, fp, tn, fn, precision = '', recall = '', f1Score = '', accuracy = '' }) => {
+        let metricsHeader = 'iteration,tp,fp,tn,fn,precision,recall,f1Score,accuracy\n'; // CABECERA DE MÉTRICAS
+        let metricsRows = metricsResults.map(({ iteration, tp, fp, tn, fn, precision = '', recall = '', f1Score = '', accuracy = '' }) => {
             return `${iteration},${tp},${fp},${tn},${fn},${precision},${recall},${f1Score},${accuracy}`; // DEVOLVER FILA DE MÉTRICAS
         }).join('\n');
 
         // ESCRIBIR MÉTRICAS 
-        fs.writeFileSync(metricsOutputPath, `${metricsHeader}${metricsRows}`, 'utf8'); 
-        console.log(`[ METRICS: ${metricsOutputPath} ]`);*/
+        //fs.writeFileSync(metricsOutputPath, `${metricsHeader}${metricsRows}`, 'utf8'); 
+        //console.log(`[ METRICS: ${metricsOutputPath} ]`);
 
         // Definir matrices para almacenar las métricas por iteración
 
@@ -253,8 +253,8 @@ const main = async () => {
         }
 
         // Construir el contenido del archivo CSV
-        const metricsHeader = [...Array.from({ length: iterations }, (_, i) => i + 1)].join(',');
-        const metricsRows = [
+         metricsHeader = [...Array.from({ length: iterations }, (_, i) => i + 1)].join(',');
+         metricsRows = [
             `${tpArray.join(',')}`,
             `${tnArray.join(',')}`,
             `${fpArray.join(',')}`,

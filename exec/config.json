@@ -64,47 +64,51 @@
     "createGroups": {
         "groups": [
             {
-                "output": "position_level",
+                "output": "function_level",
                 "fields": [
-                    "month_day_hour_min","n_px","n_p","truth"
+                    "month","day","hour","min","n_px","n_p","truth"
                 ]
             },
             {
-                "output": "position_drive",
+                "output": "function_drive",
                 "fields": [
-                    "month_day_hour_min","i_uiip","i_f","i_uiipu","truth"
+                    "month","day","hour","min","i_uiip","i_f","i_uiipu","truth"
                 ]
             },
             {
-                "output": "position_pressure",
+                "output": "function_pressure",
                 "fields": [
-                    "month_day_hour_min","p_uiip","p_f","p_pu","truth"
-                ]
-            },
-
-
-            {
-                "output": "operation_plaXiquet",
-                "fields": [
-                    "month_day_hour_min","n_px","ce_px","cs_px","truth"
+                    "month","day","hour","min","p_uiip","p_f","p_pu","truth"
                 ]
             },
             {
-                "output": "operation_playa",
+                "output": "function_flow",
                 "fields": [
-                    "month_day_hour_min","n_p","i_uiip","p_uiip","truth"
+                    "month","day","hour","min","ce_px","cs_px","c_pu_p","truth"
                 ]
             },
             {
-                "output": "operation_falcon",
+                "output": "position_plaXiquet",
                 "fields": [
-                    "month_day_hour_min","i_f","p_f","truth"
+                    "month","day","hour","min","n_px","ce_px","cs_px","truth"
                 ]
             },
             {
-                "output": "operation_pueblo",
+                "output": "position_playa",
                 "fields": [
-                    "month_day_hour_min","i_uiipu","c_pu_p","p_pu","truth"
+                    "month","day","hour","min","n_p","i_uiip","p_uiip","truth"
+                ]
+            },
+            {
+                "output": "position_falcon",
+                "fields": [
+                    "month","day","hour","min","i_f","p_f","truth"
+                ]
+            },
+            {
+                "output": "position_pueblo",
+                "fields": [
+                    "month","day","hour","min","i_uiipu","c_pu_p","p_pu","truth"
                 ]
             }
         ]
@@ -113,6 +117,7 @@
 
     "index": {
         "threshold": 0.6,
+        "anomalyThreshold": 0.01,
         "treesIncrement": 1,
         "score": 70,
         "valueY": 1,
