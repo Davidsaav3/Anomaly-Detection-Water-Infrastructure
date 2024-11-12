@@ -11,7 +11,7 @@
     },    
     "deleteColumn": {
         "delete": [
-            "num"
+            "﻿num"
         ]
     },
     "addColumn": {
@@ -119,7 +119,7 @@
         "threshold": 0.6,
         "anomalyThreshold": 0.01,
         "treesIncrement": 1,
-        "score": 70,
+        "score": 25,
         "valueY": 1,
         "valueX": "month_day_hour_min",
         "columnName": "truth"

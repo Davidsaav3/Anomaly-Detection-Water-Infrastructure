@@ -145,7 +145,7 @@ const main = async () => {
         // 0. ISOLATION
         for (let i = 1; i < iterations + 1; i++) {
             const myForest = new IsolationForest(features, numTrees, features.length); // INICIALIZAR FOREST
-            const scores = myForest.dataAnomalyScore(config.index.score); // CALCULAR SCORES
+            const scores = myForest.dataAnomalyScore(25); // CALCULAR SCORES
             scoresResults.push(scores); // ALMACENAR RESULTADOS
             const y_pred = scores.map(score => score > config.index.threshold ? 1 : 0); // PREDICCIÓN DE ANOMALÍAS
             const mse = calculateMSE(y_true, y_pred); // CALCULAR MSE

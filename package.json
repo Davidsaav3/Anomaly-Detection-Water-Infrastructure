@@ -19,10 +19,10 @@
     "x waterInfrastructure 0.1 - dataDispersion": "node   ./processing/dataDispersion.js   ./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/dataDispersion.csv   20   ./exec/waterConfig.json",
 
     "waterInfrastructure X 1.1 - joinColumn": "node   ./processing/joinColumn.js   ./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/joinColumn.csv   ./exec/waterConfig.json",
-    "waterInfrastructure 1.2 - deleteColumn": "node   ./processing/deleteColumn.js   ./results/waterInfrastructure/dataDispersion.csv   ./results/waterInfrastructure/deleteColumn.csv   ./exec/waterConfig.json",
+    "waterInfrastructure 1.2 - deleteColumn": "node   ./processing/deleteColumn.js   ./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/deleteColumn.csv   ./exec/waterConfig.json",
     "x waterInfrastructure 1.3 - addColumn": "node   ./processing/addColumn.js   ./results/waterInfrastructure/deleteColumn.csv   ./results/waterInfrastructure/addColumn.csv    ./exec/waterConfig.json",
 
-    "x waterInfrastructure 2.1 - encoding": "node   ./processing/encoding.js    ./results/waterInfrastructure/addColumn.csv   ./results/waterInfrastructure/auxiliaryDictionary.csv   ./results/waterInfrastructure/encoding.csv    ./exec/waterConfig.json",
+    "x waterInfrastructure 2.1 - encoding": "node   ./processing/encoding.js    ./results/waterInfrastructure/deleteColumn.csv   ./results/waterInfrastructure/auxiliaryDictionary.csv   ./results/waterInfrastructure/encoding.csv    ./exec/waterConfig.json",
 
     "x waterInfrastructure 3.1 - createTemplate": "node   ./processing/createTemplate.js   ./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/auxiliaryNormalize.csv   ./exec/waterConfig.json",
     "x waterInfrastructure 3.2 - nulls": "node   ./processing/nulls.js   ./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/nulls.csv    ./exec/waterConfig.json",
