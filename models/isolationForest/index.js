@@ -61,8 +61,8 @@ const readCSVHeaders = (filePath) => {
         const stream = fs.createReadStream(filePath)
             .pipe(csv({ headers: false }))
             .on('data', (row) => {
-                stream.pause(); // SOLO LAMPRIMERA FILA
-                resolve(row); // DEVUELVE
+                stream.pause(); // SOLO LA PRIMERA FILA
+                resolve(Object.values(row)); // Convertir a array
             })
             .on('error', reject);
     });
@@ -160,7 +160,41 @@ const main = async () => {
         }
 
 
-        // 1. SCORES
+        
+        // Crear encabezado que incluya todas las cabeceras entre 'id' y 'score'
+        const scoresHeader = [
+            'id', 'score'
+        ].join(',');
+
+        // Generar filas de datos con columnas de 'headers' y valores correspondientes de 'csvData'
+        let scoresRows = scoresResults[0].map((_, index) => {
+            const scores = scoresResults.map(scoreArray => scoreArray[index].toFixed(2)); // Obtener puntuaciones
+            const scoresTotal = scores.reduce((acc, score) => acc + parseFloat(score), 0); // Total puntuaciones
+            const scoresPercent = (scoresTotal / iterations).toFixed(2); // Porcentaje puntuaciones
+
+            // Extraer valores de la fila actual en csvData (index)
+            const csvValues = headers.map(header => csvData[index][header]); // Obtener valores de la fila en csvData usando las cabeceras
+
+            return [
+                ids[index],       // ID
+                scoresPercent     // Score
+            ];
+        });
+
+        // Ordenar de mayor a menor por `score`
+        scoresRows = scoresRows.sort((a, b) => parseFloat(b[b.length - 1]) - parseFloat(a[a.length - 1]));
+
+        // Limitar el número de registros guardados a `config.index.score`
+        scoresRows = scoresRows.slice(0, config.index.score);
+
+        // Formatear para escribir en el archivo
+        const scoresRowsFormatted = scoresRows.map(row => row.join(',')).join('\n');
+
+        // Escribir archivo
+        fs.writeFileSync(scoresOutputPath, `${scoresHeader}\n${scoresRowsFormatted}`, 'utf8');
+
+
+        /*// 1. SCORES
         const scoresHeader = [
             'id','valueYName','valueY','valueXName','valueX',
             ...Array.from({ length: iterations }, (_, i) => `score_${i + 1}`),
@@ -184,7 +218,7 @@ const main = async () => {
         }).join('\n');
         
         // ESCRIBIR ARCHIVO
-        fs.writeFileSync(scoresOutputPath, `${scoresHeader}\n${scoresRows}`, 'utf8');
+        fs.writeFileSync(scoresOutputPath, `${scoresHeader}\n${scoresRows}`, 'utf8');*/
 
 
         // 2. MÉTRICAS
