@@ -163,7 +163,7 @@ const main = async () => {
         
         // Crear encabezado que incluya todas las cabeceras entre 'id' y 'score'
         const scoresHeader = [
-            'id', 'score'
+            'id', ...headers, 'score'
         ].join(',');
 
         // Generar filas de datos con columnas de 'headers' y valores correspondientes de 'csvData'
@@ -177,6 +177,7 @@ const main = async () => {
 
             return [
                 ids[index],       // ID
+                ...csvValues,
                 scoresPercent     // Score
             ];
         });
