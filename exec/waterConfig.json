@@ -116,10 +116,10 @@
 
 
     "index": {
-        "threshold": 0.6,
+        "threshold": 0.55,
         "anomalyThreshold": 0.01,
         "treesIncrement": 1,
-        "score": 25,
+        "score": 300,
         "valueY": 1,
         "valueX": "month_day_hour_min",
         "columnName": "truth"

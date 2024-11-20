@@ -28,7 +28,7 @@
     "x waterInfrastructure 3.2 - nulls": "node   ./processing/nulls.js   ./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/nulls.csv    ./exec/waterConfig.json",
     "x waterInfrastructure 3.3 - createWeight": "node   ./processing/createWeight.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/auxiliaryWeight.csv   ./exec/waterConfig.json",
     
-    "x waterInfrastructure x - pollution": "node   ./processing/pollution.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/pollution.csv    70   1.5   ./exec/waterConfig.json",
+    "x waterInfrastructure x - pollution": "node   ./processing/pollution.js   ./results/waterInfrastructure/300.csv   ./results/waterInfrastructure/pollution_10.csv    3   1.999   ./exec/waterConfig.json",
     "waterInfrastructure 3.4 - deleteTruth": "node   ./processing/deleteTruth.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/deleteTruth.csv   ./exec/waterConfig.json",
 
     "waterInfrastructure 4.1 - createGroups": "node   ./processing/createGroups.js   ./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/createGroups   ./exec/waterConfig.json",

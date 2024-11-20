@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-set "treesFolder=waterInfrastructureTrees"
+set "treesFolder=waterInfrastructure/pollution"
 
 for /L %%i in (1,100,1) do (
     set "iterFolder=iteration%%i"
@@ -12,9 +12,9 @@ for /L %%i in (1,100,1) do (
     echo ITERACION %%i
 
     echo WATER - Index...
-    node ../models/isolationForest/index.js ../results/!treesFolder!/deleteTruth.csv ../results/!treesFolder!/nulls.csv ../results/!treesFolder!/auxiliaryWeight.csv 10 100 ../results/!treesFolder!/!iterFolder!/ isolation.csv scores.csv metrics.csv image ./waterConfig.json
+    node ../models/isolationForest/index.js ../results/!treesFolder!/pollution_10.csv ../results/!treesFolder!/truth.csv ../results/!treesFolder!/auxiliaryWeight.csv 1 10 ../results/!treesFolder!/!iterFolder!/ isolation.csv scores.csv metrics.csv image ./waterConfig.json
 
-    echo OK ITERACON %%i.
+    echo OK ITERACON %%i
 )
 
 endlocal
