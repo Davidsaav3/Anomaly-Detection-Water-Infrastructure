@@ -24,3 +24,19 @@
 -cuanta mas contaminacion será el mismo o mas bajo el umbral ????
 -un dataset y un 1% lo cotamino a 10% 20% 30% - 0.6.0.65
 ------------------------------------------------------
+hasta 200%
+por tanto el humbral será 60%
+dw
+no total en las particiones
+pseudocodigo mas detallado
+sea... exollicar codigo...
+FUNCTION -> MESURE
+TOP10, ORDENADO POR SCORE FAPARTADO 5 discusion, despliege...
+
+sol: en q contextos ees problemático.
+si ordeno x unvalor o otro,hay columnas q no tienen anomalias o ...
+observacion de resultados.
+
+relaciones, scores mas altos, ordenar... 
+
+vs lo q tenai antes, justificación, ubicar ademas...

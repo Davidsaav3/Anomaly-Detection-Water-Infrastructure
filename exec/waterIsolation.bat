@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 set "treesFolder=waterInfrastructure/pollution"
 
 for /L %%i in (1,100,1) do (
-    set "iterFolder=iteration%%i"
+    set "iterFolder=6612_3"
 
     rem Crear directorios si no existen
     if not exist "../results/!treesFolder!/!iterFolder!" mkdir "../results/!treesFolder!/!iterFolder!"
@@ -12,7 +12,7 @@ for /L %%i in (1,100,1) do (
     echo ITERACION %%i
 
     echo WATER - Index...
-    node ../models/isolationForest/index.js ../results/!treesFolder!/pollution_10.csv ../results/!treesFolder!/truth.csv ../results/!treesFolder!/auxiliaryWeight.csv 1 10 ../results/!treesFolder!/!iterFolder!/ isolation.csv scores.csv metrics.csv image ./waterConfig.json
+    node ../models/isolationForest/index.js ../results/!treesFolder!/6612_3.csv ../results/!treesFolder!/truth.csv ../results/!treesFolder!/auxiliaryWeight.csv 1 10 ../results/!treesFolder!/!iterFolder!/ isolation.csv scores.csv metrics.csv image ./waterConfig.json
 
     echo OK ITERACON %%i
 )

@@ -100,5 +100,5 @@ function analyzeCSVFiles(fileNames, outputFileNum, outputFileScores) {
 }
 
 // Lista de archivos a analizar
-const fileNames = ['total.csv', 'position_pueblo.csv', 'position_playa.csv','position_plaxiquet.csv', 'position_falcon.csv', 'function_presure.csv','function_level.csv', 'function_flow.csv', 'function_drive.csv'];
+const fileNames = ['position_pueblo.csv', 'position_playa.csv','position_plaxiquet.csv', 'position_falcon.csv', 'function_presure.csv','function_level.csv', 'function_flow.csv', 'function_drive.csv'];
 analyzeCSVFiles(fileNames, 'resultados_num.csv', 'resultados_scores.csv');
