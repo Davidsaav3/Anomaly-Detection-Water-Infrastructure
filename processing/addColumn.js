@@ -1,73 +1,146 @@
 const fs = require('fs');
 const csv = require('csv-parser');
+const path = require('path');
 
-// [ OBTENER PARÁMETROS ]
-const args = process.argv.slice(2);
-if (args.length < 3) {
-  console.error('! ERROR: INPUT !');
-  process.exit(1);
+const COMMON_EXTENSIONS = ['.csv', '.txt', '.json'];
+
+// [ BUSCA ARCHIVO CON EXTENSIÓN ]
+function findFileWithExtension(filePath) {
+  if (fs.existsSync(filePath)) {
+    return filePath; // SI EL ARCHIVO YA EXISTE, LO DEVUELVE
+  }
+  for (const ext of COMMON_EXTENSIONS) {
+    const fileWithExt = filePath + ext;
+    if (fs.existsSync(fileWithExt)) {
+      return fileWithExt; // DEVUELVE LA PRIMERA COINCIDENCIA
+    }
+  }
+  throw new Error(`Archivo no encontrado: ${filePath} (se buscó con extensiones ${COMMON_EXTENSIONS.join(', ')})`);
 }
 
-const inputFile = args[0]; // ENTRADA
-const outputFile = args[1]; // SALIDA
-const configPath = args[2] ? args[2] : './config.json'; // CONFIGURACIÓN
-let config = {};
-
-// [ CARGAR CONFIGURACIÓN ]
-try {
-  const configFile = fs.readFileSync(configPath); 
-  config = JSON.parse(configFile); // PARSEAR JSON
-} catch (error) {
-  console.error(`! ERROR: CONFIG ${configPath} !`, error);
-  process.exit(1);
-}
-
-// [ LEER CSV ORIGINAL ]
-const readCSV = (filePath) => {
+// [ LEE CSV ]
+async function readCSV(filePath) {
   return new Promise((resolve, reject) => {
-      const results = [];
-      fs.createReadStream(filePath)
-          .pipe(csv())
-          .on('data', (data) => results.push(data))
-          .on('end', () => resolve(results))
-          .on('error', reject);
+    const results = [];
+    let headers = [];
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('headers', headerList => { headers = headerList; })
+      .on('data', data => results.push(data))
+      .on('end', () => resolve({ headers, results }))
+      .on('error', reject);
   });
-};
+}
 
-// [ GUARDAR CSV ]
+// [ LEE JSON ]
+async function readJSON(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) reject(err);
+      else resolve(JSON.parse(data));
+    });
+  });
+}
+
+// [ LEE TXT ]
+async function readTXT(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) reject(err);
+      else {
+        resolve(data.split('\n').map(line => ({ value: line })));
+      }
+    });
+  });
+}
+
+// [ GUARDA CSV ]
 function saveCSV(data, headers, fileName) {
   const csvContent = [
-    headers.join(','), // CABECERAS
-    ...data.map(row => headers.map(header => row[header] !== undefined ? row[header] : '').join(',')) // RELLENAR ARCHIVO DE CADA GRUPO
-  ].join('\n'); // UNIR LOS ELEMENTOS CON COMAS
+    headers.join(','), // CABECERA
+    ...data.map(row => headers.map(header => row[header] ?? '').join(',')) // FILAS
+  ].join('\n');
   fs.writeFileSync(fileName, csvContent);
   console.log(`[ ADD COLUMN: ${fileName} ]`);
 }
 
-// [ *** AÑADIR COLUMNA ]
-async function addColumn(results) {
-  const columnName = config.addColumn.columnName;  // NUEVAS CLAVES 
-  const columnsValue = config.addColumn.value;  // NUEVOS VALORES 
-  return results.map(row => {
-    const newRow = { ...row }; // DUPLICAR DATOS
-    columnName.forEach((key, index) => {
-      newRow[key] = columnsValue[index]; // ASIGNAR VALORES A LA COLUMNA
+// [ AÑADE COLUMNAS ]
+function addColumns(data, columnNames, columnValues) {
+  if (!columnNames || columnNames.length === 0 || !columnValues || columnValues.length !== columnNames.length) {
+    throw new Error("Error al añadir columnas. Verifique las columnas y los valores.");
+  }
+  return data.map(row => {
+    const newRow = { ...row };
+    columnNames.forEach((columnName, index) => {
+      newRow[columnName] = columnValues[index]; // ASIGNA VALOR A LA COLUMNA
     });
     return newRow;
   });
 }
 
-// [ MAIN ]
-async function main(inputFile, outputFile) {
-  try {
-    const results = await readCSV(inputFile);
-    const updatedResults = await addColumn(results); // AGREGAR COLUMNA
-    const headers = [...Object.keys(results[0]), ...config.addColumn.columnName]; // NUEVAS CABECERAS
-    saveCSV(updatedResults, headers, outputFile);
-  } 
-  catch (error) {
-    console.error('ERROR MAIN: ', error); // ERROR DE PROCESAMIENTO
-  }
+// [ PARÁMETROS DE ENTRADA ]
+const args = process.argv.slice(2);
+if (args.length < 2) {
+  console.error('! ERROR: INPUT !');
+  process.exit(1);
 }
 
-main(inputFile, outputFile);
+try {
+  const inputFile = findFileWithExtension(args[0]);
+  const outputFile = args[1]; // EL ARCHIVO DE SALIDA PUEDE SER CREADO, NO NECESITA EXISTIR.
+
+  // CONFIGURACIÓN POR DEFECTO
+  let config = {
+    addColumn: {
+      columnName: ["truth"],
+      value: [0]
+    }  
+  };
+
+  // LEE CONFIGURACIÓN
+  if (args[2]) {
+    try {
+      const rawConfig = args[2];
+      config = JSON.parse(rawConfig); // INSTENTA PARSEAR LA CONFIGURACIÓN
+      console.log('Configuración cargada correctamente:', config);
+    } catch (error) {
+      console.error('Configuración malformateada. Usando configuración por defecto:', config);
+    }
+  } 
+  else {
+    console.log('Configuración no proporcionada. Usando configuración por defecto:', config);
+  }
+  main(inputFile, outputFile, config);
+} 
+catch (error) {
+  console.error('ERROR:', error.message);
+  process.exit(1);
+}
+
+// [ MAIN ]
+async function main(inputFile, outputFile, config) {
+  try {
+    const extname = path.extname(inputFile).toLowerCase();
+    let data;
+    if (extname === '.csv') {
+      const { headers, results } = await readCSV(inputFile);
+      data = { headers, results };
+    } 
+    else if (extname === '.json') {
+      data = await readJSON(inputFile);
+    } 
+    else if (extname === '.txt') {
+      data = await readTXT(inputFile);
+    } 
+    else {
+      throw new Error(`Formato no soportado: ${extname}`);
+    }
+    const { columnName, value } = config;
+    const updatedData = addColumns(data.results || data, columnName, value); // PROCESA DATOS AÑADIENDO COLUMNAS
+    const headers = data.headers || Object.keys(updatedData[0]); // GUARDA 
+    saveCSV(updatedData, [...headers, ...columnName], outputFile + '.csv');
+  } 
+  catch (error) {
+    console.error('ERROR:', error);
+  }
+}

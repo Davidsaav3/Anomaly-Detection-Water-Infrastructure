@@ -1,71 +1,112 @@
 const fs = require('fs');
 const csv = require('csv-parser');
+const path = require('path');
 
-// [ OBTENER PARÁMETROS ]
-const args = process.argv.slice(2);
-if (args.length < 3) {
-  console.error('! ERROR: INPUT !'); // ERROR SI FALTAN ARGUMENTOS
-  process.exit(1);
+// Lista de extensiones comunes
+const COMMON_EXTENSIONS = ['.csv', '.txt', '.json'];
+
+// Busca un archivo en la ruta dada con extensiones comunes si no se proporciona una extensión.
+function findFileWithExtension(filePath) {
+  if (fs.existsSync(filePath)) {
+    return filePath; // Si el archivo ya existe, lo devuelve
+  }
+
+  for (const ext of COMMON_EXTENSIONS) {
+    const fileWithExt = filePath + ext;
+    if (fs.existsSync(fileWithExt)) {
+      return fileWithExt; // Devuelve la primera coincidencia
+    }
+  }
+
+  throw new Error(`Archivo no encontrado: ${filePath} (se buscó con extensiones ${COMMON_EXTENSIONS.join(', ')})`);
 }
 
-const inputFile = args[0];
-const outputFile = args[1];
-const configPath = args[2] ? args[2] : './config.json';
-let config = {};
-
-// [ CARGAR CONFIGURACIÓN ]
-try {
-  const configFile = fs.readFileSync(configPath); // LEER
-  config = JSON.parse(configFile); // PARSEAR CONFIGURACIÓN
-}
-catch (error) {
-  console.error(`! ERROR: CONFIG ${configPath} !`, error); // ERROR
-  process.exit(1);
-}
-
-// [ LEER CSV ORIGINAL ]
-function readCSV(filePath) {
+// Lee un archivo CSV y devuelve sus datos.
+async function readCSV(filePath) {
   return new Promise((resolve, reject) => {
     const results = [];
+    let headers = [];
     fs.createReadStream(filePath)
       .pipe(csv())
-      .on('data', (data) => results.push(data)) // AÑADIR DATOS A RESULTADOS
-      .on('end', () => resolve(results)) // RESOLVER PROMESA CUANDO TERMINE
-      .on('error', (error) => reject(error)); // RECHAZAR PROMESA 
+      .on('headers', headerList => { headers = headerList; })
+      .on('data', data => results.push(data))
+      .on('end', () => resolve({ headers, results }))
+      .on('error', reject);
   });
 }
 
-// [ GUARDAR RESULTADO EN CSV ]
-function saveCSV(data, outputFilename) {
-  const csvRows = [];
-  const headers = Object.keys(data[0]); // CABECERAS
-  csvRows.push(headers.join(',')); // AÑADIR CABECERAS
-  data.forEach(obj => {
-    const values = headers.map(header => {
-      let stringValue = String(obj[header]); // PASAR A STRING
-      return stringValue; 
-    });
-    csvRows.push(values.join(',')); // AÑADIR FILA
-  });
-  fs.writeFileSync(outputFilename, csvRows.join('\n')); // GUARDAR
-  console.log(`[ DELETE TRUTH: ${outputFilename} ]`);
+// Guarda datos en un archivo CSV.
+function saveCSV(data, headers, fileName) {
+  const csvContent = [
+    headers.join(','), // Cabecera
+    ...data.map(row => headers.map(header => row[header] ?? '').join(',')) // Filas
+  ].join('\n');
+  fs.writeFileSync(fileName, csvContent);
+  console.log(`[ DELETE COLUMN: ${fileName} ]`);
 }
 
-// [ *** MAIN ]
-async function main(inputFilePath, outputFileName) {
+// Elimina columnas específicas de los datos.
+function deleteColumns(data, columnsToDelete) {
+  if (!columnsToDelete || columnsToDelete.length === 0) {
+    throw new Error("NO COLUMNS TO DELETE");
+  }
+  return data.map(row => {
+    const newRow = { ...row };
+    columnsToDelete.forEach(col => delete newRow[col]);
+    return newRow;
+  });
+}
+
+// [ PARÁMETROS DE ENTRADA ]
+const args = process.argv.slice(2);
+if (args.length < 2) {
+  console.error('! ERROR: INPUT !');
+  process.exit(1);
+}
+
+try {
+  // Detectar archivos con extensiones comunes
+  const inputFile = findFileWithExtension(args[0]);
+  const outputFile = args[1]; // El archivo de salida puede ser creado, no necesita existir.
+
+  // Configuración por defecto
+  let config = {
+    deleteColumns: [] // Lista de columnas a eliminar por defecto
+  };
+
+  // Leer configuración del tercer argumento o usar predeterminada
+  if (args[2]) {
+    try {
+      const rawConfig = args[2];
+      config = JSON.parse(rawConfig); // Intenta parsear la configuración
+      console.log('Configuración cargada correctamente:', config);
+    } catch (error) {
+      console.error('Configuración malformateada. Usando configuración por defecto:', config);
+    }
+  } else {
+    console.log('Configuración no proporcionada. Usando configuración por defecto:', config);
+  }
+
+  // Ejecutar lógica principal
+  main(inputFile, outputFile, config);
+
+} catch (error) {
+  console.error('ERROR:', error.message);
+  process.exit(1);
+}
+
+// Lógica principal del script.
+async function main(inputFile, outputFile, config) {
   try {
-    const data = await readCSV(inputFilePath);
-    const columnsToDelete = config.deleteTruth.delete; //   COLUMNAS A ELIMINAR
-    const filteredData = data.map(row => {
-      const newRow = { ...row }; // COPIA DEL OBJETO
-      columnsToDelete.forEach(col => delete newRow[col]); // ELIMINAR COLUMNAS
-      return newRow; // NUEVA FILA FILTRADA
-    });
-    saveCSV(filteredData, outputFileName); // GUARDAR
-  }
-  catch (error) {
-    console.error('! ERROR ! ', error);
+    const { headers, results } = await readCSV(inputFile);
+    const columnsToDelete = config.delete;
+    
+    // Procesar datos eliminando columnas
+    const filteredData = deleteColumns(results, columnsToDelete);
+
+    // Guardar resultado en el archivo de salida
+    saveCSV(filteredData, headers.filter(header => !columnsToDelete.includes(header)), outputFile+'.csv');
+  } catch (error) {
+    console.error('ERROR:', error);
   }
 }
-
-main(inputFile, outputFile); 

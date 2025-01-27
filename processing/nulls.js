@@ -1,26 +1,43 @@
 const fs = require('fs');
 const csv = require('csv-parser');
+const path = require('path');
 
-// [ EJECUTAR PROCESO Y GUARDAR RESULTADOS ]
+// [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
 if (args.length !== 4) {
   console.error('! ERROR: INPUT !');
   process.exit(1);
 }
 
-const inputFile = args[0];
-const nullsFile = args[1];
-const outputFile = args[2];
-const configPath = args[3] ? args[3] : './config.json';
-let config = {};
+const inputFilePath = args[0];
+const nullsFileName = args[1];
+const outputFileName = args[2];
+const configPath = args[3]; 
 
-// [ CARGAR CONFIGURACIÓN ]
-try {
-  const configFile = fs.readFileSync(configPath);
-  config = JSON.parse(configFile);
-} catch (error) {
-  console.error(`! ERROR: CONFIG ${configPath} !`, error);
-  process.exit(1);
+// CONFIGURACIÓN 
+let config = {
+  remove: [
+      "R", 
+      "r", 
+      "D", 
+      "d"
+  ]
+};
+
+const COMMON_EXTENSIONS = ['.csv', '.txt', '.json'];
+
+// [ BUSCAR ARCHIVO CON EXTENSIÓN ]
+function findFileWithExtension(filePath) {
+  if (fs.existsSync(filePath)) {
+    return filePath; // SI EL ARCHIVO YA EXISTE, LO DEVUELVE
+  }
+  for (const ext of COMMON_EXTENSIONS) {
+    const fileWithExt = filePath + ext;
+    if (fs.existsSync(fileWithExt)) {
+      return fileWithExt; // DEVUELVE LA PRIMERA COINCIDENCIA
+    }
+  }
+  throw new Error(`Archivo no encontrado: ${filePath} (se buscó con extensiones ${COMMON_EXTENSIONS.join(', ')})`);
 }
 
 // [ LEER CSV Y DEVOLVER CABECERAS Y RESULTADOS ]
@@ -45,8 +62,33 @@ const saveCSV = (data, headers, fileName) => {
   console.log(`[ NULLS: ${fileName} ]`);
 };
 
-// [ *** MAIN ]
-async function main(inputFile, nullsFile) { 
+// [ CARGAR CONFIGURACIÓN ]
+try {
+  // DETECTAR ARCHIVOS DE ENTRADA
+  const inputFile = findFileWithExtension(inputFilePath);
+  const nullsFile = findFileWithExtension(nullsFileName);
+
+  if (configPath) {
+    try {
+      const rawConfig = configPath;
+      config = JSON.parse(rawConfig); // INTENTA PARSEAR LA CONFIGURACIÓN
+      console.log('Configuración cargada correctamente:', config);
+    } catch (error) {
+      console.error('Configuración malformateada. Usando configuración por defecto:', config);
+    }
+  } 
+  else {
+    console.log('Configuración no proporcionada. Usando configuración por defecto:', config);
+  }
+  main(inputFile, nullsFile, outputFileName, config);
+} 
+catch (error) {
+  console.error('ERROR:', error.message);
+  process.exit(1);
+}
+
+// [ MAIN ]
+async function main(inputFile, nullsFile, outputFile, config) { 
   try {
     const { headers, results } = await readCSV(inputFile); // LEER CSV PRINCIPAL
     const { results: nullValues } = await readCSV(nullsFile); // LEER CSV DE NULOS
@@ -55,7 +97,7 @@ async function main(inputFile, nullsFile) {
 
     // ENCONTRAR COLUMNAS CON 'R'
     const columnsToCheck = Object.keys(values1).filter(
-      (header) => config.nulls.remove.includes(values1[header])
+      (header) => config.remove.includes(values1[header])
     );
 
     // FILTRAR FILAS EN BASE A COLUMNAS ESPECIFICADAS EN columnsToCheck
@@ -72,15 +114,9 @@ async function main(inputFile, nullsFile) {
         return newRow;
       }, {});
     });
-
-    return normalizedData;
-  } catch (error) {
+    saveCSV(normalizedData, headers, outputFile+".csv"); // GUARDAR RESULTADOS
+  } 
+  catch (error) {
     console.error('! ERROR ! ', error);
   }
 }
-
-main(inputFile, nullsFile)
-  .then(data => {
-    saveCSV(data, data.length ? Object.keys(data[0]) : [], outputFile); // GUARDAR RESULTADOS
-  })
-  .catch(error => console.error('! ERROR ! ', error));

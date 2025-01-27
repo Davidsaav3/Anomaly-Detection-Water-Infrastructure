@@ -1,5 +1,6 @@
 const fs = require('fs');
 const csv = require('csv-parser');
+const path = require('path');
 
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
@@ -8,19 +9,66 @@ if (args.length !== 4) {
   process.exit(1);
 }
 
-const inputFile = args[0];
+const inputFilePath = args[0];
 const nullsFileName = args[1];
 const normalizeFileName = args[2];
-const configPath = args[3] ? args[3] : './config.json';
-let config = {};
+
+// CONFIGURACIÓN POR DEFECTO
+let config = {
+  separator1: '_',
+  separator2: '_',
+  joinFiles: ['month', 'day', 'hour', 'min'],
+  createTemplate: {
+    nulls: 'null',
+    normalize1: '1',
+    normalize2: '0'
+  }
+};
+
+// [ DETECTAR EXTENSIONES ]
+function findFileWithExtension(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  const extensions = ['.csv', '.txt', '.json'];
+  if (fs.existsSync(filePath)) {
+    return filePath;
+  }
+  for (const extension of extensions) {
+    const fileWithExt = filePath + extension;
+    if (fs.existsSync(fileWithExt)) {
+      return fileWithExt;
+    }
+  }
+  throw new Error(`Archivo no encontrado: ${filePath} (se buscó con extensiones ${extensions.join(', ')})`);
+}
 
 // [ CARGAR CONFIGURACIÓN ]
 try {
-  const configFile = fs.readFileSync(configPath);
-  config = JSON.parse(configFile);
-}
+  const inputFile = findFileWithExtension(inputFilePath);
+
+  // CONFIGURACIÓN
+  let config = {
+    nulls: "0",
+    normalize1: "0",
+    normalize2: "1"
+  };
+
+  if (args[3]) {
+    try {
+      const rawConfig = args[3];
+      config = JSON.parse(rawConfig); // INTENTA PARSEAR LA CONFIGURACIÓN
+      console.log('Configuración cargada correctamente:', config);
+    } 
+    catch (error) {
+      console.error('Configuración malformateada. Usando configuración por defecto:', config);
+    }
+  } 
+  else {
+    console.log('Configuración no proporcionada. Usando configuración por defecto:', config);
+  }
+  main(inputFile);
+} 
 catch (error) {
-  console.error(`! ERROR: CONFIG ${configPath} !`, error);
+  console.error('ERROR:', error.message);
   process.exit(1);
 }
 
@@ -36,7 +84,7 @@ function readCSV(filePath) {
   });
 }
 
-// [ *** VERIFICAR NULLS POR COLUMNAS ]
+// [ VERIFICAR NULLS POR COLUMNAS ]
 function getNulls(data, headers) {
   const nullsMap = {};
   headers.forEach(header => nullsMap[header] = false); // INICIALIZAR
@@ -52,7 +100,7 @@ function getNulls(data, headers) {
 function saveNulls(headers, nullsMap) {
   const nullsRow = headers.map(header => (nullsMap[header] ? 'null' : config.createTemplate.nulls)).join(','); // GENERAR FILA
   const csvContent = [headers.join(','), nullsRow].join('\n'); // GENERAR PLANTILLA NULLS
-  fs.writeFileSync(nullsFileName, csvContent);
+  fs.writeFileSync(nullsFileName+".csv", csvContent);
   console.log(`[ CREATE TEMPLATE - NULLS: ${nullsFileName} ]`);
 }
 
@@ -61,7 +109,7 @@ function saveNormalized(headers) {
   const nullsRow = headers.map(() => config.createTemplate.normalize1).join(','); // SI HAY NULL -> 1
   const onesRow = headers.map(() => config.createTemplate.normalize2).join(','); // SI NO HAY NULL -> 0
   const csvContent = [headers.join(','), nullsRow, onesRow].join('\n'); // UNIR CLAVES VALOR
-  fs.writeFileSync(normalizeFileName, csvContent);
+  fs.writeFileSync(normalizeFileName+".csv", csvContent);
   console.log(`[ CREATE TEMPLATE - NORMALIZE: ${normalizeFileName} ]`);
 }
 
@@ -77,6 +125,3 @@ async function main(inputFilename) { // LEER ENTRADA
   saveNulls(headers, nullsMap); // NULLS
   saveNormalized(headers); // NORMALIZADO
 }
-
-main(inputFile)
-  .catch(error => console.error('! ERROR ! ', error));
