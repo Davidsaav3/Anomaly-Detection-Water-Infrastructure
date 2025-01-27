@@ -1,0 +1,2 @@
+received_at,end_device_ids.device_id,end_device_ids.dev_eui,end_device_ids.dev_addr,end_device_ids.application_ids.application_id,uplink_message.session_key_id,uplink_message.rx_metadata.0.gateway_ids.gateway_id,uplink_message.rx_metadata.1.gateway_ids.gateway_id,uplink_message.rx_metadata.2.gateway_ids.gateway_id,uplink_message.rx_metadata.3.gateway_ids.gateway_id,uplink_message.rx_metadata.4.gateway_ids.gateway_id
+1,1,1,1,1,1,1,1,1,1,1

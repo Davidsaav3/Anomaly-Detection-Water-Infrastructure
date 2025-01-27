@@ -12,13 +12,10 @@ function analyzeCSVFiles(fileNames, outputFileNum, outputFileScores) {
     const header = lines[0].split(',');
     const idIndex = header.indexOf('id');
     const scoreIndex = header.indexOf('score');
-    const monthIndex = header.indexOf('month');
-    const dayIndex = header.indexOf('day');
-    const hourIndex = header.indexOf('hour');
-    const minIndex = header.indexOf('min');
+    const received_atIndex = header.indexOf('received_at');
 
-    if (idIndex === -1 || scoreIndex === -1 || monthIndex === -1 || dayIndex === -1 || hourIndex === -1 || minIndex === -1) {
-      console.error(`Archivo ${fileName} no contiene las columnas requeridas ('id', 'score', 'month', 'day', 'hour', 'min')`);
+    if (idIndex === -1 || scoreIndex === -1 || received_atIndex === -1) {
+      console.error(`Archivo ${fileName} no contiene las columnas requeridas ('id', 'score', 'received_at')`);
       return;
     }
 
@@ -26,10 +23,7 @@ function analyzeCSVFiles(fileNames, outputFileNum, outputFileScores) {
       const columns = line.split(',');
       const id = columns[idIndex];
       const score = parseFloat(columns[scoreIndex]);
-      const month = columns[monthIndex];
-      const day = columns[dayIndex];
-      const hour = columns[hourIndex];
-      const min = columns[minIndex];
+      const received_at = columns[received_atIndex];
 
       if (!idMap.has(id)) {
         idMap.set(id, {
@@ -37,10 +31,7 @@ function analyzeCSVFiles(fileNames, outputFileNum, outputFileScores) {
           files: [],
           scores: [],
           scores_sum: 0,
-          firstMonth: month,
-          firstDay: day,
-          firstHour: hour,
-          firstMin: min
+          firstMonth: received_at,
         });
       }
 
@@ -59,18 +50,15 @@ function analyzeCSVFiles(fileNames, outputFileNum, outputFileScores) {
     return idMap.get(a).scores_sum - idMap.get(b).scores_sum;
   });
 
-  let outputNum = 'id,num,scores_files,scores_sum,num_files,month,day,hour,min\n';
+  let outputNum = 'id,num,scores_files,scores_sum,num_files,received_at\n';
   sortedByNum.forEach(id => {
     const value = idMap.get(id);
     const numFiles = value.count;
     const files = value.files.join(';');
     const scores = value.scores.join(';');
     const scoresSum = value.scores_sum;
-    const month = value.firstMonth;
-    const day = value.firstDay;
-    const hour = value.firstHour;
-    const min = value.firstMin;
-    outputNum += `${id},${numFiles},${scores},${scoresSum},${files},${month},${day},${hour},${min}\n`;
+    const received_at = value.firstMonth;
+    outputNum += `${id},${numFiles},${scores},${scoresSum},${files},${received_at}\n`;
   });
   fs.writeFileSync(outputFileNum, outputNum);
   console.log(`Resultado guardado en ${outputFileNum}`);
@@ -82,23 +70,20 @@ function analyzeCSVFiles(fileNames, outputFileNum, outputFileScores) {
     return idMap.get(a).count - idMap.get(b).count;
   });
 
-  let outputScore = 'id,num,scores_files,scores_sum,num_files,month,day,hour,min\n';
+  let outputScore = 'id,num,scores_files,scores_sum,num_files,received_at\n';
   sortedByScore.forEach(id => {
     const value = idMap.get(id);
     const numFiles = value.count;
     const files = value.files.join(';');
     const scores = value.scores.join(';');
     const scoresSum = value.scores_sum;
-    const month = value.firstMonth;
-    const day = value.firstDay;
-    const hour = value.firstHour;
-    const min = value.firstMin;
-    outputScore += `${id},${numFiles},${scores},${scoresSum},${files},${month},${day},${hour},${min}\n`;
+    const received_at = value.firstMonth;
+    outputScore += `${id},${numFiles},${scores},${scoresSum},${files},${received_at}\n`;
   });
   fs.writeFileSync(outputFileScores, outputScore);
   console.log(`Resultado guardado en ${outputFileScores}`);
 }
 
 // Lista de archivos a analizar
-const fileNames = ['position_pueblo.csv', 'position_playa.csv','position_plaxiquet.csv', 'position_falcon.csv', 'function_presure.csv','function_level.csv', 'function_flow.csv', 'function_drive.csv'];
+const fileNames = ['conexion.csv', 'configuracion.csv','identificacion.csv', 'mensaje.csv', 'tiempo.csv','ubicacion.csv'];
 analyzeCSVFiles(fileNames, 'resultados_num.csv', 'resultados_scores.csv');

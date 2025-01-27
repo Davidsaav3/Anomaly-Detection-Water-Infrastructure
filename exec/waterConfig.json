@@ -9,9 +9,14 @@
             "min"
         ]
     },    
+    "flatten": {},
+
+    "expandedColumn": {
+        "expandedValue": "#fill#"
+    },
     "deleteColumn": {
         "delete": [
-            "﻿num"
+            "truth"
         ]
     },
     "addColumn": {
@@ -116,7 +121,7 @@
 
 
     "index": {
-        "threshold": 0.55,
+        "threshold": 0,
         "anomalyThreshold": 0.01,
         "treesIncrement": 1,
         "score": 33096,

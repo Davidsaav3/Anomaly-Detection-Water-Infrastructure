@@ -49,18 +49,19 @@ function contaminateRows(results) {
     }
   }
 
+  // Inicializar la columna `truth` para todas las filas como `0`
+  results.forEach(row => {
+    row['truth'] = 0; // Asignar por defecto no contaminada
+  });
+
   selectedIndices.forEach(index => {
     const row = results[index];
     for (const key in row) {
       if (!excludedColumns.includes(key) && !isNaN(row[key])) {
-        row[key] = parseFloat(row[key]) * parseFloat(contaminationFactor);
+        row[key] = parseFloat(row[key]) * parseFloat(contaminationFactor); // Aplicar contaminación
       }
     }
-    
-    const lastColumn = Object.keys(row).pop();
-    if (row[lastColumn] == 0) {
-      row[lastColumn] = 1;
-    }
+    row['truth'] = 1; // Marcar como contaminada
   });
 
   return results;
