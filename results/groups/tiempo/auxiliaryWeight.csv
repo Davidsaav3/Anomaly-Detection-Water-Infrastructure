@@ -1,0 +1,2 @@
+received_at,uplink_message.rx_metadata.0.time,uplink_message.rx_metadata.0.timestamp,uplink_message.rx_metadata.1.time,uplink_message.rx_metadata.1.timestamp,uplink_message.rx_metadata.2.time,uplink_message.rx_metadata.2.timestamp,uplink_message.rx_metadata.3.time,uplink_message.rx_metadata.3.timestamp,uplink_message.rx_metadata.4.time,uplink_message.rx_metadata.4.timestamp,uplink_message.received_at,uplink_message.settings.timestamp,uplink_message.settings.time
+1,1,1,1,1,1,1,1,1,1,1,1,1,1

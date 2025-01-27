@@ -1,0 +1,5 @@
+id,received_at,end_device_ids.device_id,end_device_ids.dev_eui,end_device_ids.dev_addr,end_device_ids.application_ids.application_id,uplink_message.session_key_id,uplink_message.rx_metadata.0.gateway_ids.gateway_id,uplink_message.rx_metadata.1.gateway_ids.gateway_id,uplink_message.rx_metadata.2.gateway_ids.gateway_id,uplink_message.rx_metadata.3.gateway_ids.gateway_id,uplink_message.rx_metadata.4.gateway_ids.gateway_id,score
+700,0.07711799052550403,0,0,0,0,0,1,1,0.6,0,0,0.74
+2944,0.3243362344386912,0,0,0,0,0,1,0.2,0.2,0,0,0.70
+3910,0.43075906136388675,0.9333333333333333,0.9333333333333333,0.9333333333333333,0,0.9333333333333333,0,0.8,1,0.8,0.2,0.70
+8277,0.9118651536851382,0.2,0.2,0.2,0,0.2,0.25,0.2,0,1,0.6,0.70

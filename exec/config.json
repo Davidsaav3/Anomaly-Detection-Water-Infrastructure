@@ -61,54 +61,49 @@
     },
 
     
+    
     "createGroups": {
         "groups": [
             {
-                "output": "function_level",
+                "output": "ubicacion",
                 "fields": [
-                    "month","day","hour","min","n_px","n_p","truth"
+                    "received_at",
+                    "uplink_message.rx_metadata.0.location.latitude","uplink_message.rx_metadata.0.location.longitude","uplink_message.rx_metadata.0.location.altitude","uplink_message.rx_metadata.0.gateway_ids.gateway_id","uplink_message.rx_metadata.0.gateway_ids.eui","uplink_message.rx_metadata.0.location.source",
+                    "uplink_message.rx_metadata.1.location.latitude","uplink_message.rx_metadata.1.location.longitude","uplink_message.rx_metadata.1.location.altitude","uplink_message.rx_metadata.1.gateway_ids.gateway_id","uplink_message.rx_metadata.1.gateway_ids.eui","uplink_message.rx_metadata.1.location.source",
+                    "uplink_message.rx_metadata.2.location.latitude","uplink_message.rx_metadata.2.location.longitude","uplink_message.rx_metadata.2.location.altitude","uplink_message.rx_metadata.2.gateway_ids.gateway_id","uplink_message.rx_metadata.2.gateway_ids.eui","uplink_message.rx_metadata.2.location.source",
+                    "uplink_message.rx_metadata.3.location.latitude","uplink_message.rx_metadata.3.location.longitude","uplink_message.rx_metadata.3.location.altitude","uplink_message.rx_metadata.3.gateway_ids.gateway_id","uplink_message.rx_metadata.3.gateway_ids.eui","uplink_message.rx_metadata.3.location.source",
+                    "uplink_message.rx_metadata.4.location.latitude","uplink_message.rx_metadata.4.location.longitude","uplink_message.rx_metadata.4.location.altitude","uplink_message.rx_metadata.4.gateway_ids.gateway_id","uplink_message.rx_metadata.4.gateway_ids.eui","uplink_message.rx_metadata.4.location.source"
                 ]
             },
             {
-                "output": "function_drive",
+                "output": "conexion",
                 "fields": [
-                    "month","day","hour","min","i_uiip","i_f","i_uiipu","truth"
+                    "received_at","end_device_ids.device_id","end_device_ids.dev_eui","houend_device_ids.join_end_device_ids.device_id euir","end_device_ids.dev_addr","end_device_ids.application_ids.application_id","uplink_message.session_key_id","uplink_message.rx_metadata.0.gateway_ids.gateway_id",
+                    "uplink_message.rx_metadata.1.gateway_ids.gateway_id","uplink_message.rx_metadata.2.gateway_ids.gateway_id","uplink_message.rx_metadata.3.gateway_ids.gateway_id","uplink_message.rx_metadata.4.gateway_ids.gateway_id"
                 ]
             },
             {
-                "output": "function_pressure",
+                "output": "identificacion",
                 "fields": [
-                    "month","day","hour","min","p_uiip","p_f","p_pu","truth"
+                    "received_at","end_device_ids.device_id","end_device_ids.dev_eui","end_device_ids.join_eui","end_device_ids.dev_addr","end_device_ids.application_ids.application_id","correlation_ids.0","uplink_message.network_ids.net_id","uplink_message.network_ids.ns_id","uplink_message.network_ids.tenant_id","uplink_message.network_ids.cluster_id","uplink_message.network_ids.cluster_address"
                 ]
             },
             {
-                "output": "function_flow",
+                "output": "tiempo",
                 "fields": [
-                    "month","day","hour","min","ce_px","cs_px","c_pu_p","truth"
+                    "received_at","uplink_message.rx_metadata.0.time","uplink_message.rx_metadata.0.timestamp","uplink_message.rx_metadata.1.time","uplink_message.rx_metadata.1.timestamp","uplink_message.rx_metadata.2.time","uplink_message.rx_metadata.2.timestamp","uplink_message.rx_metadata.3.time","uplink_message.rx_metadata.3.timestamp","uplink_message.rx_metadata.4.time","uplink_message.rx_metadata.4.timestamp","uplink_message.received_at","uplink_message.settings.timestamp","uplink_message.settings.time"
                 ]
             },
             {
-                "output": "position_plaXiquet",
+                "output": "mensaje",
                 "fields": [
-                    "month","day","hour","min","n_px","ce_px","cs_px","truth"
+                    "received_at","uplink_message.f_port","uplink_message.f_cnt","uplink_message.frm_payload","uplink_message.decoded_payload.bytes.0","uplink_message.decoded_payload.bytes.1","uplink_message.decoded_payload.bytes.2","uplink_message.decoded_payload.bytes.3","uplink_message.decoded_payload.bytes.4","uplink_message.decoded_payload.bytes.5","uplink_message.decoded_payload.bytes.6","uplink_message.decoded_payload.bytes.7","uplink_message.decoded_payload.bytes.8","uplink_message.decoded_payload.bytes.9","uplink_message.decoded_payload.bytes.10","uplink_message.decoded_payload.bytes.11","uplink_message.decoded_payload.bytes.12","uplink_message.decoded_payload.bytes.13","uplink_message.decoded_payload.bytes.14","uplink_message.decoded_payload.bytes.15","uplink_message.decoded_payload.bytes.16","uplink_message.decoded_payload.bytes.17","uplink_message.decoded_payload.bytes.18","uplink_message.decoded_payload.bytes.19","uplink_message.decoded_payload.bytes.20","uplink_message.decoded_payload.bytes.21","uplink_message.decoded_payload.bytes.22","uplink_message.decoded_payload.bytes.23","uplink_message.decoded_payload.bytes.24","uplink_message.decoded_payload.bytes.25","uplink_message.decoded_payload.bytes.26","uplink_message.decoded_payload.bytes.27","uplink_message.decoded_payload.bytes.28","uplink_message.decoded_payload.bytes.29","uplink_message.decoded_payload.bytes.30","uplink_message.decoded_payload.bytes.31","uplink_message.decoded_payload.bytes.32","uplink_message.decoded_payload.bytes.33","uplink_message.decoded_payload.bytes.34","uplink_message.decoded_payload.bytes.35","uplink_message.decoded_payload.bytes.36","uplink_message.decoded_payload.bytes.37","uplink_message.decoded_payload.bytes.38","uplink_message.decoded_payload.bytes.39","uplink_message.decoded_payload.bytes.40","uplink_message.decoded_payload.bytes.41","uplink_message.decoded_payload.bytes.42","uplink_message.decoded_payload.bytes.43","uplink_message.decoded_payload.bytes.44","uplink_message.decoded_payload.bytes.45","uplink_message.decoded_payload.bytes.46","uplink_message.decoded_payload.bytes.47","uplink_message.decoded_payload.bytes.48"
                 ]
             },
             {
-                "output": "position_playa",
+                "output": "configuracion",
                 "fields": [
-                    "month","day","hour","min","n_p","i_uiip","p_uiip","truth"
-                ]
-            },
-            {
-                "output": "position_falcon",
-                "fields": [
-                    "month","day","hour","min","i_f","p_f","truth"
-                ]
-            },
-            {
-                "output": "position_pueblo",
-                "fields": [
-                    "month","day","hour","min","i_uiipu","c_pu_p","p_pu","truth"
+                    "received_at","uplink_message.settings.data_rate.lora.bandwidth","uplink_message.settings.data_rate.lora.spreading_factor","uplink_message.settings.data_rate.lora.coding_rate","uplink_message.version_ids.brand_id","uplink_message.version_ids.model_id","uplink_message.version_ids.hardware_version","uplink_message.version_ids.firmware_version","uplink_message.version_ids.band_id","uplink_message.consumed_airtime"
                 ]
             }
         ]

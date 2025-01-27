@@ -1,0 +1,2 @@
+received_at,end_device_ids.device_id,end_device_ids.dev_eui,end_device_ids.join_eui,end_device_ids.dev_addr,end_device_ids.application_ids.application_id,correlation_ids.0,uplink_message.network_ids.net_id,uplink_message.network_ids.ns_id,uplink_message.network_ids.tenant_id,uplink_message.network_ids.cluster_id,uplink_message.network_ids.cluster_address
+1,1,1,1,1,1,1,1,1,1,1,1
