@@ -109,6 +109,11 @@ function processCSV(inputFile, outputFile, referenceFile) {
 
 // Obtener los parámetros de la línea de comandos
 const args = process.argv.slice(2);
+if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
+    console.log(`input:1,output:1,config:1`);
+    console.log(`./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/union.csv   ./exec/waterConfig.json`);
+    process.exit(0);
+}
 
 // Verificar si tenemos los parámetros necesarios
 if (args.length !== 3) {

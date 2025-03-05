@@ -3,6 +3,11 @@ const csv = require('csv-parser');
 
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
+if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
+  console.log(`input:3,output:1,config:1`);
+  console.log(`./results/waterInfrastructure/319.csv   ./results/waterInfrastructure/6612_3.csv    3  3   ./exec/waterConfig.json`);
+  process.exit(0);
+}
 if (args.length < 4) {
   console.error('! ERROR: INPUT !');
   process.exit(1);

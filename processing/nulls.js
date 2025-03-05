@@ -4,6 +4,11 @@ const path = require('path');
 
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
+if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
+  console.log(`input:2,output:1,config:1`);
+  console.log(`./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/nulls.csv    ./exec/waterConfig.json`);
+  process.exit(0);
+}
 if (args.length !== 4) {
   console.error('! ERROR: INPUT !');
   process.exit(1);

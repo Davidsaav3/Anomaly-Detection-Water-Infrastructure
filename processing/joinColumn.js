@@ -61,6 +61,11 @@ function joinColumns(data, columnsToUnite, separator) {
 
 // [ PARÁMETROS DE ENTRADA ]
 const args = process.argv.slice(2);
+if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
+  console.log(`input:1,output:1,config:1`);
+  console.log(`./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/joinColumn.csv   ./exec/waterConfig.json`);
+  process.exit(0);
+}
 if (args.length < 2) {
   console.error('! ERROR: INPUT !');
   process.exit(1);
