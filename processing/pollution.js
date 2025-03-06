@@ -5,7 +5,7 @@ const csv = require('csv-parser');
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
   console.log(`input:3,output:1,config:1`);
-  console.log(`./results/waterInfrastructure/319.csv   ./results/waterInfrastructure/6612_3.csv    3  3   ./exec/waterConfig.json`);
+  console.log(`./results/waterInfrastructure/319.csv   3  3    ./results/waterInfrastructure/6612_3.csv    ./exec/sensorsConfig.json`);
   process.exit(0);
 }
 if (args.length < 4) {
@@ -14,9 +14,9 @@ if (args.length < 4) {
 }
 
 const inputFile = args[0];       // Archivo de entrada
-const outputFile = args[1];      // Archivo de salida
-const numLinesToContaminate = parseInt(args[2]);  // Número de filas a contaminar
-const contaminationFactor = parseFloat(args[3]);  // Factor de contaminación
+const numLinesToContaminate = parseInt(args[1]);  // Número de filas a contaminar
+const contaminationFactor = parseFloat(args[2]);  // Factor de contaminación
+const outputFile = args[3];      // Archivo de salida
 
 // Columnas a excluir de la contaminación
 const excludedColumns = ['num', 'month', 'day', 'hour', 'min'];

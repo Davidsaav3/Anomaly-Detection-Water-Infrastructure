@@ -4,8 +4,8 @@ const csv = require('csv-parser');
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:1,output:1,config:1`);
-  console.log(`./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/dataDispersion.csv   20   ./exec/waterConfig.json`);
+  console.log(`input:2,output:1,config:1`);
+  console.log(`./results/sensorsExpanded/dataDispersion.csv    20   ./results/sensorsExpanded/dataDispersion.csv    ./exec/sensorsConfig.json`);
   process.exit(0);
 }
 if (args.length < 3) {
@@ -14,8 +14,8 @@ if (args.length < 3) {
 }
 
 const inputFile = args[0]; // ENTRADA
-const outputFile = args[1]; // SALIDA
-const percentage = parseFloat(args[2]); // PORCENTAJE
+const percentage = parseFloat(args[1]); // PORCENTAJE
+const outputFile = args[2]; // SALIDA
 
 // [ LEER CSV ORIGINAL ]
 const readCSV = (filePath) => {
