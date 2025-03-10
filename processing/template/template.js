@@ -48,7 +48,7 @@ function saveCSV(data, headers, fileName) {
     ...data.map(row => headers.map(header => row[header] !== undefined ? row[header] : '').join(',')) // RELLENAR ARCHIVO DE CADA GRUPO
   ].join('\n'); // UNIR LOS ELEMENTOS CON COMAS
   fs.writeFileSync(fileName, csvContent);
-  console.log(`[ ADD COLUMN: ${fileName} ]`);
+  console.log(`[ TEMPLATE: ${fileName} ]`);
 }
 
 // [ *** FUNCIÓN PRINCIPAL ]

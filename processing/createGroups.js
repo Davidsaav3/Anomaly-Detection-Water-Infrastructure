@@ -5,66 +5,66 @@ const path = require('path');
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:1,output:1,config:1`);
-  console.log(`./results/waterInfrastructure/nulls.csv   ./results/waterInfrastructure/createGroups   ./exec/waterConfig.json`);
+  console.log(`input:1,output:8,config:1`);
+  console.log(`./results/Nulls_s1 ./results/CreateGroups/Function_Level_s1 ./results/CreateGroups/Function_Drive_s2 ./results/CreateGroups/Function_Pressure_s3 ./results/CreateGroups/Function_Flow_s4 ./results/CreateGroups/Position_PlaXiquet_s5 ./results/CreateGroups/Position_Playa_s6 ./results/CreateGroups/Position_Falcon_s7 ./results/CreateGroups/Position_Pueblo_s8 ./exec/waterConfig.json`);
   process.exit(0);
 }
-if (args.length < 2) {
+if (args.length < 9) {
   console.error('! ERROR: INPUT !');
   process.exit(1);
 }
 
 const inputFilePath = args[0];
-const outputDir = args[1];
-const configPath = args[2]; 
+const outputPaths = args.slice(1, 9);
+const configPath = args[9]; 
 
 // CONFIGURACIÓN POR DEFECTO
 let config = {
   "groups": [
       {
-          "output": "function_level",
+          "output": "Function_Level_s1",
           "fields": [
               "month","day","hour","min","n_px","n_p","truth"
           ]
       },
       {
-          "output": "function_drive",
+          "output": "Function_Drive_s2",
           "fields": [
               "month","day","hour","min","i_uiip","i_f","i_uiipu","truth"
           ]
       },
       {
-          "output": "function_pressure",
+          "output": "Function_Pressure_s3",
           "fields": [
               "month","day","hour","min","p_uiip","p_f","p_pu","truth"
           ]
       },
       {
-          "output": "function_flow",
+          "output": "Function_Flow_s4",
           "fields": [
               "month","day","hour","min","ce_px","cs_px","c_pu_p","truth"
           ]
       },
       {
-          "output": "position_plaXiquet",
+          "output": "Position_PlaXiquet_s5",
           "fields": [
               "month","day","hour","min","n_px","ce_px","cs_px","truth"
           ]
       },
       {
-          "output": "position_playa",
+          "output": "Position_Playa_s6",
           "fields": [
               "month","day","hour","min","n_p","i_uiip","p_uiip","truth"
           ]
       },
       {
-          "output": "position_falcon",
+          "output": "Position_Falcon_s7",
           "fields": [
               "month","day","hour","min","i_f","p_f","truth"
           ]
       },
       {
-          "output": "position_pueblo",
+          "output": "Position_Pueblo_s8",
           "fields": [
               "month","day","hour","min","i_uiipu","c_pu_p","p_pu","truth"
           ]
@@ -72,40 +72,21 @@ let config = {
   ]
 };
 
-// [ DETECTAR FORMATO DE FICHERO ]
-const COMMON_EXTENSIONS = ['.csv', '.json'];
-function findFileWithExtension(filePath) {
-  const ext = path.extname(filePath).toLowerCase();
-  if (fs.existsSync(filePath)) {
-    return filePath; // SI  EL ARCHIVO YA EXISTE, LO DEVUELVE
-  }
-  for (const ext of COMMON_EXTENSIONS) {
-    const fileWithExt = filePath + ext;
-    if (fs.existsSync(fileWithExt)) {
-      return fileWithExt; // DEVUELVE LA PRIMERA COINCIDENCIA
-    }
-  }
-  throw new Error(`Archivo no encontrado: ${filePath} (se buscó con extensiones ${COMMON_EXTENSIONS.join(', ')})`);
-}
-
 // [ CARGAR CONFIGURACIÓN ]
 try {
   if (configPath.trim().startsWith("{")) {
     config = JSON.parse(configPath);
-    console.log('Configuración cargada desde JSON en línea:', config);
-  }
-  else {
+  } else {
     const configFile = fs.readFileSync(configPath);
     config = JSON.parse(configFile);
-    console.log('Configuración cargada desde archivo:', config);
   }
-} 
-catch (error) {
+  console.log('Configuración cargada correctamente');
+} catch (error) {
   console.error('Error cargando la configuración:', error);
   process.exit(1);
 }
 
-// [ LEER CSV ORIGINAL ]
+// [ LEER CSV ]
 async function readCSV(filePath) {
   return new Promise((resolve, reject) => {
     const results = [];
@@ -124,43 +105,56 @@ function divideGroups(data, groupHeaders, headers) {
   return data.map(row => {
     const newRow = {};
     groupHeaders.forEach(header => {
-      if (headers.includes(header)) { // VERIFICAR QUE EXISTE
-        newRow[header] = row[header]; // FORMAR GRUPOS
+      if (headers.includes(header)) {
+        newRow[header] = row[header];
       }
     });
     return newRow;
   });
 }
 
+// [ CREAR DIRECTORIO SI NO EXISTE ]
+function ensureDirectoryExistence(filePath) {
+  const dirname = path.dirname(filePath);
+  if (!fs.existsSync(dirname)) {
+    fs.mkdirSync(dirname, { recursive: true });
+  }
+}
+
 // [ GUARDAR CSV ]
 function saveCSV(data, headers, fileName) {
+  ensureDirectoryExistence(fileName);
   const csvContent = [
-    headers.join(','), // CABECERAS
-    ...data.map(row => headers.map(header => row[header] ?? '').join(',')) // FORMAR ARCHIVO
+    headers.join(','),
+    ...data.map(row => headers.map(header => row[header] ?? '').join(','))
   ].join('\n');
-  fs.writeFileSync(fileName, csvContent); // GUARDAR
-  console.log(`[ ARCHIVO GUARDADO: ${fileName} ]`);
+  try {
+    fs.writeFileSync(fileName, csvContent);
+    if (fs.existsSync(fileName)) {
+      console.log(`[ ARCHIVO GUARDADO: ${fileName} ]`);
+    } else {
+      console.error(`[ ERROR AL GUARDAR: ${fileName} ]`);
+    }
+  } catch (error) {
+    console.error(`[ ERROR AL GUARDAR: ${fileName} ]`, error);
+  }
 }
 
 // [ MAIN ]
-async function main(inputFile) {
+async function main(inputFile, outputFiles) {
   try {
     const { headers, results } = await readCSV(inputFile);
-    const groups = config.groups.reduce((acc, group) => { // OBTENER GRUPOS
-      acc[group.output] = group.fields;
-      return acc;
-    }, {});
-    for (const [groupName, groupHeaders] of Object.entries(groups)) { // DIVIDIR Y GUARDAR CADA GRUPO
-      const groupData = divideGroups(results, groupHeaders, headers);
-      saveCSV(groupData, groupHeaders.filter(header => headers.includes(header)), groupName+".csv"); // GUARDAR CADA GRUPO
-    }
-  } 
-  catch (error) {
-    console.error('PROCESSING ERROR: ', error);
+    config.groups.forEach((group, index) => {
+      if (index < outputFiles.length) {
+        const groupData = divideGroups(results, group.fields, headers);
+        saveCSV(groupData, group.fields.filter(header => headers.includes(header)), outputFiles[index]);
+      }
+    });
+  } catch (error) {
+    console.error('PROCESSING ERROR:', error);
   }
 }
 
 // [ CALL MAIN ]
-const inputFile = findFileWithExtension(inputFilePath);
-const outputFile = path.join(outputDir, 'output.csv');
-main(inputFile, outputFile);
+const inputFile = inputFilePath;
+main(inputFile, outputPaths);
