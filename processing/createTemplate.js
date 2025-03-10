@@ -5,8 +5,17 @@ const path = require('path');
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:1,output:2,config:1`);
-  console.log(`./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/auxiliaryNormalize.csv   ./exec/waterConfig.json`);
+  console.log(JSON.stringify({
+    version: "1.0.0",
+    configData : {
+      verDF4IA:"1.0",
+      name: "Crear Plantilla de NUlls y Normalizado",
+      description: "Crea plantillas de nulls y normalizado a partir de un archivo CSV",
+      input:1,
+      output: 2,
+      configexample:'{separator1: "_",separator2: "_",joinFiles: ["month", "day", "hour", "min"],createTemplate: {nulls: "null",normalize1: "1",normalize2: "0"}}'
+    }
+  }, null, 2));
   process.exit(0);
 }
 if (args.length !== 4) {

@@ -1,8 +1,17 @@
 const fs = require('fs');
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:1,output:1,config:1`);
-  console.log(`./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/toCsv.csv   ./exec/waterConfig.json`);
+  console.log(JSON.stringify({
+    version: "1.0.0",
+    configData : {
+      verDF4IA:"1.0",
+      name: "Pasar a CSV",
+      description: "Transforma un archivo JSON a CSV",
+      input:1,
+      output: 1,
+      configexample:''
+    }
+  }, null, 2));
   process.exit(0);
 }
 const configPath = args[3] ? args[3] : './config.json';

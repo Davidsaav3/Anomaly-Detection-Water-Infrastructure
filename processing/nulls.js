@@ -5,8 +5,17 @@ const path = require('path');
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:2,output:1,config:1`);
-  console.log(`./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/auxiliaryNulls.csv   ./results/waterInfrastructure/nulls.csv    ./exec/waterConfig.json`);
+  console.log(JSON.stringify({
+    version: "1.0.0",
+    configData : {
+      verDF4IA:"1.0",
+      name: "Nulls",
+      description: "Nulls",
+      input:2,
+      output: 1,
+      configexample:'{"remove": ["R", "r", "D", "d"]}'
+    }
+  }, null, 2));
   process.exit(0);
 }
 if (args.length !== 4) {

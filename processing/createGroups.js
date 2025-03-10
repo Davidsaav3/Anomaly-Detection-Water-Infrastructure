@@ -5,8 +5,17 @@ const path = require('path');
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:1,output:8,config:1`);
-  console.log(`./results/Nulls_s1 ./results/CreateGroups/Function_Level_s1 ./results/CreateGroups/Function_Drive_s2 ./results/CreateGroups/Function_Pressure_s3 ./results/CreateGroups/Function_Flow_s4 ./results/CreateGroups/Position_PlaXiquet_s5 ./results/CreateGroups/Position_Playa_s6 ./results/CreateGroups/Position_Falcon_s7 ./results/CreateGroups/Position_Pueblo_s8 ./exec/waterConfig.json`);
+  console.log(JSON.stringify({
+    version: "1.0.0",
+    configData : {
+      verDF4IA:"1.0",
+      name: "Crear Grupos",
+      description: "Crea grupos de datos",
+      input:1,
+      output: 2,
+      configexample:'[{"name": "","group": [""]}]'
+    }
+  }, null, 2));
   process.exit(0);
 }
 if (args.length < 9) {

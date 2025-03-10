@@ -62,8 +62,17 @@ function joinColumns(data, columnsToUnite, separator) {
 // [ PARÁMETROS DE ENTRADA ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:1,output:1,config:1`);
-  console.log(`./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/joinColumn.csv   ./exec/waterConfig.json`);
+  console.log(JSON.stringify({
+    version: "1.0.0",
+    configData : {
+      verDF4IA:"1.0",
+      name: "Juntar Columnas",
+      description: "Join columns in a CSV file",
+      input:1,
+      output: 1,
+      configexample:'{"separator1": "_","separator2": "_","joinFiles": ["month","day","hour","min"]}'
+    }
+  }, null, 2));
   process.exit(0);
 }
 if (args.length < 2) {

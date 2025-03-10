@@ -4,8 +4,17 @@ const csv = require('csv-parser');
 // [ OBTENER PARÁMETROS ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:2,output:1,config:1`);
-  console.log(`./results/sensorsExpanded/dataDispersion.csv    20   ./results/sensorsExpanded/dataDispersion.csv    ./exec/sensorsConfig.json`);
+  console.log(JSON.stringify({
+    version: "1.0.0",
+    configData : {
+      verDF4IA:"1.0",
+      name: "Dispersion de datos",
+      description: "Crea un archivo con un porcentaje de los datos aleatorios",
+      input:1,
+      output: 1,
+      configexample:''
+    }
+  }, null, 2));
   process.exit(0);
 }
 if (args.length < 3) {

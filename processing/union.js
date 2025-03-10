@@ -110,8 +110,17 @@ function processCSV(inputFile, outputFile, referenceFile) {
 // Obtener los parámetros de la línea de comandos
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-    console.log(`input:1,output:1,config:1`);
-    console.log(`./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/union.csv   ./exec/waterConfig.json`);
+    console.log(JSON.stringify({
+      version: "1.0.0",
+      configData : {
+        verDF4IA:"1.0",
+        name: "Unir Columnas",
+        description: "Unir columnas en un archivo CSV",
+        input:3,
+        output: 1,
+        configexample:''
+      }
+    }, null, 2));
     process.exit(0);
 }
 

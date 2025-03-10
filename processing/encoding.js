@@ -154,8 +154,17 @@ const main = async (inputFile, dictFile, outputFile, config) => {
 // [ EJECUTAR MAIN ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:2,output:1,config:1`);
-  console.log(`./results/waterInfrastructure/deleteColumn.csv   ./results/waterInfrastructure/auxiliaryDictionary.csv   ./results/waterInfrastructure/encoding.csv    ./exec/waterConfig.json`);
+  console.log(JSON.stringify({
+    version: "1.0.0",
+    configData : {
+      verDF4IA:"1.0",
+      name: "Encoding",
+      description: "Codifica un archivo CSV.",
+      input:2,
+      output: 1,
+      configexample:'{"expandedValue": "#fill#","headers": "header,value,key","fillTransform": "mean","_": ["none","zero","one","mean","median"]}'
+    }
+  }, null, 2));
   process.exit(0);
 }
 if (args.length < 3) {

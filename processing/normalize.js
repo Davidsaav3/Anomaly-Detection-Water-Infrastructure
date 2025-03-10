@@ -4,8 +4,17 @@ const csv = require('csv-parser');
 // [ EJECUTAR Y GUARDAR RESULTADOS ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:1,output:1,config:1`);
-  console.log(`./results/waterInfrastructure/encoding.csv   ./results/waterInfrastructure/auxiliarynormalize.csv   ./results/waterInfrastructure/normalize.csv    ./exec/waterConfig.json`);
+  console.log(JSON.stringify({
+    version: "1.0.0",
+    configData : {
+      verDF4IA:"1.0",
+      name: "Normlizar Datos",
+      description: "Normaliza un archivo CSV",
+      input:1,
+      output: 1,
+      configexample:''
+    }
+  }, null, 2));
   process.exit(0);
 }
 if (args.length !== 5) {

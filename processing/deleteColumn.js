@@ -56,8 +56,17 @@ function deleteColumns(data, columnsToDelete) {
 // [ PARÁMETROS DE ENTRADA ]
 const args = process.argv.slice(2);
 if (args.length === 1 && (args[0] === '-c' || args[0] === '-C')) {
-  console.log(`input:1,output:1,config:1`);
-  console.log(`./results/waterInfrastructure/waterInfrastructure.csv   ./results/waterInfrastructure/deleteColumn.csv   ./exec/waterConfig.json`);
+  console.log(JSON.stringify({
+    version: "1.0.0",
+    configData : {
+      verDF4IA:"1.0",
+      name: "Eliminar Columnas",
+      description: "Elimina columnas de un archivo CSV",
+      input:1,
+      output: 1,
+      configexample:'{"delete": ["truth"]}'
+    }
+  }, null, 2));
   process.exit(0);
 }
 if (args.length < 2) {
